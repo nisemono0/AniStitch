@@ -150,6 +150,11 @@ void MainWindow::startImageStitch(ImageStitcher::ImageStitcherType stitcher_type
     // Get all the cv_mats from the ImageListView
     std::vector<cv::Mat> cv_mats = this->ui->imagesListView->getItemsCVMats();
 
+    if (cv_mats.empty()) {
+        QMessageBox::information(this, QStringLiteral("Image stitcher"), QStringLiteral("No images to stitch"));
+        return;
+    }
+
     // Start the thread and send work
     this->image_stitcher_thread->start();
     emit request_ImageStitcher_start(cv_mats, stitcher_type);
