@@ -41,7 +41,7 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
         }
         case ImageStitcherType::Scan:
         {
-            this->startPanoramaStitch(cv_mats);
+            this->startScanStitch(cv_mats);
             break;
         }
         default:
