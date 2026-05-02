@@ -59,7 +59,7 @@ QList<ImageItem> ImageLoader::getImageItemFromVideo(const QString &video_path) {
 
             image_item.name = this->getNameAndUpdateCounter();
             image_item.pixmap = Utils::Image::getPixmapFromMat(video_frame);
-            image_item.cvmat = video_frame;
+            image_item.cvmat = video_frame.clone();
             image_item.has_image = true;
 
             image_item_list.append(image_item);
