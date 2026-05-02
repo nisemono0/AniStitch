@@ -17,7 +17,7 @@ public:
     ~ImageStitcher();
 
 private:
-    // Stitcher
+    // Stitcher cv::Stitcher api (default)
     cv::Ptr<cv::Stitcher> stitcher;
 
     // Start stitching the cv_mats
