@@ -4,7 +4,8 @@
 
 
 ImageStitcher::ImageStitcher(QObject *parent) : QObject(parent) {
-    // TODO: Set some stitcher settings or split the pipeline
+    // TODO: Tune some of those settings
+
     this->stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
     // Set image registration resolution
@@ -21,21 +22,21 @@ ImageStitcher::ImageStitcher(QObject *parent) : QObject(parent) {
     //          - COST_COLOR_GRAD
     this->stitcher->setSeamFinder(
                 cv::makePtr<cv::detail::GraphCutSeamFinder>(
-                        cv::detail::GraphCutSeamFinderBase::COST_COLOR_GRAD
+                        cv::detail::GraphCutSeamFinderBase::COST_COLOR
                     )
             );
     // Blender:
     this->stitcher->setBlender(
                 // arg_name (default)
                 // try_use_gpu (false), num_bands (5)
-                cv::makePtr<cv::detail::MultiBandBlender>(true, 2)
+                cv::makePtr<cv::detail::MultiBandBlender>(true, 0)
             );
     // Features finder:
-    //      - ORB (Default)
-    //      - SIFT
-    //      - AKAZE
+    //      - ORB (Default, fast and good enough)
+    //      - SIFT (Best matcher, slow as fuck)
+    //      - AKAZE (Somewhere in between ORB and SIFT, slow-ish)
     this->stitcher->setFeaturesFinder(
-                cv::SIFT::create(2000)
+                cv::ORB::create(5000)
             );
     // Interpolation:
     //      - INTER_LINEAR (Default)
