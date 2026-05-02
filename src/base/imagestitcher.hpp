@@ -10,8 +10,6 @@
 class ImageStitcher : public QObject {
     Q_OBJECT;
 public:
-    // Type of stitch to do
-    enum ImageStitcherType { Panorama, Scan };
     // Status to send back
     enum ImageStitcherStatus { Ok, NEED_MORE_IMGS, EST_FAIL, PARAMS_ADJUST_FAIL, Interrupted };
 
@@ -19,10 +17,11 @@ public:
     ~ImageStitcher();
 
 private:
-    // Start Panorama stitch on cv_mats
-    void startPanoramaStitch(const std::vector<cv::Mat> &cv_mats);
-    // Start Scan stitch on cv_mats
-    void startScanStitch(const std::vector<cv::Mat> &cv_mats);
+    // Stitcher
+    cv::Ptr<cv::Stitcher> stitcher;
+
+    // Start stitching the cv_mats
+    void stitchImages(const std::vector<cv::Mat> &cv_mats);
 
 signals:
     // Send back status of the worker based on the result of cv::Stitcher
@@ -35,7 +34,7 @@ signals:
     void send_ImageStitcher_data(const cv::Mat &stitched_cvmat);
 
 public slots:
-    // Receive request to start stitching the cv_mats images using stitcher_type
-    void receive_ImageStitcher_start_request(const std::vector<cv::Mat> &cv_mats, ImageStitcher::ImageStitcherType stitcher_type);
+    // Receive request to start stitching the cv_mats images
+    void receive_ImageStitcher_start_request(const std::vector<cv::Mat> &cv_mats);
 };
 

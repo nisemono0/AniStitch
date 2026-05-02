@@ -51,6 +51,8 @@ private:
     ImageStitcher *image_stitcher_worker;
     QThread *image_stitcher_thread;
 
+    // Get ImageList images and starts ImageStitcher thread
+    void startImageStitch();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
@@ -59,7 +61,7 @@ protected:
 
 signals:
     void request_ImageLoader_start(const QStringList &file_paths);
-    void request_ImageStitcher_start(const std::vector<cv::Mat> &cv_mats, ImageStitcher::ImageStitcherType stitcher_type);
+    void request_ImageStitcher_start(const std::vector<cv::Mat> &cv_mats);
 
 public slots:
     // Image loader
@@ -77,12 +79,8 @@ private slots:
     // Load file(s)
     // Opens a file dialog and starts ImageLoader thread with them
     void startImageLoad();
-    // Get ImageList images and starts ImageStitcher thread with them
-    // with given ImageStitcherType stitcher_type
-    void startImageStitch(ImageStitcher::ImageStitcherType stitcher_type);
 
     // Stitch buttons clicked
-    void pushButtonStitchScan_clicked(bool checked = false);
-    void pushButtonStitchPanorama_clicked(bool checked = false);
+    void pushButtonStitchImages_clicked(bool checked = false);
 };
 

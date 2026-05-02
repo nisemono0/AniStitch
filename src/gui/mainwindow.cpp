@@ -36,8 +36,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this->ui->pushButtonClearImages, &QPushButton::clicked, this->image_loader_worker, &ImageLoader::receive_ImageLoader_reset_counter);
 
     // Stitch buttons
-    connect(this->ui->pushButtonStitchScan, &QPushButton::clicked, this, &MainWindow::pushButtonStitchScan_clicked);
-    connect(this->ui->pushButtonStitchPanorama, &QPushButton::clicked, this, &MainWindow::pushButtonStitchPanorama_clicked);
+    connect(this->ui->pushButtonStitchImages, &QPushButton::clicked, this, &MainWindow::pushButtonStitchImages_clicked);
 
     // Menubar:File
     connect(this->ui->actionLoad, &QAction::triggered, this, &MainWindow::startImageLoad);
@@ -134,7 +133,7 @@ void MainWindow::startImageLoad() {
     emit request_ImageLoader_start(selected_files);
 }
 
-void MainWindow::startImageStitch(ImageStitcher::ImageStitcherType stitcher_type) {
+void MainWindow::startImageStitch() {
     // If the ImageStitcher thread is running, show a
     // message and bring the progress bar on front
     if (this->image_stitcher_thread->isRunning()) {
@@ -157,7 +156,7 @@ void MainWindow::startImageStitch(ImageStitcher::ImageStitcherType stitcher_type
 
     // Start the thread and send work
     this->image_stitcher_thread->start();
-    emit request_ImageStitcher_start(cv_mats, stitcher_type);
+    emit request_ImageStitcher_start(cv_mats);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event) {
@@ -297,11 +296,7 @@ void MainWindow::receive_ImageStitcher_show_progress_bar() {
     }
 }
 
-void MainWindow::pushButtonStitchScan_clicked(bool checked) {
-    this->startImageStitch(ImageStitcher::ImageStitcherType::Scan);
-}
-
-void MainWindow::pushButtonStitchPanorama_clicked(bool checked) {
-    this->startImageStitch(ImageStitcher::ImageStitcherType::Panorama);
+void MainWindow::pushButtonStitchImages_clicked(bool checked) {
+    this->startImageStitch();
 }
 

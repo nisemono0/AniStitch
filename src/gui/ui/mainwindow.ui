@@ -134,22 +134,12 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonStitchScan">
+           <widget class="QPushButton" name="pushButtonStitchImages">
             <property name="statusTip">
-             <string>Stitch images in scan mode</string>
+             <string>Stitch the loaded images</string>
             </property>
             <property name="text">
-             <string>Scan</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButtonStitchPanorama">
-            <property name="statusTip">
-             <string>Stitch images in panorama mode</string>
-            </property>
-            <property name="text">
-             <string>Panorama</string>
+             <string>Stitch images</string>
             </property>
            </widget>
           </item>
