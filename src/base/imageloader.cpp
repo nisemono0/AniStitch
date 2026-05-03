@@ -23,31 +23,30 @@ QString ImageLoader::getNameAndUpdateCounter() {
     return QStringLiteral("Image %1").arg(QString::number(this->image_counter));
 }
 
-ImageItem ImageLoader::getImageItemFromImage(const QString &image_path) {
+std::optional<ImageItem> ImageLoader::getImageItemFromImage(const QString &image_path) {
     cv::Mat image_mat = cv::imread(image_path.toStdString(), cv::IMREAD_UNCHANGED);
 
     if (image_mat.empty()) {
-        return ImageItem();
+        return std::nullopt;
     }
 
     ImageItem image_item = ImageItem();
     image_item.name = this->getNameAndUpdateCounter();
     image_item.pixmap = Utils::Image::getPixmapFromMat(image_mat);
     image_item.cvmat = image_mat.clone();
-    image_item.has_image = true;
 
     return image_item;
 }
 
-QList<ImageItem> ImageLoader::getImageItemFromVideo(const QString &video_path) {
+QList<std::optional<ImageItem>> ImageLoader::getImageItemFromVideo(const QString &video_path) {
     // Open video_path as video
     cv::VideoCapture video_cap = cv::VideoCapture(video_path.toStdString(), cv::CAP_ANY);
     // If the video couldn't be opened, return and empty QList
     if (!video_cap.isOpened()) {
-        return QList<ImageItem>();
+        return QList<std::optional<ImageItem>>();
     }
 
-    QList<ImageItem> image_item_list = QList<ImageItem>();
+    QList<std::optional<ImageItem>> image_item_list = QList<std::optional<ImageItem>>();
     cv::Mat video_frame = cv::Mat();
 
     int frame_count = video_cap.get(cv::CAP_PROP_FRAME_COUNT);
@@ -59,11 +58,10 @@ QList<ImageItem> ImageLoader::getImageItemFromVideo(const QString &video_path) {
             image_item.name = this->getNameAndUpdateCounter();
             image_item.pixmap = Utils::Image::getPixmapFromMat(video_frame);
             image_item.cvmat = video_frame.clone();
-            image_item.has_image = true;
 
             image_item_list.append(image_item);
         } else {
-            image_item_list.append(ImageItem());
+            image_item_list.append(std::nullopt);
         }
     }
 
@@ -97,11 +95,11 @@ void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_path
         if (Utils::File::isImage(current_file_path)) {
             Log::info(QStringLiteral("Loading image: %1").arg(current_file_path));
 
-            ImageItem image_item = this->getImageItemFromImage(current_file_path);
+            std::optional<ImageItem> image_item = this->getImageItemFromImage(current_file_path);
             // If item has no image loaded, send error and stop loading images
-            if (image_item.has_image) {
-                Log::info(QStringLiteral("  -> Image (%1) loaded: %2").arg(image_item.name, current_file_path));
-                emit send_ImageLoader_data(image_item);
+            if (image_item) {
+                Log::info(QStringLiteral("  -> Image (%1) loaded: %2").arg(image_item.value().name, current_file_path));
+                emit send_ImageLoader_data(image_item.value());
             } else {
                 Log::error(QStringLiteral("Error loading image: %1").arg(current_file_path));
                 has_errors = true;
@@ -112,7 +110,7 @@ void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_path
         } else if (Utils::File::isVideo(current_file_path)) {
             Log::info(QStringLiteral("Loading video: %1").arg(current_file_path));
 
-            QList<ImageItem> image_item_list = this->getImageItemFromVideo(current_file_path);
+            QList<std::optional<ImageItem>> image_item_list = this->getImageItemFromVideo(current_file_path);
             if (image_item_list.isEmpty()) {
                 Log::error(QStringLiteral("Error loading video: %1").arg(current_file_path));
                 has_errors = true;
@@ -127,9 +125,9 @@ void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_path
                     return;
                 }
                 // If item has no image loaded, send error and stop loading images
-                if (image_item_list[item_idx].has_image) {
-                    Log::info(QStringLiteral("  -> Frame (%1) loaded: %2").arg(image_item_list[item_idx].name, current_file_path));
-                    emit send_ImageLoader_data(image_item_list[item_idx]);
+                if (image_item_list[item_idx]) {
+                    Log::info(QStringLiteral("  -> Frame (%1) loaded: %2").arg(image_item_list[item_idx].value().name, current_file_path));
+                    emit send_ImageLoader_data(image_item_list[item_idx].value());
                 } else {
                     Log::warning(QStringLiteral("  -> Frame not loaded: %1").arg(current_file_path));
                     has_warnings = true;

@@ -12,14 +12,12 @@ public:
     QString name;
     QPixmap pixmap;
     cv::Mat cvmat;
-    bool has_image;
 
     ImageItem();
     ImageItem(
             const QString &name,
             const QPixmap &pixmap,
-            const cv::Mat &cvmat,
-            const bool &has_image
+            const cv::Mat &cvmat
          );
 };
 

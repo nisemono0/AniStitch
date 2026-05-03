@@ -2,6 +2,8 @@
 
 #include "base/imageitem.hpp"
 
+#include <optional>
+
 #include <QObject>
 
 
@@ -21,10 +23,12 @@ private:
 
     // Return a QString with a name based on current loader_count and update it
     QString getNameAndUpdateCounter();
-    // Return an ImageItem from an image at image_path
-    ImageItem getImageItemFromImage(const QString &image_path);
-    // Return a QList of ImageItem from a video at video_path
-    QList<ImageItem> getImageItemFromVideo(const QString &video_path);
+    // Return an ImageItem from an image at image_path or std::nullopt
+    std::optional<ImageItem> getImageItemFromImage(const QString &image_path);
+    // Return a QList of std::optional<ImageItem> from a video at video_path
+    // Each ImageItem inside the QList is a frame from the video, can be std::nullopt
+    // if it could not be loaded
+    QList<std::optional<ImageItem>> getImageItemFromVideo(const QString &video_path);
 
 signals:
     // Send the finish status of the worker; this implies
