@@ -3,9 +3,10 @@
 #include <opencv2/core.hpp>
 #include <opencv2/stitching.hpp>
 
+#include <expected>
+
 #include <QObject>
 #include <QPixmap>
-#include <expected>
 
 
 class ImageStitcher : public QObject {
