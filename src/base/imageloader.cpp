@@ -24,8 +24,7 @@ QString ImageLoader::getNameAndUpdateCounter() {
 }
 
 ImageItem ImageLoader::getImageItemFromImage(const QString &image_path) {
-    // cv::IMREAD_UNCHANGED to also load the alpha channel
-    cv::Mat image_mat = cv::imread(image_path.toStdString(), cv::IMREAD_ANYCOLOR);
+    cv::Mat image_mat = cv::imread(image_path.toStdString(), cv::IMREAD_UNCHANGED);
 
     if (image_mat.empty()) {
         return ImageItem();
@@ -34,7 +33,7 @@ ImageItem ImageLoader::getImageItemFromImage(const QString &image_path) {
     ImageItem image_item = ImageItem();
     image_item.name = this->getNameAndUpdateCounter();
     image_item.pixmap = Utils::Image::getPixmapFromMat(image_mat);
-    image_item.cvmat = image_mat;
+    image_item.cvmat = image_mat.clone();
     image_item.has_image = true;
 
     return image_item;

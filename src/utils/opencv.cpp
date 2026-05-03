@@ -9,7 +9,19 @@
 
 
 QPixmap Utils::Image::getPixmapFromMat(const cv::Mat &cv_mat) {
-    QImage image = QImage(cv_mat.data, cv_mat.cols, cv_mat.rows, static_cast<int>(cv_mat.step), QImage::Format_BGR888);
+    // Return empty pixmap if cv_mat is empty
+    if (cv_mat.empty()) {
+        return QPixmap();
+    }
+
+    QImage image = QImage();
+    // Check if cv_mat has 4 channels and load QImage accordingly
+    if (cv_mat.channels() == 4) {
+        image = QImage(cv_mat.data, cv_mat.cols, cv_mat.rows, static_cast<int>(cv_mat.step), QImage::Format_ARGB32);
+    } else {
+        image = QImage(cv_mat.data, cv_mat.cols, cv_mat.rows, static_cast<int>(cv_mat.step), QImage::Format_BGR888);
+    }
+
     return QPixmap::fromImage(image);
 }
 

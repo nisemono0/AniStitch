@@ -4,8 +4,6 @@
 
 
 ImageStitcher::ImageStitcher(QObject *parent) : QObject(parent) {
-    // TODO: Tune some of those settings
-
     this->stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
     // Set image registration resolution
