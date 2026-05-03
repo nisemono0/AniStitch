@@ -12,6 +12,8 @@ namespace Utils::Image {
     QPixmap getPixmapFromMat(const cv::Mat &cv_mat);
     // Save cv::Mat to file_path
     bool saveMatToPath(const cv::Mat &cv_mat, const QString &file_path);
+    // Return a cv::Mat with alpha channel (BGRA) from input cv_mat and image_mask
+    cv::Mat getBGRAMat(const cv::Mat &cv_mat, const cv::UMat &image_mask);
 };
 
 namespace Utils::OpenCV {

@@ -6,6 +6,7 @@
 #include <opencv2/core/ocl.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
+#include <opencv2/imgproc.hpp>
 
 
 QPixmap Utils::Image::getPixmapFromMat(const cv::Mat &cv_mat) {
@@ -36,6 +37,21 @@ bool Utils::Image::saveMatToPath(const cv::Mat &cv_mat, const QString &file_path
     }
 
     return image_written;
+}
+
+cv::Mat Utils::Image::getBGRAMat(const cv::Mat &cv_mat, const cv::UMat &image_mask) {
+    // Convert cv_mat to BGRA
+    cv::Mat bgra_mat;
+    cv::cvtColor(cv_mat, bgra_mat, cv::COLOR_BGR2BGRA);
+    // Split the BGRA channels
+    std::vector<cv::UMat> bgra_mat_channels;
+    cv::split(bgra_mat, bgra_mat_channels);
+    // Set the Alpha channel from image_mask
+    bgra_mat_channels[3] = image_mask;
+    // Merge the channels back into bgra_mat
+    cv::merge(bgra_mat_channels, bgra_mat);
+
+    return bgra_mat;
 }
 
 void Utils::OpenCV::enableOpenCL() {

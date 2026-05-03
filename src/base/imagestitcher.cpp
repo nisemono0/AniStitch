@@ -1,6 +1,7 @@
 #include "base/imagestitcher.hpp"
 
 #include "utils/log.hpp"
+#include "utils/opencv.hpp"
 
 
 ImageStitcher::ImageStitcher(QObject *parent) : QObject(parent) {
@@ -98,7 +99,8 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
     // TODO: Remove those and do it properly
     cv::Mat pano;
     this->stitcher->stitch(cv_mats, pano);
+    cv::Mat pano_alpha = Utils::Image::getBGRAMat(pano, this->stitcher->resultMask());
     emit send_ImageStitcher_status(ImageStitcher::Ok);
-    emit send_ImageStitcher_data(pano);
+    emit send_ImageStitcher_data(pano_alpha);
 }
 
