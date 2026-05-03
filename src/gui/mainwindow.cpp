@@ -149,8 +149,8 @@ void MainWindow::startImageStitch() {
     // Get all the cv_mats from the ImageListView
     std::vector<cv::Mat> cv_mats = this->ui->imagesListView->getItemsCVMats();
 
-    if (cv_mats.empty()) {
-        QMessageBox::information(this, QStringLiteral("Image stitcher"), QStringLiteral("No images to stitch"));
+    if (cv_mats.size() < 2) {
+        QMessageBox::information(this, QStringLiteral("Image stitcher"), QStringLiteral("Need at least 2 images"));
         return;
     }
 
