@@ -12,17 +12,20 @@ echo "[!!!] cmakeconf.sh: CMakeLists.txt config"
 
 sed -i -e '4i set(CMAKE_EXPORT_COMPILE_COMMANDS ON)\n' ./CMakeLists.txt
 echo "[!!!] Added set(CMAKE_EXPORT_COMPILE_COMMANDS ON) on line 4 of CMakeLists.txt (needed for .clangd)"
-echo "" >> ./CMakeLists.txt
+echo >> ./CMakeLists.txt
 
 echo "# !!! cmakeconf.sh !!!" >> ./CMakeLists.txt
+echo "find_package(Qt6 REQUIRED COMPONENTS Concurrent)" >> ./CMakeLists.txt
+echo >> ./CMakeLists.txt
 echo "find_package(OpenCV REQUIRED COMPONENTS core)" >> ./CMakeLists.txt
 echo "find_package(OpenCV REQUIRED COMPONENTS imgcodecs)" >> ./CMakeLists.txt
 echo "find_package(OpenCV REQUIRED COMPONENTS imgproc)" >> ./CMakeLists.txt
 echo "find_package(OpenCV REQUIRED COMPONENTS videoio)" >> ./CMakeLists.txt
 echo "find_package(OpenCV REQUIRED COMPONENTS stitching)" >> ./CMakeLists.txt
-
+echo >> ./CMakeLists.txt
 echo "target_include_directories($PROJ_NAME PUBLIC \${CMAKE_SOURCE_DIR}/src)" >> ./CMakeLists.txt
-
+echo >> ./CMakeLists.txt
+echo "target_link_libraries($PROJ_NAME PRIVATE Qt::Concurrent)" >> ./CMakeLists.txt
 echo "target_link_libraries($PROJ_NAME PRIVATE \${OpenCV_LIBS})" >> ./CMakeLists.txt
 
 if [ "$1" == "--compile" ]; then

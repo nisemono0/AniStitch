@@ -66,10 +66,15 @@ target_link_libraries(AniStitch
 )
 
 # !!! cmakeconf.sh !!!
+find_package(Qt6 REQUIRED COMPONENTS Concurrent)
+
 find_package(OpenCV REQUIRED COMPONENTS core)
 find_package(OpenCV REQUIRED COMPONENTS imgcodecs)
 find_package(OpenCV REQUIRED COMPONENTS imgproc)
 find_package(OpenCV REQUIRED COMPONENTS videoio)
 find_package(OpenCV REQUIRED COMPONENTS stitching)
+
 target_include_directories(AniStitch PUBLIC ${CMAKE_SOURCE_DIR}/src)
+
+target_link_libraries(AniStitch PRIVATE Qt::Concurrent)
 target_link_libraries(AniStitch PRIVATE ${OpenCV_LIBS})
