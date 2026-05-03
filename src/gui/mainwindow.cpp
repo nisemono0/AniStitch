@@ -248,7 +248,7 @@ void MainWindow::receive_ImageLoader_show_progress_bar() {
         // or image_loader_thread or image_loader_worker gets deleted or when
         // image_loader_progress_dialog is closed
         connect(this->image_loader_progress_dialog, &DualProgressDialog::cancel_progress,
-                this->image_loader_thread, [=]() {
+                this->image_loader_thread, [this]() {
                     if (this->image_loader_thread->isRunning()) {
                         this->image_loader_thread->requestInterruption();
                     }
@@ -286,7 +286,7 @@ void MainWindow::receive_ImageStitcher_show_progress_bar() {
         // or image_stitcher_thread or image_stitcher_worker gets deleted or when
         // image_stitcher_progress_dialog is closed
         connect(this->image_stitcher_progress_dialog, &ProgressDialog::canceled,
-                this->image_stitcher_thread, [=]() {
+                this->image_stitcher_thread, [this]() {
                     if (this->image_stitcher_thread->isRunning()) {
                         this->image_stitcher_thread->requestInterruption();
                     }
