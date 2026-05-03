@@ -3,17 +3,19 @@
 #include "utils/log.hpp"
 #include "utils/opencv.hpp"
 
+#include <QtConcurrent>
+
 
 ImageStitcher::ImageStitcher(QObject *parent) : QObject(parent) {
-    this->stitcher = this->getStitcherPtr();
+
 }
 
 ImageStitcher::~ImageStitcher() {
-    this->stitcher.release();
+
 }
 
 cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
-    stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
+    cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
     // Set image registration resolution
     stitcher->setRegistrationResol(0.6);
@@ -88,26 +90,37 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
     return stitcher;
 }
 
-void ImageStitcher::stitchImages(const std::vector<cv::Mat> &cv_mats) {
+std::expected<cv::Mat, cv::Stitcher::Status> ImageStitcher::stitchImages(const std::vector<cv::Mat> &cv_mats) {
+    cv::Ptr<cv::Stitcher> stitcher = this->getStitcherPtr();
 
+    cv::Mat stitched_image;
+    cv::Stitcher::Status stitcher_status;
+
+    stitcher_status = stitcher->stitch(cv_mats, stitched_image);
+
+    if (stitcher_status != cv::Stitcher::OK) {
+        return std::unexpected(stitcher_status);
+    }
+
+    // Release stitcher ptr
+    stitcher.release();
+
+    return stitched_image;
 }
 
 void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Mat> &cv_mats) {
-    // TODO: Stitch here
-    //       - emit send_ImageStitcher_show_progress_bar
-    //       - Start stitching:
-    //          - split in batches
-    //          - call startImageStitch on batches
-    //          - emit send_ImageStitcher_progress to display the progress
-    //       - When done:
-    //          - emit send_ImageStitcher_data
-    //          - emit send_ImageStitcher_status
+    // Show progress bar
+    emit send_ImageStitcher_show_progress_bar();
 
-    // TODO: Remove those and do it properly
-    cv::Mat pano;
-    this->stitcher->stitch(cv_mats, pano);
-    cv::Mat pano_alpha = Utils::Image::getBGRAMat(pano, this->stitcher->resultMask());
-    emit send_ImageStitcher_status(ImageStitcher::Ok);
-    emit send_ImageStitcher_data(pano_alpha);
+    // TODO: Implement batching here
+    //       Use QtConcurrent to process multiple batches
+
+    std::expected<cv::Mat, cv::Stitcher::Status> result = this->stitchImages(cv_mats);
+
+    if (result) {
+        emit send_ImageStitcher_data(result.value());
+    } else {
+        emit send_ImageStitcher_status(ImageStitcherStatus::EST_FAIL);
+    }
 }
 

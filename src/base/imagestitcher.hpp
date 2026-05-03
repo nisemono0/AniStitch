@@ -5,25 +5,24 @@
 
 #include <QObject>
 #include <QPixmap>
+#include <expected>
 
 
 class ImageStitcher : public QObject {
     Q_OBJECT;
 public:
     // Status to send back
-    enum ImageStitcherStatus { Ok, NEED_MORE_IMGS, EST_FAIL, PARAMS_ADJUST_FAIL, Interrupted };
+    enum ImageStitcherStatus { OK, NEED_MORE_IMGS, EST_FAIL, PARAMS_ADJUST_FAIL, INTERRUPTED };
 
     explicit ImageStitcher(QObject *parent = nullptr);
     ~ImageStitcher();
 
 private:
-    // Stitcher cv::Stitcher API
-    cv::Ptr<cv::Stitcher> stitcher;
-
     // Returns a cv::Ptr of type cv::Stitcher with custom settings
     cv::Ptr<cv::Stitcher> getStitcherPtr();
     // Start stitching the cv_mats
-    void stitchImages(const std::vector<cv::Mat> &cv_mats);
+    // Returns a stitched cv::Mat or cv::Stitcher::Status on errors
+    std::expected<cv::Mat, cv::Stitcher::Status> stitchImages(const std::vector<cv::Mat> &cv_mats);
 
 signals:
     // Send back status of the worker based on the result of cv::Stitcher
