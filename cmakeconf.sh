@@ -11,7 +11,9 @@ echo
 echo "[!!!] cmakeconf.sh: CMakeLists.txt config"
 
 sed -i -e '4i set(CMAKE_EXPORT_COMPILE_COMMANDS ON)\n' ./CMakeLists.txt
-echo "[!!!] Added set(CMAKE_EXPORT_COMPILE_COMMANDS ON) on line 4 of CMakeLists.txt (needed for .clangd)"
+echo "[!!!] Added set(CMAKE_EXPORT_COMPILE_COMMANDS ON) on line 4 of CMakeLists.txt"
+sed -i -e '4i set (CMAKE_CXX_STANDARD 23)\n' ./CMakeLists.txt
+echo "[!!!] Added set (CMAKE_CXX_STANDARD 23) on line 4 of CMakeLists.txt"
 echo >> ./CMakeLists.txt
 
 echo "# !!! cmakeconf.sh !!!" >> ./CMakeLists.txt
