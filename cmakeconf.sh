@@ -17,6 +17,7 @@ echo "" >> ./CMakeLists.txt
 echo "# !!! cmakeconf.sh !!!" >> ./CMakeLists.txt
 echo "find_package(OpenCV REQUIRED COMPONENTS core)" >> ./CMakeLists.txt
 echo "find_package(OpenCV REQUIRED COMPONENTS imgcodecs)" >> ./CMakeLists.txt
+echo "find_package(OpenCV REQUIRED COMPONENTS imgproc)" >> ./CMakeLists.txt
 echo "find_package(OpenCV REQUIRED COMPONENTS videoio)" >> ./CMakeLists.txt
 echo "find_package(OpenCV REQUIRED COMPONENTS stitching)" >> ./CMakeLists.txt
 
