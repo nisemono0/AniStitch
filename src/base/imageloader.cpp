@@ -85,7 +85,7 @@ void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_path
 
     for (int file_idx = 0; file_idx < total_files; file_idx++) {
         if (QThread::currentThread()->isInterruptionRequested()) {
-            emit send_ImageLoader_status(ImageLoader::Interrupted);
+            emit send_ImageLoader_status(ImageLoaderStatus::INTERRUPTED);
             return;
         }
 
@@ -123,7 +123,7 @@ void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_path
                 if (QThread::currentThread()->isInterruptionRequested()) {
                     // Update counter
                     this->image_counter = this->image_counter - (total_items - item_idx);
-                    emit send_ImageLoader_status(ImageLoader::Interrupted);
+                    emit send_ImageLoader_status(ImageLoaderStatus::INTERRUPTED);
                     return;
                 }
                 // If item has no image loaded, send error and stop loading images
@@ -147,16 +147,16 @@ void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_path
     }
 
     if (has_errors) {
-        emit send_ImageLoader_status(ImageLoader::Error);
+        emit send_ImageLoader_status(ImageLoaderStatus::ERROR);
         return;
     }
 
     if (has_warnings) {
-        emit send_ImageLoader_status(ImageLoader::Warning);
+        emit send_ImageLoader_status(ImageLoaderStatus::WARNING);
         return;
     }
 
-    emit send_ImageLoader_status(ImageLoader::Ok);
+    emit send_ImageLoader_status(ImageLoaderStatus::OK);
 }
 
 void ImageLoader::receive_ImageLoader_reset_counter() {

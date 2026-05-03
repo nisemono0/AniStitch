@@ -206,22 +206,22 @@ void MainWindow::receive_ImageGraphicsScene_drag_drop_file_paths(const QStringLi
 
 void MainWindow::receive_ImageLoader_status(ImageLoader::ImageLoaderStatus status) {
     switch (status) {
-        case ImageLoader::ImageLoaderStatus::Ok:
+        case ImageLoader::ImageLoaderStatus::OK:
         {
             QMessageBox::information(this, QStringLiteral("Load file(s)"), QStringLiteral("All files loaded"));
             break;
         }
-        case ImageLoader::ImageLoaderStatus::Warning:
+        case ImageLoader::ImageLoaderStatus::WARNING:
         {
             QMessageBox::warning(this, QStringLiteral("Load file(s)"), QStringLiteral("Warnings found; Check logs"));
             break;
         }
-        case ImageLoader::ImageLoaderStatus::Error:
+        case ImageLoader::ImageLoaderStatus::ERROR:
         {
             QMessageBox::critical(this, QStringLiteral("Load file(s)"), QStringLiteral("Errors found; Check logs"));
             break;
         }
-        case ImageLoader::ImageLoaderStatus::Interrupted:
+        case ImageLoader::ImageLoaderStatus::INTERRUPTED:
         {
             QMessageBox::warning(this, QStringLiteral("Load file(s)"), QStringLiteral("File load canceled"));
             break;

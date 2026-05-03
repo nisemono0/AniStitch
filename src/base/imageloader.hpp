@@ -9,7 +9,7 @@ class ImageLoader : public QObject {
     Q_OBJECT;
 public:
     // Statuses to send back
-    enum ImageLoaderStatus { Ok, Warning, Error, Interrupted };
+    enum ImageLoaderStatus { OK, WARNING, ERROR, INTERRUPTED };
 
     explicit ImageLoader(QObject *parent = nullptr);
     ~ImageLoader();
