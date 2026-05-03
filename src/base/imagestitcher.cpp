@@ -9,9 +9,9 @@ ImageStitcher::ImageStitcher(QObject *parent) : QObject(parent) {
     this->stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
     // Set image registration resolution
-    this->stitcher->setRegistrationResol(1);
+    this->stitcher->setRegistrationResol(0.6);
     // Set image resolution for seam estimation
-    this->stitcher->setSeamEstimationResol(0.2);
+    this->stitcher->setSeamEstimationResol(0.1);
     // Set resolution for final stitch
     this->stitcher->setCompositingResol(cv::Stitcher::ORIG_RESOL);
     // Confidence threshold for images to be part of the same stitch (Default: 1)
@@ -36,7 +36,7 @@ ImageStitcher::ImageStitcher(QObject *parent) : QObject(parent) {
     //      - SIFT (Best matcher, slow as fuck)
     //      - AKAZE (Somewhere in between ORB and SIFT, slow-ish)
     this->stitcher->setFeaturesFinder(
-                cv::ORB::create(5000)
+                cv::ORB::create(700)
             );
     // Interpolation:
     //      - INTER_LINEAR (Default)
@@ -58,7 +58,7 @@ ImageStitcher::ImageStitcher(QObject *parent) : QObject(parent) {
     this->stitcher->setFeaturesMatcher(
                 // arg_name (default)
                 // full_affine (false), try_use_gpu (false), match_conf (0.3f), num_matches_thresh1 (6)
-                cv::makePtr<cv::detail::AffineBestOf2NearestMatcher>(false, true, 0.4f, 6)
+                cv::makePtr<cv::detail::AffineBestOf2NearestMatcher>(false, true, 0.3f, 6)
             );
     // Bundle adjuster
     this->stitcher->setBundleAdjuster(
