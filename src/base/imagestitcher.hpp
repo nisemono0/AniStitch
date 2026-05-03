@@ -17,9 +17,11 @@ public:
     ~ImageStitcher();
 
 private:
-    // Stitcher cv::Stitcher api (default)
+    // Stitcher cv::Stitcher API
     cv::Ptr<cv::Stitcher> stitcher;
 
+    // Returns a cv::Ptr of type cv::Stitcher with custom settings
+    cv::Ptr<cv::Stitcher> getStitcherPtr();
     // Start stitching the cv_mats
     void stitchImages(const std::vector<cv::Mat> &cv_mats);
 
