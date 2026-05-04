@@ -85,3 +85,15 @@ void ImageListView::contextMenuEvent(QContextMenuEvent *event) {
     }
 }
 
+void ImageListView::keyPressEvent(QKeyEvent *event) {
+    switch (event->key()) {
+        // Remove selected items on DEL key press
+        case Qt::Key_Delete:
+        {
+            this->deleteSelectedItems();
+            break;
+        }
+    }
+    QListView::keyPressEvent(event);
+}
+

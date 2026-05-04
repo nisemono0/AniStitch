@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QContextMenuEvent>
+#include <QKeyEvent>
 
 
 class ImageListView : public QListView {
@@ -30,6 +31,7 @@ private:
 protected:
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
     void contextMenuEvent(QContextMenuEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 signals:
     // Send the current selected item's underlying QPixmap data

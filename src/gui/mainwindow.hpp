@@ -51,8 +51,6 @@ private:
     ImageStitcher *image_stitcher_worker;
     QThread *image_stitcher_thread;
 
-    // TODO: Add global shortcuts
-
     // Get ImageList images and starts ImageStitcher thread
     void startImageStitch();
 
