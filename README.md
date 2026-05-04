@@ -1,11 +1,12 @@
 <h1 align="center"> AniStitch </h1>
 <p align="center">
-  Program to stitch anime images together <br>
+  Program to stitch images from anime together <br>
   Uses Qt (GUI) and OpenCV (Stitching, Image/Video loading) <br>
 </p>
 
 ## Info
-Program to stitch anime images from video/image files together. <br>
+Program to stitch images from anime together. Works on things other than anime too. <br>
+Takes video/image files as input. <br>
 Stitches images in an inverted pyramid style. <br>
 
 For an example with 100 images:
