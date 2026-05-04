@@ -4,7 +4,7 @@
 ProgressDialog::ProgressDialog(QWidget *parent) : QProgressDialog(parent) {
     // Set window title and label text
     this->setWindowTitle(QStringLiteral("Progress"));
-    this->setLabelText(QStringLiteral("Done"));
+    this->setLabelText(QStringLiteral("Stitching images"));
 
     // Set fixed size for the dialog
     this->setFixedSize(this->size());
