@@ -19,8 +19,5 @@ namespace Utils::Image {
 namespace Utils::OpenCV {
     // Try to enable OpenCL if available
     void enableOpenCL();
-    // Return a std::vector of cv::UMat from a std::vector of cv::Mat
-    // to be used with OpenCL
-    std::vector<cv::UMat> getUMatsFromMats(const std::vector<cv::Mat> &cv_mats);
 }
 

@@ -70,15 +70,3 @@ void Utils::OpenCV::enableOpenCL() {
     }
 }
 
-std::vector<cv::UMat> Utils::OpenCV::getUMatsFromMats(const std::vector<cv::Mat> &cv_mats) {
-    std::vector<cv::UMat> cv_umats = std::vector<cv::UMat>();
-
-    for (auto &mat : cv_mats) {
-        cv_umats.push_back(
-                mat.getUMat(cv::ACCESS_READ)
-                );
-    }
-
-    return cv_umats;
-}
-

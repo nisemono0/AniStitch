@@ -27,12 +27,9 @@ private:
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
-signals:
-
 public slots:
     void receive_show_pixmap_request(const QPixmap &pixmap);
     void receive_clear_scene_request();
 
-private slots:
 };
 
