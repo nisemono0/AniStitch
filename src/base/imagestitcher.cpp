@@ -113,15 +113,28 @@ std::vector<std::vector<cv::Mat>> ImageStitcher::splitIntoChunks(const std::vect
     return cv_mats_chunks;
 }
 
+int ImageStitcher::getTotalProgressToDo(int size, int chunk_size) {
+    int total_steps = 1;
+    int current_step = std::ceil(static_cast<double>(size) / chunk_size);
+
+    while (current_step > 1) {
+        total_steps += current_step;
+        current_step = std::ceil(static_cast<double>(current_step) / chunk_size);
+    }
+
+    return total_steps;
+}
+
 void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Mat> &cv_mats) {
     // Show progress bar
     emit send_ImageStitcher_show_progress_bar();
 
-    int total_images = cv_mats.size();
+    int total_steps = this->getTotalProgressToDo(cv_mats.size(), ImageStitcher::STITCHER_CHUNK_SIZE);
+    int current_step = 0;
 
     std::vector<cv::Mat> image_list = cv_mats;
 
-    Log::info(QStringLiteral("Start stitching images: %1").arg(QString::number(total_images)));
+    Log::info(QStringLiteral("Start stitching images: %1").arg(QString::number(cv_mats.size())));
 
     // Process until cv_mats has a single image
     while (image_list.size() > 1) {
@@ -165,8 +178,8 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
                 // Add stitched images for reprocessing
                 stitched_images.push_back(stitch_result.value());
                 // Send progress
-                int num_image_stitched = total_images - (image_list.size() - stitched_images.size());
-                int progress = (num_image_stitched * 100) / total_images;
+                current_step++;
+                int progress = (current_step * 100) / total_steps;
                 emit send_ImageStitcher_progress(progress);
             // If result is cv::Stitcher::Status process it and emit signal
             } else {
@@ -205,9 +218,6 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
         return;
     }
 
-    // Send the last progress since the while loop
-    // doesn't count for the last stitched image
-    emit send_ImageStitcher_progress(99);
     // image_list[0] is the full stitched image
     emit send_ImageStitcher_data(image_list[0]);
     // Send stitcher status

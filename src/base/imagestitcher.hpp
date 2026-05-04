@@ -32,6 +32,9 @@ private:
     std::expected<cv::Mat, cv::Stitcher::Status> stitchImages(const std::vector<cv::Mat> &cv_mats);
     // Split cv::Mat vector into STITCHER_CHUNK_SIZE chunks
     std::vector<std::vector<cv::Mat>> splitIntoChunks(const std::vector<cv::Mat> &cv_mats);
+    // Return total steps the program needs to do
+    // Used to compute emit progress
+    int getTotalProgressToDo(int size, int chunk_size);
 
 signals:
     // Send back status of the worker based on the result of cv::Stitcher
