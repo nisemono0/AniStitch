@@ -121,14 +121,22 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
 
     std::vector<cv::Mat> image_list = cv_mats;
 
+    Log::info(QStringLiteral("Start stitching images: %1").arg(QString::number(total_images)));
+
     // Process until cv_mats has a single image
     while (image_list.size() > 1) {
         if (QThread::currentThread()->isInterruptionRequested()) {
             emit send_ImageStitcher_status(ImageStitcherStatus::INTERRUPTED);
             return;
         }
+
+        Log::info(QStringLiteral("  -> Images left to stitch: %1").arg(QString::number(image_list.size())));
+
         // Split into chunks to process
         std::vector<std::vector<cv::Mat>> cv_mats_chunks = this->splitIntoChunks(image_list);
+
+        Log::info(QStringLiteral("  -> Chunks to stitch: %1").arg(QString::number(cv_mats_chunks.size())));
+
         // Thread futures
         QList<QFuture<std::expected<cv::Mat, cv::Stitcher::Status>>> stitch_thread_futures;
         for (auto &cv_mat_chunk : cv_mats_chunks) {
@@ -165,16 +173,19 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
                 switch (stitch_result.error()) {
                     case cv::Stitcher::ERR_NEED_MORE_IMGS:
                     {
+                        Log::error(QStringLiteral("Error stitching images: NEED_MORE_IMGS"));
                         emit send_ImageStitcher_status(ImageStitcherStatus::NEED_MORE_IMGS);
                         return;
                     }
                     case cv::Stitcher::ERR_HOMOGRAPHY_EST_FAIL:
                     {
+                        Log::error(QStringLiteral("Error stitching images: EST_FAIL"));
                         emit send_ImageStitcher_status(ImageStitcherStatus::EST_FAIL);
                         return;
                     }
                     case cv::Stitcher::ERR_CAMERA_PARAMS_ADJUST_FAIL:
                     {
+                        Log::error(QStringLiteral("Error stitching images: ADJUST_FAIL"));
                         emit send_ImageStitcher_status(ImageStitcherStatus::ADJUST_FAIL);
                         return;
                     }
@@ -189,6 +200,7 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
     // image_list should contain the final stitched image
     // If it contains more images it means that the stitch failed somehow
     if (image_list.size() != 1) {
+        Log::error(QStringLiteral("Error stitching images: NOT_DONE"));
         emit send_ImageStitcher_status(ImageStitcherStatus::NOT_DONE);
         return;
     }
