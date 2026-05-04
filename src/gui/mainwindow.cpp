@@ -205,6 +205,11 @@ void MainWindow::receive_ImageGraphicsScene_drag_drop_file_paths(const QStringLi
 }
 
 void MainWindow::receive_ImageLoader_status(ImageLoader::ImageLoaderStatus status) {
+    // Close the progress dialog if it exists
+    if (this->image_loader_progress_dialog) {
+        this->image_loader_progress_dialog->close();
+    }
+
     switch (status) {
         case ImageLoader::ImageLoaderStatus::OK:
         {
@@ -228,10 +233,6 @@ void MainWindow::receive_ImageLoader_status(ImageLoader::ImageLoaderStatus statu
         }
     }
 
-    // Close the progress dialog if it exists
-    if (this->image_loader_progress_dialog) {
-        this->image_loader_progress_dialog->close();
-    }
 }
 
 void MainWindow::receive_ImageLoader_show_progress_bar() {
@@ -264,12 +265,44 @@ void MainWindow::receive_ImageLoader_show_progress_bar() {
 }
 
 void MainWindow::receive_ImageStitcher_status(ImageStitcher::ImageStitcherStatus status) {
-    // TODO: Process ImageStitcher status here
-
     // Close the progress dialog if it exists
     if (this->image_stitcher_progress_dialog) {
         this->image_stitcher_progress_dialog->close();
     }
+
+    switch (status) {
+        case ImageStitcher::ImageStitcherStatus::OK:
+        {
+            QMessageBox::information(this, QStringLiteral("Image stitcher"), QStringLiteral("Done stitching"));
+            break;
+        }
+        case ImageStitcher::ImageStitcherStatus::NOT_DONE:
+        {
+            QMessageBox::warning(this, QStringLiteral("Image stitcher"), QStringLiteral("Not all images stitched"));
+            break;
+        }
+        case ImageStitcher::ImageStitcherStatus::NEED_MORE_IMGS:
+        {
+            QMessageBox::critical(this, QStringLiteral("Image stitcher"), QStringLiteral("Error: need more images"));
+            break;
+        }
+        case ImageStitcher::ImageStitcherStatus::EST_FAIL:
+        {
+            QMessageBox::critical(this, QStringLiteral("Image stitcher"), QStringLiteral("Error: camera estimation failed"));
+            break;
+        }
+        case ImageStitcher::ImageStitcherStatus::ADJUST_FAIL:
+        {
+            QMessageBox::critical(this, QStringLiteral("Image stitcher"), QStringLiteral("Error: camera adjusting failed"));
+            break;
+        }
+        case ImageStitcher::ImageStitcherStatus::INTERRUPTED:
+        {
+            QMessageBox::information(this, QStringLiteral("Image stitcher"), QStringLiteral("Stitching canceled"));
+            break;
+        }
+    }
+
 }
 
 void MainWindow::receive_ImageStitcher_show_progress_bar() {

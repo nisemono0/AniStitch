@@ -23,10 +23,6 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QProgressDialog(parent) {
     this->setCursor(Qt::BusyCursor);
 
     // Set range and init value
-    // TODO: If I can't get the current progress reliable
-    //       Might just set the range to (0, 0); This shows
-    //       an undeterminate progress bar (always spinning)
-    //       but has the cancel button too
     this->setRange(0, 100);
     this->setValue(0);
 }

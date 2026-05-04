@@ -7,23 +7,31 @@
 
 #include <QObject>
 #include <QPixmap>
+#include <QThreadPool>
 
 
 class ImageStitcher : public QObject {
     Q_OBJECT;
 public:
     // Status to send back
-    enum ImageStitcherStatus { OK, NEED_MORE_IMGS, EST_FAIL, PARAMS_ADJUST_FAIL, INTERRUPTED };
+    enum ImageStitcherStatus { OK, NOT_DONE, NEED_MORE_IMGS, EST_FAIL, ADJUST_FAIL, INTERRUPTED };
 
     explicit ImageStitcher(QObject *parent = nullptr);
     ~ImageStitcher();
 
 private:
+    cv::UMat final_mask;
+    // How many images to stitch at once
+    const int STITCHER_CHUNK_SIZE = 10;
+    // Stitching thread pool
+    QThreadPool *thread_pool;
+
     // Returns a cv::Ptr of type cv::Stitcher with custom settings
     cv::Ptr<cv::Stitcher> getStitcherPtr();
-    // Start stitching the cv_mats
-    // Returns a stitched cv::Mat or cv::Stitcher::Status on errors
+    // Returns a cv::Mat representing the stitched image or cv::Stitcher::Status on error
     std::expected<cv::Mat, cv::Stitcher::Status> stitchImages(const std::vector<cv::Mat> &cv_mats);
+    // Split cv::Mat vector into STITCHER_CHUNK_SIZE chunks
+    std::vector<std::vector<cv::Mat>> splitIntoChunks(const std::vector<cv::Mat> &cv_mats);
 
 signals:
     // Send back status of the worker based on the result of cv::Stitcher

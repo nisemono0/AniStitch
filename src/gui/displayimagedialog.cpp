@@ -16,23 +16,21 @@ DisplayImageDialog::DisplayImageDialog(QWidget *parent) : QDialog(parent), ui(ne
 }
 
 DisplayImageDialog::~DisplayImageDialog() {
+    this->stitched_cv_mat.release();
     delete this->ui;
 }
 
 void DisplayImageDialog::receive_show_DisplayImageDialog_request(const cv::Mat &cv_mat) {
-    // Clear the scene and empty the stitched_cv_mat
-    // before displaying a new stitched_cv_mat
+    // Clear the scene and clone the given cv_mat
     this->ui->graphicsDisplayImageView->clearScene();
-    this->stitched_cv_mat = cv::Mat();
+    this->stitched_cv_mat = cv_mat.clone();
 
-    QPixmap pixmap = Utils::Image::getPixmapFromMat(cv_mat);
+    // Convert the stitched_cv_mat to pixmap to be displayed
+    QPixmap pixmap = Utils::Image::getPixmapFromMat(this->stitched_cv_mat);
     this->ui->graphicsDisplayImageView->displayPixmap(pixmap);
 
-    // Keep the stitched cv::Mat to save it with opencv
-    this->stitched_cv_mat = cv_mat;
-
-    // Display this dialog with exec (blocking)
-    this->exec();
+    // Display this dialog with show (nonblocking)
+    this->show();
 }
 
 void DisplayImageDialog::pushButtonSaveImage_clicked(bool checked) {
