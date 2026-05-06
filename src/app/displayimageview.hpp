@@ -21,7 +21,7 @@ public:
 private:
     DisplayImageScene *image_scene;
     // ScenePadding to use when fitting the scene
-    const int ScenePadding = 10;
+    const int ScenePadding = 5;
     // Fit image_scene in view keeping aspect ratio and adding padding on all sides
     void fitImageScene();
 
