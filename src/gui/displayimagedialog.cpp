@@ -11,7 +11,7 @@
 DisplayImageDialog::DisplayImageDialog(QWidget *parent) : QDialog(parent), ui(new Ui::DisplayImageDialog) {
     this->ui->setupUi(this);
 
-    // Set selected tab to the be norma image tab
+    // Set selected tab to the be normal image tab
     this->ui->tabWidgetDisplayImages->setCurrentWidget(this->ui->tabNormalImage);
 
     // Save button
@@ -44,6 +44,9 @@ void DisplayImageDialog::receive_show_DisplayImageDialog_request(const cv::Mat &
     this->ui->graphicsDisplayNormalImageView->displayPixmap(normal_pixmap);
     this->ui->graphicsDisplayParsedImageView->displayPixmap(parsed_pixmap);
     this->ui->graphicsDisplayThresholdedImageView->displayPixmap(thresholded_pixmap);
+
+    // Set the current selected tab to the normal image one
+    this->ui->tabWidgetDisplayImages->setCurrentWidget(this->ui->tabNormalImage);
 
     // Display this dialog with show (nonblocking)
     this->show();
