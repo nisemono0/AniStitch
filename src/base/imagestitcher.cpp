@@ -45,8 +45,8 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
             );
     // Features finder:
     stitcher->setFeaturesFinder(
-                // cv::ORB::create(700) // Faster, but finds worse matches
-                cv::SIFT::create(700) // Slower than ORB but find better matches (~2s slower on 700)
+                // cv::ORB::create(1000) // Faster, but finds worse matches
+                cv::SIFT::create(1000) // Slower than ORB but find better matches (~2s slower on 700)
             );
     // Interpolation:
     stitcher->setInterpolationFlags(
