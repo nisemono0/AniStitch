@@ -86,12 +86,25 @@ std::expected<cv::Mat, cv::Stitcher::Status> ImageStitcher::stitchImages(const s
         return cv_mats[0];
     }
 
+    std::vector<cv::Mat> bgr_mats;
+
+    // cv::Stitcher doesn't like BGRA images
+    for (auto &mat : cv_mats) {
+        if (mat.channels() == 4) {
+            cv::Mat bgr;
+            cv::cvtColor(mat, bgr, cv::COLOR_BGRA2BGR);
+            bgr_mats.push_back(bgr);
+        } else {
+            bgr_mats.push_back(mat);
+        }
+    }
+
     cv::Ptr<cv::Stitcher> stitcher = this->getStitcherPtr();
 
     cv::Mat stitched_image;
     cv::Stitcher::Status stitcher_status;
 
-    stitcher_status = stitcher->stitch(cv_mats, stitched_image);
+    stitcher_status = stitcher->stitch(bgr_mats, stitched_image);
 
     if (stitcher_status != cv::Stitcher::OK) {
         return std::unexpected(stitcher_status);
