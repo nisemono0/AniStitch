@@ -18,7 +18,9 @@ ImageStitcher::~ImageStitcher() {
 cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
     // TODO:
     //      - Split the high level API pipeline into each component
-    //      - This way I can also get a stitched image with proper alpha channel
+    //      - This way I can also get a stitched image with proper alpha instead
+    //        of doing a binary threshold mask on (0, 255) or parse the image
+    //        left to right until pure black is found
     cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
     // Set image registration resolution
@@ -231,8 +233,12 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
         return;
     }
 
-    // image_list[0] is the full stitched image
-    emit send_ImageStitcher_data(image_list[0]);
+    // image_list[0] is the normal full stitched image
+    cv::Mat normal_mat = image_list[0];
+    cv::Mat parsed_mat = Utils::Image::getBGRAMatFromParsing(normal_mat);
+    cv::Mat thresholded_mat = Utils::Image::getBGRAMatFromThreshold(normal_mat);
+
+    emit send_ImageStitcher_data(normal_mat, parsed_mat, thresholded_mat);
     // Send stitcher status
     emit send_ImageStitcher_status(ImageStitcherStatus::OK);
 }

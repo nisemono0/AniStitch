@@ -23,11 +23,13 @@ public:
 private:
     Ui::DisplayImageDialog *ui;
 
-    cv::Mat stitched_cv_mat;
+    cv::Mat stitched_normal_mat;
+    cv::Mat stitched_parsed_mat;
+    cv::Mat stitched_thresholded_mat;
 
 public slots:
-    // Display cv_mat on DisplayImageDialog
-    void receive_show_DisplayImageDialog_request(const cv::Mat &cv_mat);
+    // Receive norma, parsed and thresholded cv::Mat to be displayed
+    void receive_show_DisplayImageDialog_request(const cv::Mat &normal_mat, const cv::Mat &parsed_mat, const cv::Mat &thresholded_mat);
 
 private slots:
     void pushButtonSaveImage_clicked(bool checked = false);

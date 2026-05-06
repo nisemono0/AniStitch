@@ -12,8 +12,20 @@ namespace Utils::Image {
     QPixmap getPixmapFromMat(const cv::Mat &cv_mat);
     // Save cv::Mat to file_path
     bool saveMatToPath(const cv::Mat &cv_mat, const QString &file_path);
-    // Return a cv::Mat with alpha channel (BGRA) from input cv_mat and image_mask
-    cv::Mat getBGRAMat(const cv::Mat &cv_mat, const cv::UMat &image_mask);
+    // Return a cv::Mat with alpha channel (BGRA) from an input
+    // cv_mat and its corresponding alpha channel image_mask
+    cv::Mat getBGRAMatFromMask(const cv::Mat &cv_mat, const cv::UMat &image_mask);
+    // Return a cv::Mat with alpha channel (BGRA) for an input
+    // cv_mat; Binary thresholding (0, 255) is used to make the alpha channel
+    // Can sometimes fail to make a proper mask; if other pure black pixels exist
+    // they'll be used too even if they're in the middle of the image
+    cv::Mat getBGRAMatFromThreshold(const cv::Mat &cv_mat);
+    // Return a cv::Mat with alpha channel (BGRA) from an input
+    // cv_mat by looping from the outside in over the image on all directions;
+    // Can sometimes fail to make a proper alpha mask; If the
+    // cornsers of the image are pure black, they'll be used to
+    // make the mask; Somewhat fixed the problem of using thresholding
+    cv::Mat getBGRAMatFromParsing(const cv::Mat &cv_mat);
 };
 
 namespace Utils::OpenCV {

@@ -43,8 +43,8 @@ signals:
     void send_ImageStitcher_show_progress_bar();
     // Send ImageStitcher progress
     void send_ImageStitcher_progress(int progress);
-    // Send resulted stitched cv::Mat
-    void send_ImageStitcher_data(const cv::Mat &stitched_cvmat);
+    // Send resulted stitched images
+    void send_ImageStitcher_data(const cv::Mat &normal_mat, const cv::Mat &parsed_mat, const cv::Mat &thresholded_mat);
 
 public slots:
     // Receive request to start stitching the cv_mats images
