@@ -46,10 +46,7 @@ bool Utils::File::isImage(const QString &file_path) {
 
 QString Utils::File::absolutePath(const QString &file_path) {
     QFileInfo file_info = QFileInfo(file_path);
-    if (file_info.exists()) {
-        return file_info.absolutePath();
-    }
-    return QDir::homePath();
+    return file_info.absolutePath();
 }
 
 QStringList Utils::FileDialog::openFile(QWidget *parent) {
