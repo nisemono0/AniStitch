@@ -1,10 +1,16 @@
 #include "app/progressdialog.hpp"
 
 
-ProgressDialog::ProgressDialog(QWidget *parent) : QProgressDialog(parent) {
+ProgressDialog::ProgressDialog(QWidget *parent, bool no_cancel_button) : QProgressDialog(parent) {
     // Set window title and label text
     this->setWindowTitle(QStringLiteral("Progress"));
     this->setLabelText(QStringLiteral("Stitching images"));
+
+    // Disable progress cancel button if no_cancel_button is true
+    // If not set the cancel button is displayed
+    if (no_cancel_button) {
+        this->setCancelButton(nullptr);
+    }
 
     // Set fixed size for the dialog
     this->setFixedSize(this->size());

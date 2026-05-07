@@ -7,7 +7,7 @@
 class ProgressDialog : public QProgressDialog {
     Q_OBJECT;
 public:
-    explicit ProgressDialog(QWidget *parent = nullptr);
+    explicit ProgressDialog(QWidget *parent = nullptr, bool no_cancel_button = false);
     ~ProgressDialog();
 
 public slots:

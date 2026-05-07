@@ -311,7 +311,7 @@ void MainWindow::receive_ImageStitcher_show_progress_bar() {
         this->image_stitcher_progress_dialog->raise();
         this->image_stitcher_progress_dialog->activateWindow();
     } else {
-        this->image_stitcher_progress_dialog = new ProgressDialog(this);
+        this->image_stitcher_progress_dialog = new ProgressDialog(this, true);
         this->image_stitcher_progress_dialog->show();
         this->image_stitcher_progress_dialog->raise();
         this->image_stitcher_progress_dialog->activateWindow();
