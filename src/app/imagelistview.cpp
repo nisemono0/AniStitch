@@ -74,6 +74,9 @@ void ImageListView::currentChanged(const QModelIndex &current, const QModelIndex
         return;
     }
 
+    // Make sure the selected item is visible in the list
+    this->scrollTo(current, QListView::EnsureVisible);
+
     QPixmap item_pixmap = current.data(ImageListModel::ItemPixmap).value<QPixmap>();
     emit send_current_item_pixmap(item_pixmap);
 }
