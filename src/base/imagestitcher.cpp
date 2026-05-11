@@ -243,8 +243,8 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
     QTime time = QTime(0, 0);
     QString sec_done = time.addMSecs(
             stitcher_timer.elapsed()
-            ).toString("s.z");
-    Log::info(QStringLiteral("Stitching done in: %1s").arg(sec_done));
+            ).toString("mm:ss.zz");
+    Log::info(QStringLiteral("Stitching done in: %1").arg(sec_done));
 
     emit send_ImageStitcher_data(normal_mat, parsed_mat, thresholded_mat);
     // Send stitcher status
