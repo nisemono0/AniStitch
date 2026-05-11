@@ -56,7 +56,7 @@ QStringList Utils::FileDialog::openFile(QWidget *parent) {
     open_dialog.setAcceptMode(QFileDialog::AcceptOpen);
     open_dialog.setFileMode(QFileDialog::ExistingFiles);
     open_dialog.setNameFilters({
-            QStringLiteral("Video file(s) (*.webm *.mp4)"),
+            QStringLiteral("Video file(s) (*.webm *.mp4 *.mkv)"),
             QStringLiteral("Image file(s) (*.png *.jpg *.jpeg *.webp)")
             });
 
