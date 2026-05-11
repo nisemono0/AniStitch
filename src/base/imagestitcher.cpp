@@ -4,6 +4,8 @@
 #include "utils/opencv.hpp"
 
 #include <QtConcurrent>
+#include <QElapsedTimer>
+#include <QDateTime>
 
 
 ImageStitcher::ImageStitcher(QObject *parent) : QObject(parent) {
@@ -74,6 +76,8 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
             );
     // Exposure compensator:
     stitcher->setExposureCompensator(
+                // arg_name (default)
+                // BlocksGainCompensator: bl_width (32), bl_height (32), nr_feeds (2)
                 cv::makePtr<cv::detail::BlocksGainCompensator>()
             );
 
@@ -150,6 +154,9 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
     std::vector<cv::Mat> image_list = cv_mats;
 
     Log::info(QStringLiteral("Start stitching images: %1").arg(QString::number(cv_mats.size())));
+
+    QElapsedTimer stitcher_timer;
+    stitcher_timer.start();
 
     // Process until cv_mats has a single image
     while (image_list.size() > 1) {
@@ -237,6 +244,12 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
     cv::Mat normal_mat = image_list[0];
     cv::Mat parsed_mat = Utils::Image::getBGRAMatFromParsing(normal_mat);
     cv::Mat thresholded_mat = Utils::Image::getBGRAMatFromThreshold(normal_mat);
+
+    QTime time = QTime(0, 0);
+    QString sec_done = time.addMSecs(
+            stitcher_timer.elapsed()
+            ).toString("s.z");
+    Log::info(QStringLiteral("Stitching done in: %1s").arg(sec_done));
 
     emit send_ImageStitcher_data(normal_mat, parsed_mat, thresholded_mat);
     // Send stitcher status
