@@ -20,11 +20,11 @@ ImageStitcher::~ImageStitcher() {
 cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
     cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
-    // Set image registration resolution
+    // Set image registration resolution (Default: 0.6)
     stitcher->setRegistrationResol(0.7);
-    // Set image resolution for seam estimation
+    // Set image resolution for seam estimation (Default: 0.1)
     stitcher->setSeamEstimationResol(0.1);
-    // Set resolution for final stitch
+    // Set resolution for final stitch (Default: ORIG_RESOL)
     stitcher->setCompositingResol(cv::Stitcher::ORIG_RESOL);
     // Confidence threshold for images to be part of the same stitch (Default: 1)
     stitcher->setPanoConfidenceThresh(1);
@@ -42,8 +42,7 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
             );
     // Features finder:
     stitcher->setFeaturesFinder(
-                // cv::ORB::create(1000) // Faster, but finds worse matches
-                cv::SIFT::create(1000) // Slower than ORB but find better matches (~2s slower on 700)
+                cv::SIFT::create(1000)
             );
     // Interpolation:
     stitcher->setInterpolationFlags(
@@ -72,7 +71,7 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
     // Exposure compensator:
     stitcher->setExposureCompensator(
                 // arg_name (default)
-                // BlocksGainCompensator: bl_width (32), bl_height (32), nr_feeds (2)
+                // BlocksGainCompensator: bl_width (32), bl_height (32), nr_feeds (1)
                 cv::makePtr<cv::detail::BlocksGainCompensator>()
             );
 
