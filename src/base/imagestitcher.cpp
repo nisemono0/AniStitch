@@ -18,11 +18,6 @@ ImageStitcher::~ImageStitcher() {
 }
 
 cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
-    // TODO:
-    //      - Split the high level API pipeline into each component
-    //      - This way I can also get a stitched image with proper alpha instead
-    //        of doing a binary threshold mask on (0, 255) or parse the image
-    //        left to right until pure black is found
     cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
     // Set image registration resolution
