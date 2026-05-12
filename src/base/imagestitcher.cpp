@@ -27,7 +27,7 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
     // Set resolution for final stitch (Default: ORIG_RESOL)
     stitcher->setCompositingResol(cv::Stitcher::ORIG_RESOL);
     // Confidence threshold for images to be part of the same stitch (Default: 1)
-    stitcher->setPanoConfidenceThresh(1);
+    stitcher->setPanoConfidenceThresh(0.7);
     // Seam finder:
     stitcher->setSeamFinder(
                 cv::makePtr<cv::detail::GraphCutSeamFinder>(
@@ -42,7 +42,7 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
             );
     // Features finder:
     stitcher->setFeaturesFinder(
-                cv::SIFT::create(1000)
+                cv::SIFT::create(2000)
             );
     // Interpolation:
     stitcher->setInterpolationFlags(
