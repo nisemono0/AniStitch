@@ -20,7 +20,6 @@ public:
     ~ImageStitcher();
 
 private:
-    cv::UMat final_mask;
     // How many images to stitch at once
     const int STITCHER_CHUNK_SIZE = 10;
     // Stitching thread pool
