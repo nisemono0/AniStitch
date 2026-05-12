@@ -16,6 +16,7 @@ int main (int argc, char *argv[]) {
     // Register metatypes
     qRegisterMetaType<cv::Mat>("cv::Mat");
     qRegisterMetaType<std::vector<cv::Mat>>("std::vector<cv::Mat>");
+    qRegisterMetaType<StitcherSettings>("StitcherSettings");
 
     app.setApplicationName(App::AppName);
     app.setOrganizationName(App::OrgName);

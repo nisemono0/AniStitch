@@ -39,6 +39,8 @@ qt_add_executable(AniStitch
     src/gui/logdialog.hpp
     src/gui/mainwindow.cpp
     src/gui/mainwindow.hpp
+    src/gui/stitchersettingsdialog.cpp
+    src/gui/stitchersettingsdialog.hpp
     src/main.cpp
     src/utils/defs.hpp
     src/utils/file.cpp
@@ -58,6 +60,7 @@ target_sources(AniStitch
         src/gui/ui/displayimagedialog.ui
         src/gui/ui/logdialog.ui
         src/gui/ui/mainwindow.ui
+        src/gui/ui/stitchersettingsdialog.ui
 )
 
 target_link_libraries(AniStitch

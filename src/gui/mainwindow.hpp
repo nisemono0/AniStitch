@@ -4,6 +4,7 @@
 
 #include "gui/logdialog.hpp"
 #include "gui/displayimagedialog.hpp"
+#include "gui/stitchersettingsdialog.hpp"
 
 #include "app/dualprogressdialog.hpp"
 #include "app/progressdialog.hpp"
@@ -42,6 +43,8 @@ private:
     LogDialog *log_window_dialog;
     // Display stitched image dialog
     DisplayImageDialog *display_image_dialog;
+    // Stitcher settings dialog
+    StitcherSettingsDialog *stitcher_settings_dialog;
 
     // Loader
     ImageLoader *image_loader_worker;
@@ -51,8 +54,9 @@ private:
     ImageStitcher *image_stitcher_worker;
     QThread *image_stitcher_thread;
 
-    // Get ImageList images and starts ImageStitcher thread
-    void startImageStitch();
+    // Get ImageList images and starts ImageStitcher thread.
+    // Images are stitched using stitcher_type
+    void startImageStitch(ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
@@ -61,7 +65,7 @@ protected:
 
 signals:
     void request_ImageLoader_start(const QStringList &file_paths);
-    void request_ImageStitcher_start(const std::vector<cv::Mat> &cv_mats);
+    void request_ImageStitcher_start(const std::vector<cv::Mat> &cv_mats, const ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings);
 
 public slots:
     // Image loader
@@ -75,12 +79,17 @@ public slots:
     // Receive forwarded ImageGraphicsScene drag and dropped QList<QUrl> url_list
     void receive_ImageGraphicsScene_drag_drop_file_paths(const QStringList &file_paths);
 
+    // Receive settings from the StitcherSettingsDialog
+    void receive_StitcherSettingsDialog_scan_settings(const StitcherSettings &stitcher_settings);
+    void receive_StitcherSettingsDialog_panorama_settings(const StitcherSettings &stitcher_settings);
+
 private slots:
     // Load file(s)
     // Opens a file dialog and starts ImageLoader thread with them
     void startImageLoad();
 
     // Stitch buttons clicked
-    void pushButtonStitchImages_clicked(bool checked = false);
+    void pushButtonStitchScan_clicked(bool checked = false);
+    void pushButtonStitchPanorama_clicked(bool checked = false);
 };
 

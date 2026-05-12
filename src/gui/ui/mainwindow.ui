@@ -134,12 +134,32 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonStitchImages">
+           <widget class="QPushButton" name="pushButtonStitchCustom">
             <property name="statusTip">
-             <string>Stitch the loaded images</string>
+             <string>Stitch the loaded images. Opens a dialog to set custom settings.</string>
             </property>
             <property name="text">
-             <string>Stitch images</string>
+             <string>Stitch custom</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonStitchPanorama">
+            <property name="statusTip">
+             <string>Stitch the loaded images. Expects images under perspective transformation.</string>
+            </property>
+            <property name="text">
+             <string>Stitch panorama</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonStitchScan">
+            <property name="statusTip">
+             <string>Stitch the loaded images. Expects images under affine transformation.</string>
+            </property>
+            <property name="text">
+             <string>Stitch scan</string>
             </property>
            </widget>
           </item>

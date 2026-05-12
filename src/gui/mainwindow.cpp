@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->ui->setupUi(this);
     this->log_window_dialog = new LogDialog(this);
     this->display_image_dialog = new DisplayImageDialog(this);
+    this->stitcher_settings_dialog = new StitcherSettingsDialog(this);
 
     // ImageLoader worker/thread
     this->image_loader_worker = new ImageLoader();
@@ -36,7 +37,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this->ui->pushButtonClearImages, &QPushButton::clicked, this->image_loader_worker, &ImageLoader::receive_ImageLoader_reset_counter);
 
     // Stitch buttons
-    connect(this->ui->pushButtonStitchImages, &QPushButton::clicked, this, &MainWindow::pushButtonStitchImages_clicked);
+    connect(this->ui->pushButtonStitchScan, &QPushButton::clicked, this, &MainWindow::pushButtonStitchScan_clicked);
+    connect(this->ui->pushButtonStitchPanorama, &QPushButton::clicked, this, &MainWindow::pushButtonStitchPanorama_clicked);
+    connect(this->ui->pushButtonStitchCustom, &QPushButton::clicked, this->stitcher_settings_dialog, &StitcherSettingsDialog::receive_show_StitcherSettingsDialog_request);
+    // Stitch settings buttons
+    connect(this->stitcher_settings_dialog, &StitcherSettingsDialog::send_StitcherSettingsDialog_scan_settings, this, &MainWindow::receive_StitcherSettingsDialog_scan_settings);
+    connect(this->stitcher_settings_dialog, &StitcherSettingsDialog::send_StitcherSettingsDialog_panorama_settings, this, &MainWindow::receive_StitcherSettingsDialog_panorama_settings);
 
     // Menubar:File
     connect(this->ui->actionLoad, &QAction::triggered, this, &MainWindow::startImageLoad);
@@ -104,6 +110,7 @@ MainWindow::~MainWindow() {
     delete this->image_loader_progress_dialog;
     delete this->image_stitcher_progress_dialog;
 
+    delete this->stitcher_settings_dialog;
     delete this->log_window_dialog;
     delete this->display_image_dialog;
 
@@ -133,7 +140,7 @@ void MainWindow::startImageLoad() {
     emit request_ImageLoader_start(selected_files);
 }
 
-void MainWindow::startImageStitch() {
+void MainWindow::startImageStitch(ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings) {
     // If the ImageStitcher thread is running, show a
     // message and bring the progress bar on front
     if (this->image_stitcher_thread->isRunning()) {
@@ -156,7 +163,7 @@ void MainWindow::startImageStitch() {
 
     // Start the thread and send work
     this->image_stitcher_thread->start();
-    emit request_ImageStitcher_start(cv_mats);
+    emit request_ImageStitcher_start(cv_mats, stitcher_type, stitcher_settings);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event) {
@@ -202,6 +209,14 @@ void MainWindow::receive_ImageGraphicsScene_drag_drop_file_paths(const QStringLi
         this->image_loader_thread->start();
         emit request_ImageLoader_start(file_paths);
     }
+}
+
+void MainWindow::receive_StitcherSettingsDialog_scan_settings(const StitcherSettings &stitcher_settings) {
+    this->startImageStitch(ImageStitcher::ImageStitcherType::CUSTOM_SCAN, stitcher_settings);
+}
+
+void MainWindow::receive_StitcherSettingsDialog_panorama_settings(const StitcherSettings &stitcher_settings) {
+    this->startImageStitch(ImageStitcher::ImageStitcherType::CUSTOM_PANORAMA, stitcher_settings);
 }
 
 void MainWindow::receive_ImageLoader_status(ImageLoader::ImageLoaderStatus status) {
@@ -329,7 +344,11 @@ void MainWindow::receive_ImageStitcher_show_progress_bar() {
     }
 }
 
-void MainWindow::pushButtonStitchImages_clicked(bool checked) {
-    this->startImageStitch();
+void MainWindow::pushButtonStitchScan_clicked(bool checked) {
+    this->startImageStitch(ImageStitcher::ImageStitcherType::SCAN, StitcherSettings());
+}
+
+void MainWindow::pushButtonStitchPanorama_clicked(bool checked) {
+    this->startImageStitch(ImageStitcher::ImageStitcherType::PANORAMA, StitcherSettings());
 }
 

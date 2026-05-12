@@ -2,6 +2,7 @@
 
 #include "utils/log.hpp"
 #include "utils/opencv.hpp"
+#include "utils/defs.hpp"
 
 #include <QtConcurrent>
 #include <QElapsedTimer>
@@ -17,7 +18,7 @@ ImageStitcher::~ImageStitcher() {
     delete this->thread_pool;
 }
 
-cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
+cv::Ptr<cv::Stitcher> ImageStitcher::getScanStitcherPtr() {
     cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
     // Set image registration resolution (Default: 0.6)
@@ -79,7 +80,265 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getStitcherPtr() {
     return stitcher;
 }
 
-std::expected<cv::Mat, cv::Stitcher::Status> ImageStitcher::stitchImages(const std::vector<cv::Mat> &cv_mats) {
+cv::Ptr<cv::Stitcher> ImageStitcher::getPanoramaStitcherPtr() {
+    cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::PANORAMA);
+
+    // Set image registration resolution (Default: 0.6)
+    stitcher->setRegistrationResol(0.7);
+    // Set image resolution for seam estimation (Default: 0.1)
+    stitcher->setSeamEstimationResol(0.1);
+    // Set resolution for final stitch (Default: ORIG_RESOL)
+    stitcher->setCompositingResol(cv::Stitcher::ORIG_RESOL);
+    // Confidence threshold for images to be part of the same stitch (Default: 1)
+    stitcher->setPanoConfidenceThresh(0.7);
+    // Seam finder:
+    stitcher->setSeamFinder(
+                cv::makePtr<cv::detail::GraphCutSeamFinder>(
+                        cv::detail::GraphCutSeamFinderBase::COST_COLOR
+                    )
+            );
+    // Blender:
+    stitcher->setBlender(
+                // arg_name (default)
+                // try_use_gpu (false), num_bands (5)
+                cv::makePtr<cv::detail::MultiBandBlender>(true, 0)
+            );
+    // Features finder:
+    stitcher->setFeaturesFinder(
+                cv::SIFT::create(2000)
+            );
+    // Interpolation:
+    stitcher->setInterpolationFlags(
+                cv::INTER_LANCZOS4
+            );
+    // Estimator:
+    stitcher->setEstimator(
+                cv::makePtr<cv::detail::HomographyBasedEstimator>()
+            );
+    // Wave correction:
+    stitcher->setWaveCorrection(true);
+    stitcher->setWaveCorrectKind(cv::detail::WAVE_CORRECT_HORIZ);
+    // Features matcher:
+    stitcher->setFeaturesMatcher(
+                // arg_name (default)
+                // try_use_gpu (false), float match_conf (0.3f), num_matches_thresh1 (6), num_matches_thresh2 (6), matches_confindece_thresh = (3.)
+                cv::makePtr<cv::detail::BestOf2NearestMatcher>(true, 0.3f, 6, 6, 3.)
+            );
+    // Bundle adjuster
+    stitcher->setBundleAdjuster(
+                cv::makePtr<cv::detail::BundleAdjusterRay>()
+            );
+    // Warper:
+    stitcher->setWarper(
+                cv::makePtr<cv::PlaneWarper>()
+            );
+    // Exposure compensator:
+    stitcher->setExposureCompensator(
+                // arg_name (default)
+                // BlocksGainCompensator: bl_width (32), bl_height (32), nr_feeds (1)
+                cv::makePtr<cv::detail::BlocksGainCompensator>()
+            );
+
+    // Return the cv::Stitcher object
+    return stitcher;
+}
+
+cv::Ptr<cv::Stitcher> ImageStitcher::getCustomScanStitcherPtr(const StitcherSettings &stitcher_settings) {
+    cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
+
+    // Set image registration resolution (Default: 0.6)
+    stitcher->setRegistrationResol(0.7);
+    // Set image resolution for seam estimation (Default: 0.1)
+    stitcher->setSeamEstimationResol(0.1);
+    // Set resolution for final stitch (Default: ORIG_RESOL)
+    stitcher->setCompositingResol(cv::Stitcher::ORIG_RESOL);
+    // Confidence threshold for images to be part of the same stitch (Default: 1)
+    stitcher->setPanoConfidenceThresh(0.7);
+    // Seam finder:
+    stitcher->setSeamFinder(
+                cv::makePtr<cv::detail::GraphCutSeamFinder>(
+                        cv::detail::GraphCutSeamFinderBase::COST_COLOR
+                    )
+            );
+    // Blender:
+    stitcher->setBlender(
+                // arg_name (default)
+                // try_use_gpu (false), num_bands (5)
+                cv::makePtr<cv::detail::MultiBandBlender>(true, stitcher_settings.blender_bands)
+            );
+    // Features finder:
+    stitcher->setFeaturesFinder(
+                cv::SIFT::create(2000)
+            );
+    // Interpolation:
+    stitcher->setInterpolationFlags(
+                cv::INTER_LANCZOS4
+            );
+    // Estimator:
+    stitcher->setEstimator(
+                cv::makePtr<cv::detail::AffineBasedEstimator>()
+            );
+    // Wave correction:
+    stitcher->setWaveCorrection(false);
+    // Features matcher:
+    stitcher->setFeaturesMatcher(
+                // arg_name (default)
+                // full_affine (false), try_use_gpu (false), match_conf (0.3f), num_matches_thresh1 (6)
+                cv::makePtr<cv::detail::AffineBestOf2NearestMatcher>(false, true, 0.3f, 6)
+            );
+    // Bundle adjuster
+    stitcher->setBundleAdjuster(
+                cv::makePtr<cv::detail::BundleAdjusterAffinePartial>()
+            );
+    // Warper:
+    stitcher->setWarper(
+                cv::makePtr<cv::AffineWarper>()
+            );
+    // Exposure compensator:
+    switch (stitcher_settings.exposure_compensator) {
+        case StitcherSettings::ExposureCompensator::BLOCKS_GAIN:
+        {
+            stitcher->setExposureCompensator(
+                    cv::makePtr<cv::detail::BlocksGainCompensator>(
+                        stitcher_settings.compensator_block_size,
+                        stitcher_settings.compensator_block_size,
+                        stitcher_settings.compensator_feeds
+                        )
+                    );
+            break;
+        }
+        case StitcherSettings::ExposureCompensator::BLOCKS_CHANNEL:
+        {
+            stitcher->setExposureCompensator(
+                    cv::makePtr<cv::detail::BlocksChannelsCompensator>(
+                        stitcher_settings.compensator_block_size,
+                        stitcher_settings.compensator_block_size,
+                        stitcher_settings.compensator_feeds
+                        )
+                    );
+
+        }
+    }
+
+    // Return the cv::Stitcher object
+    return stitcher;
+}
+
+cv::Ptr<cv::Stitcher> ImageStitcher::getCustomPanoramaStitcherPtr(const StitcherSettings &stitcher_settings) {
+    cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::PANORAMA);
+
+    // Set image registration resolution (Default: 0.6)
+    stitcher->setRegistrationResol(0.7);
+    // Set image resolution for seam estimation (Default: 0.1)
+    stitcher->setSeamEstimationResol(0.1);
+    // Set resolution for final stitch (Default: ORIG_RESOL)
+    stitcher->setCompositingResol(cv::Stitcher::ORIG_RESOL);
+    // Confidence threshold for images to be part of the same stitch (Default: 1)
+    stitcher->setPanoConfidenceThresh(0.7);
+    // Seam finder:
+    stitcher->setSeamFinder(
+                cv::makePtr<cv::detail::GraphCutSeamFinder>(
+                        cv::detail::GraphCutSeamFinderBase::COST_COLOR
+                    )
+            );
+    // Blender:
+    stitcher->setBlender(
+                // arg_name (default)
+                // try_use_gpu (false), num_bands (5)
+                cv::makePtr<cv::detail::MultiBandBlender>(true, stitcher_settings.blender_bands)
+            );
+    // Features finder:
+    stitcher->setFeaturesFinder(
+                cv::SIFT::create(2000)
+            );
+    // Interpolation:
+    stitcher->setInterpolationFlags(
+                cv::INTER_LANCZOS4
+            );
+    // Estimator:
+    stitcher->setEstimator(
+                cv::makePtr<cv::detail::HomographyBasedEstimator>()
+            );
+    // Wave correction:
+    stitcher->setWaveCorrection(true);
+    switch (stitcher_settings.wave_correct) {
+        case StitcherSettings::WaveCorrect::HORIZONTAL:
+        {
+            stitcher->setWaveCorrectKind(cv::detail::WAVE_CORRECT_HORIZ);
+            break;
+        }
+        case StitcherSettings::WaveCorrect::VERTICAL:
+        {
+            stitcher->setWaveCorrectKind(cv::detail::WAVE_CORRECT_VERT);
+            break;
+        }
+        case StitcherSettings::WaveCorrect::AUTO:
+        {
+            stitcher->setWaveCorrectKind(cv::detail::WAVE_CORRECT_AUTO);
+            break;
+        }
+    }
+    // Features matcher:
+    stitcher->setFeaturesMatcher(
+                // arg_name (default)
+                // try_use_gpu (false), float match_conf (0.3f), num_matches_thresh1 (6), num_matches_thresh2 (6), matches_confindece_thresh = (3.)
+                cv::makePtr<cv::detail::BestOf2NearestMatcher>(true, 0.3f, 6, 6, 3.)
+            );
+    // Bundle adjuster
+    stitcher->setBundleAdjuster(
+                cv::makePtr<cv::detail::BundleAdjusterRay>()
+            );
+    // Warper:
+    switch (stitcher_settings.warper) {
+        case StitcherSettings::PLANE:
+        {
+            stitcher->setWarper(cv::makePtr<cv::PlaneWarper>());
+            break;
+        }
+        case StitcherSettings::SPHERICAL:
+        {
+            stitcher->setWarper(cv::makePtr<cv::SphericalWarper>());
+            break;
+        }
+        case StitcherSettings::CYLINDRICAL:
+        {
+            stitcher->setWarper(cv::makePtr<cv::CylindricalWarper>());
+            break;
+        }
+    }
+
+    // Exposure compensator:
+    switch (stitcher_settings.exposure_compensator) {
+        case StitcherSettings::ExposureCompensator::BLOCKS_GAIN:
+        {
+            stitcher->setExposureCompensator(
+                    cv::makePtr<cv::detail::BlocksGainCompensator>(
+                        stitcher_settings.compensator_block_size,
+                        stitcher_settings.compensator_block_size,
+                        stitcher_settings.compensator_feeds
+                        )
+                    );
+            break;
+        }
+        case StitcherSettings::ExposureCompensator::BLOCKS_CHANNEL:
+        {
+            stitcher->setExposureCompensator(
+                    cv::makePtr<cv::detail::BlocksChannelsCompensator>(
+                        stitcher_settings.compensator_block_size,
+                        stitcher_settings.compensator_block_size,
+                        stitcher_settings.compensator_feeds
+                        )
+                    );
+
+        }
+    }
+
+    // Return the cv::Stitcher object
+    return stitcher;
+
+}
+
+std::expected<cv::Mat, cv::Stitcher::Status> ImageStitcher::stitchImages(const std::vector<cv::Mat> &cv_mats, ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings) {
     // If cv_mats only has 1 image return it since
     // the stitcher needs 2 images for stitching
     if (cv_mats.size() == 1) {
@@ -99,7 +358,29 @@ std::expected<cv::Mat, cv::Stitcher::Status> ImageStitcher::stitchImages(const s
         }
     }
 
-    cv::Ptr<cv::Stitcher> stitcher = this->getStitcherPtr();
+    cv::Ptr<cv::Stitcher> stitcher;
+    switch (stitcher_type) {
+        case SCAN:
+        {
+            stitcher = this->getScanStitcherPtr();
+            break;
+        }
+        case PANORAMA:
+        {
+            stitcher = this->getPanoramaStitcherPtr();
+            break;
+        }
+        case CUSTOM_SCAN:
+        {
+            stitcher = this->getCustomScanStitcherPtr(stitcher_settings);
+            break;
+        }
+        case CUSTOM_PANORAMA:
+        {
+            stitcher = this->getCustomPanoramaStitcherPtr(stitcher_settings);
+            break;
+        }
+    }
 
     cv::Mat stitched_image;
     cv::Stitcher::Status stitcher_status;
@@ -116,10 +397,10 @@ std::expected<cv::Mat, cv::Stitcher::Status> ImageStitcher::stitchImages(const s
     return stitched_image;
 }
 
-std::vector<std::vector<cv::Mat>> ImageStitcher::splitIntoChunks(const std::vector<cv::Mat> &cv_mats) {
+std::vector<std::vector<cv::Mat>> ImageStitcher::splitIntoChunks(const std::vector<cv::Mat> &cv_mats, int chunk_size) {
     std::vector<std::vector<cv::Mat>> cv_mats_chunks = std::vector<std::vector<cv::Mat>>();
 
-    for (auto chunk : cv_mats | std::views::chunk(ImageStitcher::STITCHER_CHUNK_SIZE)) {
+    for (auto chunk : cv_mats | std::views::chunk(chunk_size)) {
         cv_mats_chunks.emplace_back(chunk.begin(), chunk.end());
     }
 
@@ -138,11 +419,36 @@ int ImageStitcher::getTotalProgressToDo(int size, int chunk_size) {
     return total_steps;
 }
 
-void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Mat> &cv_mats) {
+void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Mat> &cv_mats, ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings) {
     // Show progress bar
     emit send_ImageStitcher_show_progress_bar();
 
-    int total_steps = this->getTotalProgressToDo(cv_mats.size(), ImageStitcher::STITCHER_CHUNK_SIZE);
+    int chunk_size = ImageStitcher::DEFAULT_CHUNK_SIZE;
+
+    switch (stitcher_type) {
+        case ImageStitcherType::SCAN:
+        {
+            chunk_size = ImageStitcher::SCAN_CHUNKS_SIZE;
+            break;
+        }
+        case ImageStitcherType::PANORAMA:
+        {
+            chunk_size = ImageStitcher::PANORAMA_CHUNKS_SIZE;
+            break;
+        }
+        case ImageStitcherType::CUSTOM_SCAN:
+        {
+            chunk_size = ImageStitcher::SCAN_CHUNKS_SIZE;
+            break;
+        }
+        case ImageStitcherType::CUSTOM_PANORAMA:
+        {
+            chunk_size = ImageStitcher::PANORAMA_CHUNKS_SIZE;
+            break;
+        }
+    }
+
+    int total_steps = this->getTotalProgressToDo(cv_mats.size(), chunk_size);
     int current_step = 0;
 
     std::vector<cv::Mat> image_list = cv_mats;
@@ -162,7 +468,7 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
         Log::info(QStringLiteral("  -> Images left to stitch: %1").arg(QString::number(image_list.size())));
 
         // Split into chunks to process
-        std::vector<std::vector<cv::Mat>> cv_mats_chunks = this->splitIntoChunks(image_list);
+        std::vector<std::vector<cv::Mat>> cv_mats_chunks = this->splitIntoChunks(image_list, chunk_size);
 
         Log::info(QStringLiteral("  -> Chunks to stitch: %1").arg(QString::number(cv_mats_chunks.size())));
 
@@ -172,8 +478,8 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
             stitch_thread_futures.append(
                         QtConcurrent::run(
                                 this->thread_pool,
-                                [this, cv_mat_chunk] {
-                                    return this->stitchImages(cv_mat_chunk);
+                                [this, cv_mat_chunk, stitcher_type, stitcher_settings] {
+                                    return this->stitchImages(cv_mat_chunk, stitcher_type, stitcher_settings);
                                 }
                             )
                     );
