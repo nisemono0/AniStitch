@@ -94,8 +94,13 @@ StitcherSettings StitcherSettingsDialog::getStitcherSettings() {
 }
 
 void StitcherSettingsDialog::receive_show_StitcherSettingsDialog_request() {
-    this->resetValues();
-    this->show();
+    if (this->isVisible()) {
+        this->raise();
+        this->activateWindow();
+    } else {
+        this->resetValues();
+        this->show();
+    }
 }
 
 void StitcherSettingsDialog::pushButtonStitchScan_clicked(bool checked) {

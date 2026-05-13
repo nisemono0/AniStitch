@@ -16,7 +16,13 @@ CropDialog::~CropDialog() {
 }
 
 void CropDialog::receive_show_CropDialog_request() {
-    this->show();
+    if (this->isVisible()) {
+        this->raise();
+        this->activateWindow();
+    } else {
+        this->resetValues();
+        this->show();
+    }
 }
 
 void CropDialog::resetValues() {

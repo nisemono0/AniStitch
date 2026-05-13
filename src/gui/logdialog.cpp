@@ -35,6 +35,7 @@ LogDialog::~LogDialog() {
 
 void LogDialog::receive_show_LogDialog_request(bool checked) {
     if (this->isVisible()) {
+        this->raise();
         this->activateWindow();
     } else {
         this->show();

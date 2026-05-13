@@ -48,8 +48,13 @@ void DisplayImageDialog::receive_show_DisplayImageDialog_request(const cv::Mat &
     // Set the current selected tab to the normal image one
     this->ui->tabWidgetDisplayImages->setCurrentWidget(this->ui->tabNormalImage);
 
-    // Display this dialog with show (nonblocking)
-    this->show();
+    // Display this dialog with show or focus it if visible
+    if (this->isVisible()) {
+        this->raise();
+        this->activateWindow();
+    } else {
+        this->show();
+    }
 }
 
 void DisplayImageDialog::pushButtonSaveImage_clicked(bool checked) {
