@@ -39,25 +39,49 @@ void ImageListView::setUpContextMenu() {
 }
 
 void ImageListView::receive_insert_item_request(const ImageItem &image_item) {
-    this->image_list_model->insertItem(image_item);
+    this->insert(image_item);
 }
 
 void ImageListView::receive_delete_items_request() {
-    this->deleteSelectedItems();
+    this->deleteSelected();
 }
 
 void ImageListView::receive_clear_items_request() {
-    this->image_list_model->clearItems();
+    this->clear();
 }
 
 void ImageListView::action_delete_items_triggered(bool checked) {
-    this->deleteSelectedItems();
+    this->deleteSelected();
 }
 
-void ImageListView::deleteSelectedItems() {
+void ImageListView::insert(const ImageItem &image_item) {
+    this->image_list_model->insertItem(image_item);
+    this->sendImageListViewStatus();
+}
+
+void ImageListView::deleteSelected() {
     this->image_list_model->deleteItems(
             this->selectedIndexes()
             );
+    this->sendImageListViewStatus();
+}
+
+void ImageListView::clear() {
+    this->image_list_model->clearItems();
+    this->sendImageListViewStatus();
+}
+
+void ImageListView::sendImageListViewStatus() {
+    int image_list_size = this->image_list_model->rowCount();
+    if (image_list_size > 0) {
+        emit send_ImageListView_status(
+                QStringLiteral("Loaded images: %1").arg(
+                    QString::number(image_list_size)
+                    )
+                );
+    } else {
+        emit send_ImageListView_status(QStringLiteral("No images loaded"));
+    }
 }
 
 void ImageListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
@@ -93,7 +117,7 @@ void ImageListView::keyPressEvent(QKeyEvent *event) {
         // Remove selected items on DEL key press
         case Qt::Key_Delete:
         {
-            this->deleteSelectedItems();
+            this->deleteSelected();
             break;
         }
     }

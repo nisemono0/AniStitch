@@ -46,6 +46,9 @@ private:
     // Stitcher settings dialog
     StitcherSettingsDialog *stitcher_settings_dialog;
 
+    // ImageList status label
+    QLabel *image_list_status;
+
     // Loader
     ImageLoader *image_loader_worker;
     QThread *image_loader_thread;

@@ -15,6 +15,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->display_image_dialog = new DisplayImageDialog(this);
     this->stitcher_settings_dialog = new StitcherSettingsDialog(this);
 
+    // Image list status label
+    this->image_list_status = new QLabel(this);
+    this->image_list_status->setText(QStringLiteral("No images loaded"));
+    // Indent 4 makes it be aligned with the default statusbar message
+    this->image_list_status->setIndent(4);
+    this->ui->statusbar->addWidget(this->image_list_status);
+
     // ImageLoader worker/thread
     this->image_loader_worker = new ImageLoader();
     this->image_loader_thread = new QThread(this);
@@ -35,6 +42,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this->ui->pushButtonClearImages, &QPushButton::clicked, this->ui->imageGraphicsView, &ImageGraphicsView::receive_clear_scene_request);
     // Send signal to ImageLoader to reset the image_counter to 0 when the Clear button is pressed
     connect(this->ui->pushButtonClearImages, &QPushButton::clicked, this->image_loader_worker, &ImageLoader::receive_ImageLoader_reset_counter);
+
+    // ImageListView send status message to image_list_status
+    connect(this->ui->imagesListView, &ImageListView::send_ImageListView_status, this->image_list_status, &QLabel::setText);
 
     // Stitch buttons
     connect(this->ui->pushButtonStitchScan, &QPushButton::clicked, this, &MainWindow::pushButtonStitchScan_clicked);
@@ -109,6 +119,8 @@ MainWindow::~MainWindow() {
 
     delete this->image_loader_progress_dialog;
     delete this->image_stitcher_progress_dialog;
+
+    delete this->image_list_status;
 
     delete this->stitcher_settings_dialog;
     delete this->log_window_dialog;

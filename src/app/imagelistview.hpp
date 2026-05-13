@@ -26,7 +26,13 @@ private:
     QAction *action_delete_items;
 
     void setUpContextMenu();
-    void deleteSelectedItems();
+
+    // Insert delete and clear items from the model
+    void insert(const ImageItem &image_item);
+    void deleteSelected();
+    void clear();
+
+    void sendImageListViewStatus();
 
 protected:
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
@@ -36,6 +42,8 @@ protected:
 signals:
     // Send the current selected item's underlying QPixmap data
     void send_current_item_pixmap(const QPixmap &item_pixmap);
+    // Send the ImageListView status text for image_list_status label
+    void send_ImageListView_status(const QString &status);
 
 public slots:
     // Insert image_item into ImageListView
