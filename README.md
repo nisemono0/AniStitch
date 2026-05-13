@@ -7,19 +7,15 @@
 ## Info
 Program to stitch images from anime together. Works on things other than anime too. <br>
 Takes video/image files as input. <br>
-Stitches images in an inverted pyramid style. <br>
+Stitches chunks of images in an inverted pyramid style. Each chunk in a different thread.
 
-For an example with 100 images:
+For example, with 100 images:
 - Split the 100 images into chunks of 10
 - Stitch those 10 chunks -> 1 stitched image
   - The resulted stitched image from the chunks is added to a finished images list
-- Splits the finished images list into chunks of 10
-- Repeat until finished list contains only 1 stitched image being the full stitched image
-
-> [!NOTE]
-> For now the stitcher does not work with transparent images. <br>
-> If a stitch has transparency, it will be filled with black instead of being transparent. <br>
-> Will add transparency support SoonTM. <br>
+  - Repeat until all chunks are processed
+- Splits the finished images list into another chunks of 10
+- Repeat until the finished images list contains only 1 image (the final stitched image)
 
 ## Dependencies (Arch Linux)
 `qt6-base` <br>
@@ -29,6 +25,10 @@ For an example with 100 images:
 
 ## Compile (Arch Linux)
 Install the dependencies then run: <br>
-`cmake -B build -DCMAKE_BUILD_TYPE=Release` <br>
-`cmake --build build` <br>
-The binary is `./build/AniStitch`. <br>
+```bash
+git clone https://github.com/nisemono0/AniStitch.git && cd ./AniStitch
+```
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j
+```
+The binary is `./build/AniStitch` <br>
