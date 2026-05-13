@@ -70,14 +70,14 @@ void ImageListView::currentChanged(const QModelIndex &current, const QModelIndex
     }
 
     // Check if QPixmap can be retrieved from the item's data
-    if (!current.data(ImageListModel::ItemPixmap).canConvert<QPixmap>()) {
+    if (!current.data(ImageListModel::ITEM_PIXMAP).canConvert<QPixmap>()) {
         return;
     }
 
     // Make sure the selected item is visible in the list
     this->scrollTo(current, QListView::EnsureVisible);
 
-    QPixmap item_pixmap = current.data(ImageListModel::ItemPixmap).value<QPixmap>();
+    QPixmap item_pixmap = current.data(ImageListModel::ITEM_PIXMAP).value<QPixmap>();
     emit send_current_item_pixmap(item_pixmap);
 }
 
