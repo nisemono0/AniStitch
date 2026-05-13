@@ -26,6 +26,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     // Set the role data for index to value
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    // Returns the item flags for the given index
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     // Insert image_item into the model
     void insertItem(const ImageItem &image_item);
@@ -35,12 +37,12 @@ public:
     void clearItems();
     // True if the model has no items in it
     bool isEmpty();
-    // Return the underlying QList<ImageItem> pointer that stores
-    // the model's data as const so that it is read only
-    const QList<ImageItem>* getModelData() const;
+    // Return the underlying QList<ImageItem> that stores the
+    // model's data as const reference so that it is read only
+    const QList<ImageItem>& getModelData() const;
 
 private:
-    QList<ImageItem> *image_item_list;
+    QList<ImageItem> image_item_list;
 
 };
 

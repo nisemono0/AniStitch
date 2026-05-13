@@ -8,6 +8,8 @@ ImageListView::ImageListView(QWidget *parent) : QListView(parent) {
     this->setModel(this->image_list_model);
 
     this->setUpContextMenu();
+
+    connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ImageListView::selectionModel_selectionChanged);
 }
 
 ImageListView::~ImageListView() {
@@ -18,11 +20,11 @@ ImageListView::~ImageListView() {
 }
 
 std::vector<cv::Mat> ImageListView::getItemsCVMats() {
-    const QList<ImageItem> *model_data = this->image_list_model->getModelData();
+    const QList<ImageItem> &model_data = this->image_list_model->getModelData();
 
     std::vector<cv::Mat> cv_mats = std::vector<cv::Mat>();
 
-    for (auto &data : *model_data) {
+    for (auto &data : model_data) {
         cv_mats.push_back(data.cvmat);
     }
 
@@ -69,7 +71,7 @@ void ImageListView::receive_crop_selected_items_request(int top_px, int right_px
 
             // Manually trigger the currentChanged slot with the last selected index
             // this way if the selecte item's image gets updated it will be displayed
-            this->currentChanged(current_selected_idx, current_selected_idx);
+            emit currentChanged(current_selected_idx, current_selected_idx);
         }
     }
 }
@@ -151,7 +153,8 @@ void ImageListView::keyPressEvent(QKeyEvent *event) {
     QListView::keyPressEvent(event);
 }
 
-void ImageListView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
+void ImageListView::selectionModel_selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
     this->sendImageListViewStatus();
+    this->viewport()->update();
 }
 

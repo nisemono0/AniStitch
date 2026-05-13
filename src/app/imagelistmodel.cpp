@@ -4,15 +4,15 @@
 
 
 ImageListModel::ImageListModel(QObject *parent) : QAbstractListModel(parent) {
-    this->image_item_list = new QList<ImageItem>();
+
 }
 
 ImageListModel::~ImageListModel() {
-    delete this->image_item_list;
+
 }
 
 int ImageListModel::rowCount(const QModelIndex &parent) const {
-    return this->image_item_list->size();
+    return this->image_item_list.size();
 }
 
 QVariant ImageListModel::data(const QModelIndex &index, int role) const {
@@ -20,11 +20,11 @@ QVariant ImageListModel::data(const QModelIndex &index, int role) const {
         return QVariant();
     }
 
-    if (index.row() >= this->image_item_list->size() || index.row() < 0) {
+    if (index.row() >= this->image_item_list.size() || index.row() < 0) {
         return QVariant();
     }
 
-    const ImageItem &image_item = this->image_item_list->at(index.row());
+    const ImageItem &image_item = this->image_item_list.at(index.row());
 
     switch (role) {
         case Qt::DisplayRole:
@@ -53,15 +53,16 @@ bool ImageListModel::setData(const QModelIndex &index, const QVariant &value, in
             return false;
         }
 
-        ImageItem new_image_item;
-        new_image_item.display_name = this->image_item_list->value(row).name.append(QStringLiteral(": Cropped"));
-        new_image_item.name = this->image_item_list->value(row).name;
-        new_image_item.cvmat = value.value<cv::Mat>();
-        new_image_item.pixmap = Utils::Image::getPixmapFromMat(new_image_item.cvmat);
+        ImageItem &image_item = this->image_item_list[row];
+        image_item.display_name = this->image_item_list.value(row).name + QStringLiteral(": Cropped");
+        image_item.name = this->image_item_list.value(row).name;
+        image_item.cvmat = value.value<cv::Mat>();
+        image_item.pixmap = Utils::Image::getPixmapFromMat(image_item.cvmat);
 
-        this->image_item_list->replace(row, new_image_item);
-
-        emit dataChanged(index, index);
+        emit dataChanged(
+                    index, index,
+                    { Qt::DisplayRole, ImageListRole::ITEM_NAME, ImageListRole::ITEM_PIXMAP, ImageListRole::ITEM_CVMAT }
+                );
 
         return true;
     }
@@ -69,10 +70,17 @@ bool ImageListModel::setData(const QModelIndex &index, const QVariant &value, in
     return false;
 }
 
+Qt::ItemFlags ImageListModel::flags(const QModelIndex &index) const {
+    if (!index.isValid()) {
+        return Qt::NoItemFlags;
+    }
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+}
+
 void ImageListModel::insertItem(const ImageItem &image_item) {
     beginInsertRows(QModelIndex(), this->rowCount(), this->rowCount());
 
-    this->image_item_list->append(image_item);
+    this->image_item_list.append(image_item);
 
     endInsertRows();
 }
@@ -93,7 +101,7 @@ void ImageListModel::deleteItems(const QModelIndexList &item_index_list) {
 
     for (auto &row : rows_to_remove) {
         beginRemoveRows(QModelIndex(), row, row);
-        this->image_item_list->removeAt(row);
+        this->image_item_list.removeAt(row);
         endRemoveRows();
     }
 }
@@ -101,7 +109,7 @@ void ImageListModel::deleteItems(const QModelIndexList &item_index_list) {
 void ImageListModel::clearItems() {
     beginResetModel();
 
-    this->image_item_list->clear();
+    this->image_item_list.clear();
 
     endResetModel();
 }
@@ -113,7 +121,7 @@ bool ImageListModel::isEmpty() {
     return true;
 }
 
-const QList<ImageItem>* ImageListModel::getModelData() const {
+const QList<ImageItem>& ImageListModel::getModelData() const {
     return this->image_item_list;
 }
 

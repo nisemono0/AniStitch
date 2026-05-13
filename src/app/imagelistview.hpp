@@ -38,7 +38,6 @@ protected:
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
     void contextMenuEvent(QContextMenuEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
-    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) override;
 
 signals:
     // Send the current selected item's underlying QPixmap data
@@ -58,5 +57,6 @@ public slots:
 
 private slots:
     void action_delete_items_triggered(bool checked = false);
+    void selectionModel_selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 };
 
