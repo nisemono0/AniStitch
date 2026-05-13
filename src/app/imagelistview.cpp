@@ -97,10 +97,12 @@ void ImageListView::clear() {
 
 void ImageListView::sendImageListViewStatus() {
     int image_list_size = this->image_list_model->rowCount();
+    int selected_items_size = this->selectedIndexes().size();
     if (image_list_size > 0) {
         emit send_ImageListView_status(
-                QStringLiteral("Loaded images: %1").arg(
-                    QString::number(image_list_size)
+                QStringLiteral("Images: %1 | Selectd: %2").arg(
+                    QString::number(image_list_size),
+                    QString::number(selected_items_size)
                     )
                 );
     } else {
@@ -126,6 +128,7 @@ void ImageListView::currentChanged(const QModelIndex &current, const QModelIndex
     this->scrollTo(current, QListView::EnsureVisible);
 
     QPixmap item_pixmap = current.data(ImageListModel::ITEM_PIXMAP).value<QPixmap>();
+    // Send current selected item's pixmap to be displayed
     emit send_current_item_pixmap(item_pixmap);
 }
 
@@ -146,5 +149,9 @@ void ImageListView::keyPressEvent(QKeyEvent *event) {
         }
     }
     QListView::keyPressEvent(event);
+}
+
+void ImageListView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) {
+    this->sendImageListViewStatus();
 }
 
