@@ -1,5 +1,7 @@
 #include "app/imagelistmodel.hpp"
 
+#include "utils/opencv.hpp"
+
 
 ImageListModel::ImageListModel(QObject *parent) : QAbstractListModel(parent) {
     this->image_item_list = new QList<ImageItem>();
@@ -26,7 +28,7 @@ QVariant ImageListModel::data(const QModelIndex &index, int role) const {
 
     switch (role) {
         case Qt::DisplayRole:
-            return image_item.name;
+            return image_item.display_name;
         case ImageListModel::ITEM_PIXMAP:
             return image_item.pixmap;
         case ImageListModel::ITEM_CVMAT:
@@ -35,6 +37,34 @@ QVariant ImageListModel::data(const QModelIndex &index, int role) const {
             return QVariant();
             break;
     }
+}
+
+bool ImageListModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    if (!index.isValid()) {
+        return false;
+    }
+    int row = index.row();
+
+    // Update stored cvmat and pixmap
+    if (role == ImageListRole::ITEM_CVMAT) {
+        if (!value.canConvert<cv::Mat>()) {
+            return false;
+        }
+
+        ImageItem new_image_item;
+        new_image_item.display_name = this->image_item_list->value(row).name.append(QStringLiteral(": Cropped"));
+        new_image_item.name = this->image_item_list->value(row).name;
+        new_image_item.cvmat = value.value<cv::Mat>();
+        new_image_item.pixmap = Utils::Image::getPixmapFromMat(new_image_item.cvmat);
+
+        this->image_item_list->replace(row, new_image_item);
+
+        emit dataChanged(index, index, { ImageListRole::ITEM_CVMAT, ImageListRole::ITEM_PIXMAP });
+
+        return true;
+    }
+
+    return false;
 }
 
 void ImageListModel::insertItem(const ImageItem &image_item) {

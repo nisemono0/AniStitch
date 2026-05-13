@@ -151,6 +151,23 @@ cv::Mat Utils::Image::getBGRAMatFromParsing(const cv::Mat &cv_mat) {
     return alpha_mat;
 }
 
+cv::Mat Utils::Image::cropMat(const cv::Mat &cv_mat, int top_px, int right_px, int bottom_px, int left_px) {
+    int new_width = cv_mat.cols - left_px - right_px;
+    int new_height = cv_mat.rows - top_px - bottom_px;
+
+    // if the crop is bigger than the image retur the original image
+    if (new_width <= 0 || new_height <= 0) {
+        return cv_mat;
+    }
+
+    cv::Rect crop_roi = cv::Rect(
+                left_px, top_px,
+                new_width, new_height
+            );
+
+    return cv_mat(crop_roi);
+}
+
 void Utils::OpenCV::enableOpenCL() {
     if (cv::ocl::haveOpenCL()) {
         Log::info(QStringLiteral("OpenCL is supported, trying to enable it"));

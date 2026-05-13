@@ -49,9 +49,11 @@ public slots:
     // Insert image_item into ImageListView
     void receive_insert_item_request(const ImageItem &image_item);
     // Remove selected items from ImageListView
-    void receive_delete_items_request();
+    void receive_delete_selected_items_request();
     // Remove all items from ImageListView
     void receive_clear_items_request();
+    // Crop the slected items top_px/right_px/bottom_px/left_px number of pixels
+    void receive_crop_selected_items_request(int top_px, int right_px, int bottom_px, int left_px);
 
 private slots:
     void action_delete_items_triggered(bool checked = false);

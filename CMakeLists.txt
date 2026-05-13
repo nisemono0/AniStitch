@@ -33,6 +33,8 @@ qt_add_executable(AniStitch
     src/base/imagestitcher.hpp
     src/base/settings.cpp
     src/base/settings.hpp
+    src/gui/cropdialog.cpp
+    src/gui/cropdialog.hpp
     src/gui/displayimagedialog.cpp
     src/gui/displayimagedialog.hpp
     src/gui/logdialog.cpp
@@ -57,6 +59,7 @@ qt_add_executable(AniStitch
 target_sources(AniStitch
     PRIVATE
         src/app/ui/dualprogressdialog.ui
+        src/gui/ui/cropdialog.ui
         src/gui/ui/displayimagedialog.ui
         src/gui/ui/logdialog.ui
         src/gui/ui/mainwindow.ui

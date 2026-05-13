@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->log_window_dialog = new LogDialog(this);
     this->display_image_dialog = new DisplayImageDialog(this);
     this->stitcher_settings_dialog = new StitcherSettingsDialog(this);
+    this->crop_dialog = new CropDialog(this);
 
     // Image list status label
     this->image_list_status = new QLabel(this);
@@ -35,13 +36,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Send signal to open the file(s) and start loading them
     connect(this->ui->pushButtonLoad, &QPushButton::clicked, this, &MainWindow::startImageLoad);
     // Send signal to ImageListView to remove the selected items from ImageListView
-    connect(this->ui->pushButtonDeleteImage, &QPushButton::clicked, this->ui->imagesListView, &ImageListView::receive_delete_items_request);
+    connect(this->ui->pushButtonDeleteImage, &QPushButton::clicked, this->ui->imagesListView, &ImageListView::receive_delete_selected_items_request);
     // Send signal to ImageListView to remove all the items from ImageListView
     connect(this->ui->pushButtonClearImages, &QPushButton::clicked, this->ui->imagesListView, &ImageListView::receive_clear_items_request);
     // Send signal to ImageGraphicsView to clear the scene when the Clear button is pressed
     connect(this->ui->pushButtonClearImages, &QPushButton::clicked, this->ui->imageGraphicsView, &ImageGraphicsView::receive_clear_scene_request);
     // Send signal to ImageLoader to reset the image_counter to 0 when the Clear button is pressed
     connect(this->ui->pushButtonClearImages, &QPushButton::clicked, this->image_loader_worker, &ImageLoader::receive_ImageLoader_reset_counter);
+    // Send signal to CropDialog to show the dialog
+    connect(this->ui->pushButtonCropImages, &QPushButton::clicked, this->crop_dialog, &CropDialog::receive_show_CropDialog_request);
+
+    // CropDialog send crop values
+    connect(this->crop_dialog, &CropDialog::send_CropDialog_crop_values, this->ui->imagesListView, &ImageListView::receive_crop_selected_items_request);
 
     // ImageListView send status message to image_list_status
     connect(this->ui->imagesListView, &ImageListView::send_ImageListView_status, this->image_list_status, &QLabel::setText);
@@ -122,6 +128,7 @@ MainWindow::~MainWindow() {
 
     delete this->image_list_status;
 
+    delete this->crop_dialog;
     delete this->stitcher_settings_dialog;
     delete this->log_window_dialog;
     delete this->display_image_dialog;

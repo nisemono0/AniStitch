@@ -121,6 +121,16 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayoutButtonsRight">
           <item>
+           <widget class="QPushButton" name="pushButtonCropImages">
+            <property name="statusTip">
+             <string>Crop the selected image(s); Opens a dialog with crop options</string>
+            </property>
+            <property name="text">
+             <string>Crop image(s)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
              <enum>Qt::Orientation::Horizontal</enum>

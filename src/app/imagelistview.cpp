@@ -1,5 +1,7 @@
 #include "app/imagelistview.hpp"
 
+#include "utils/opencv.hpp"
+
 
 ImageListView::ImageListView(QWidget *parent) : QListView(parent) {
     this->image_list_model = new ImageListModel(this);
@@ -42,12 +44,34 @@ void ImageListView::receive_insert_item_request(const ImageItem &image_item) {
     this->insert(image_item);
 }
 
-void ImageListView::receive_delete_items_request() {
+void ImageListView::receive_delete_selected_items_request() {
     this->deleteSelected();
 }
 
 void ImageListView::receive_clear_items_request() {
     this->clear();
+}
+
+void ImageListView::receive_crop_selected_items_request(int top_px, int right_px, int bottom_px, int left_px) {
+    QModelIndexList selected_idx = this->selectedIndexes();
+
+    QModelIndex current_selected_idx = this->selectionModel()->currentIndex();
+
+    for (auto &idx : selected_idx) {
+        if (idx.data(ImageListModel::ITEM_CVMAT).canConvert<cv::Mat>()) {
+            QVariant cropped_cvmat_variant = QVariant::fromValue(
+                        Utils::Image::cropMat(
+                                idx.data(ImageListModel::ITEM_CVMAT).value<cv::Mat>(),
+                                top_px, right_px, bottom_px, left_px
+                            )
+                    );
+            this->image_list_model->setData(idx, cropped_cvmat_variant, ImageListModel::ITEM_CVMAT);
+
+            // Manually trigger the currentChanged slot with the last selected index
+            // this way if the selecte item's image gets updated it will be displayed
+            this->currentChanged(current_selected_idx, current_selected_idx);
+        }
+    }
 }
 
 void ImageListView::action_delete_items_triggered(bool checked) {

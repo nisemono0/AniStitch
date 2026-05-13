@@ -23,6 +23,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     // Returns the item's data at role given an index
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    // Set the role data for index to value
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
     // Insert image_item into the model
     void insertItem(const ImageItem &image_item);

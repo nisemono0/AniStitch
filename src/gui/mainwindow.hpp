@@ -5,6 +5,7 @@
 #include "gui/logdialog.hpp"
 #include "gui/displayimagedialog.hpp"
 #include "gui/stitchersettingsdialog.hpp"
+#include "gui/cropdialog.hpp"
 
 #include "app/dualprogressdialog.hpp"
 #include "app/progressdialog.hpp"
@@ -45,6 +46,8 @@ private:
     DisplayImageDialog *display_image_dialog;
     // Stitcher settings dialog
     StitcherSettingsDialog *stitcher_settings_dialog;
+    // Crop dialog
+    CropDialog *crop_dialog;
 
     // ImageList status label
     QLabel *image_list_status;

@@ -37,6 +37,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="spinBoxNumberBands">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+       </property>
        <property name="maximum">
         <number>100</number>
        </property>
@@ -118,6 +121,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="spinBoxCompensatorBlockSize">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+       </property>
        <property name="maximum">
         <number>100</number>
        </property>
@@ -139,6 +145,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="spinBoxCompensatorFeeds">
+       <property name="buttonSymbols">
+        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+       </property>
        <property name="maximum">
         <number>100</number>
        </property>

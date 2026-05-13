@@ -26,6 +26,8 @@ namespace Utils::Image {
     // cornsers of the image are pure black, they'll be used to
     // make the mask; Somewhat fixed the problem of using thresholding
     cv::Mat getBGRAMatFromParsing(const cv::Mat &cv_mat);
+    // Crop a cv_mat a number of top_px/right_px/bottom_px/left_px pixels from top/right/bottom/left
+    cv::Mat cropMat(const cv::Mat &cv_mat, int top_px, int right_px, int bottom_px, int left_px);
 };
 
 namespace Utils::OpenCV {
