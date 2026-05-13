@@ -6,6 +6,20 @@
 StitcherSettingsDialog::StitcherSettingsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::StitcherSettingsDialog) {
     this->ui->setupUi(this);
 
+    // Wave correct combobox setup
+    this->ui->comboBoxWaveCorrect->addItem(QStringLiteral("Horizontal"), WaveCorrectData::HORIZONTAL);
+    this->ui->comboBoxWaveCorrect->addItem(QStringLiteral("Vertical"), WaveCorrectData::VERTICAL);
+    this->ui->comboBoxWaveCorrect->addItem(QStringLiteral("Auto"), WaveCorrectData::AUTO);
+
+    // Warper combobox setup
+    this->ui->comboBoxWarper->addItem(QStringLiteral("Plane"), WarperData::PLANE);
+    this->ui->comboBoxWarper->addItem(QStringLiteral("Spherical"), WarperData::SPHERICAL);
+    this->ui->comboBoxWarper->addItem(QStringLiteral("Cylindrical"), WarperData::CYLINDRICAL);
+
+    // Compensator combobox setup
+    this->ui->comboBoxExposureCompensator->addItem(QStringLiteral("Blocks Gain"), CompensatorData::BLOCKS_GAIN);
+    this->ui->comboBoxExposureCompensator->addItem(QStringLiteral("Blocks Channels"), CompensatorData::BLOCKS_CHANNEL);
+
     connect(this->ui->pushButtonStitchScan, &QPushButton::clicked, this, &StitcherSettingsDialog::pushButtonStitchScan_clicked);
     connect(this->ui->pushButtonStitchPanorama, &QPushButton::clicked, this, &StitcherSettingsDialog::pushButtonStitchPanorama_clicked);
     connect(this->ui->pushButtonCancel, &QPushButton::clicked, this, &QDialog::close);
@@ -21,35 +35,56 @@ StitcherSettings StitcherSettingsDialog::getStitcherSettings() {
 
     stitcher_settings.blender_bands = this->ui->spinBoxNumberBands->value();
 
-    // 0 = Horizontal; 1 = Vertical; 2 = Auto
-    // I can't be arsed to do this better
-    int wave_correct = this->ui->comboBoxWaveCorrect->currentIndex();
-    if (wave_correct == 0) {
-        stitcher_settings.wave_correct = StitcherSettings::WaveCorrect::HORIZONTAL;
-    } else if (wave_correct == 1) {
-        stitcher_settings.wave_correct = StitcherSettings::WaveCorrect::VERTICAL;
-    } else if (wave_correct == 2) {
-        stitcher_settings.wave_correct = StitcherSettings::WaveCorrect::AUTO;
+    WaveCorrectData wave_correct = static_cast<WaveCorrectData>(this->ui->comboBoxWaveCorrect->currentData().toInt());
+    switch (wave_correct) {
+        case HORIZONTAL:
+        {
+            stitcher_settings.wave_correct = StitcherSettings::WaveCorrect::HORIZONTAL;
+            break;
+        }
+        case VERTICAL:
+        {
+            stitcher_settings.wave_correct = StitcherSettings::WaveCorrect::VERTICAL;
+            break;
+        }
+        case AUTO:
+        {
+            stitcher_settings.wave_correct = StitcherSettings::WaveCorrect::AUTO;
+            break;
+        }
     }
 
-    // 0 = Plane; 1 = Spherical; 2 = Cylindrical
-    // Again, I can't be arsed
-    int warper = this->ui->comboBoxWarper->currentIndex();
-    if (warper == 0) {
-        stitcher_settings.warper = StitcherSettings::Warper::PLANE;
-    } else if (warper == 1) {
-        stitcher_settings.warper = StitcherSettings::Warper::SPHERICAL;
-    } else if (warper == 2) {
-        stitcher_settings.warper = StitcherSettings::Warper::CYLINDRICAL;
+    WarperData warper = static_cast<WarperData>(this->ui->comboBoxWarper->currentData().toInt());
+    switch (warper) {
+        case PLANE:
+        {
+            stitcher_settings.warper = StitcherSettings::Warper::PLANE;
+            break;
+        }
+        case SPHERICAL:
+        {
+            stitcher_settings.warper = StitcherSettings::Warper::SPHERICAL;
+            break;
+        }
+        case CYLINDRICAL:
+        {
+            stitcher_settings.warper = StitcherSettings::Warper::CYLINDRICAL;
+            break;
+        }
     }
 
-    // 0 = Blocks Gain; 1 = Blocks Channel
-    // Really, I can't be arsed
-    int exposure_compensator = this->ui->comboBoxExposureCompensator->currentIndex();
-    if (exposure_compensator == 0) {
-        stitcher_settings.exposure_compensator = StitcherSettings::ExposureCompensator::BLOCKS_GAIN;
-    } else if (exposure_compensator == 1) {
-        stitcher_settings.exposure_compensator = StitcherSettings::ExposureCompensator::BLOCKS_CHANNEL;
+    CompensatorData compensator = static_cast<CompensatorData>(this->ui->comboBoxExposureCompensator->currentData().toInt());
+    switch (compensator) {
+        case BLOCKS_GAIN:
+        {
+            stitcher_settings.exposure_compensator = StitcherSettings::ExposureCompensator::BLOCKS_GAIN;
+            break;
+        }
+        case BLOCKS_CHANNEL:
+        {
+            stitcher_settings.exposure_compensator = StitcherSettings::ExposureCompensator::BLOCKS_CHANNEL;
+            break;
+        }
     }
 
     stitcher_settings.compensator_block_size = this->ui->spinBoxCompensatorBlockSize->value();

@@ -61,21 +61,6 @@
        <property name="sizeAdjustPolicy">
         <enum>QComboBox::SizeAdjustPolicy::AdjustToContents</enum>
        </property>
-       <item>
-        <property name="text">
-         <string>Horizontal</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Vertical</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Auto</string>
-        </property>
-       </item>
       </widget>
      </item>
     </layout>
@@ -97,21 +82,6 @@
        <property name="sizeAdjustPolicy">
         <enum>QComboBox::SizeAdjustPolicy::AdjustToContents</enum>
        </property>
-       <item>
-        <property name="text">
-         <string>Plane</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Spherical</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Cylindrical</string>
-        </property>
-       </item>
       </widget>
      </item>
     </layout>
@@ -133,16 +103,6 @@
        <property name="sizeAdjustPolicy">
         <enum>QComboBox::SizeAdjustPolicy::AdjustToContents</enum>
        </property>
-       <item>
-        <property name="text">
-         <string>Blocks Gain Compensator</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Blocks Channels Compensator</string>
-        </property>
-       </item>
       </widget>
      </item>
     </layout>

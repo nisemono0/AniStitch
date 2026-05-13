@@ -19,6 +19,22 @@ public:
     ~StitcherSettingsDialog() override;
 
 private:
+    // Enums used internally for comboboxes
+    enum WaveCorrectData {
+        HORIZONTAL = Qt::UserRole + 1,
+        VERTICAL   = Qt::UserRole + 2,
+        AUTO       = Qt::UserRole + 3
+    };
+    enum WarperData {
+        PLANE       = Qt::UserRole + 1,
+        SPHERICAL   = Qt::UserRole + 2,
+        CYLINDRICAL = Qt::UserRole + 3,
+    };
+    enum CompensatorData {
+        BLOCKS_GAIN    = Qt::UserRole + 1,
+        BLOCKS_CHANNEL = Qt::UserRole + 2,
+    };
+
     Ui::StitcherSettingsDialog *ui;
     // Return a StitcherSettings struct with values from the dialog
     StitcherSettings getStitcherSettings();
