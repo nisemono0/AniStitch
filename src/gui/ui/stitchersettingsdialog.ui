@@ -162,6 +162,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
       <widget class="QPushButton" name="pushButtonCancel">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Cancel</string>
        </property>
@@ -169,6 +172,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonResetValues">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Reset</string>
        </property>
@@ -176,6 +182,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonStitchPanorama">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Stitch panorama</string>
        </property>
@@ -183,6 +192,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonStitchScan">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Stitch scan</string>
        </property>

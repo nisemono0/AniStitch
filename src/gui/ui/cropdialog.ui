@@ -130,6 +130,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="pushButtonReset">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Reset</string>
        </property>
@@ -137,6 +140,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonCancel">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Cancel</string>
        </property>
@@ -144,6 +150,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonCrop">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Crop</string>
        </property>
