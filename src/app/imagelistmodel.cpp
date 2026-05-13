@@ -29,6 +29,8 @@ QVariant ImageListModel::data(const QModelIndex &index, int role) const {
     switch (role) {
         case Qt::DisplayRole:
             return image_item.display_name;
+        case ImageListModel::ITEM_NAME:
+            return image_item.name;
         case ImageListModel::ITEM_PIXMAP:
             return image_item.pixmap;
         case ImageListModel::ITEM_CVMAT:

@@ -12,8 +12,9 @@ class ImageListModel : public QAbstractListModel {
 public:
     // Custom roles
     enum ImageListRole {
-        ITEM_PIXMAP = Qt::UserRole + 1,
-        ITEM_CVMAT  = Qt::UserRole + 2,
+        ITEM_NAME   = Qt::UserRole + 1,
+        ITEM_PIXMAP = Qt::UserRole + 2,
+        ITEM_CVMAT  = Qt::UserRole + 3,
     };
 
     explicit ImageListModel(QObject *parent = nullptr);
