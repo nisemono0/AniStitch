@@ -61,7 +61,7 @@ bool ImageListModel::setData(const QModelIndex &index, const QVariant &value, in
 
         this->image_item_list->replace(row, new_image_item);
 
-        emit dataChanged(index, index, { ImageListRole::ITEM_CVMAT, ImageListRole::ITEM_PIXMAP });
+        emit dataChanged(index, index);
 
         return true;
     }

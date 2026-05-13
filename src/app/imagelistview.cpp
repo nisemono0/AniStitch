@@ -100,7 +100,7 @@ void ImageListView::sendImageListViewStatus() {
     int selected_items_size = this->selectedIndexes().size();
     if (image_list_size > 0) {
         emit send_ImageListView_status(
-                QStringLiteral("Images: %1 | Selectd: %2").arg(
+                QStringLiteral("Images: %1 | Selected: %2").arg(
                     QString::number(image_list_size),
                     QString::number(selected_items_size)
                     )
