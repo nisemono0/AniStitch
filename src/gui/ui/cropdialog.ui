@@ -139,12 +139,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonCancel">
+      <widget class="QPushButton" name="pushButtonClose">
        <property name="focusPolicy">
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="text">
-        <string>Cancel</string>
+        <string>Close</string>
        </property>
       </widget>
      </item>

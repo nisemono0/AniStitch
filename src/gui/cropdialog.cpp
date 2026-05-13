@@ -5,7 +5,7 @@ CropDialog::CropDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CropDialog
     this->ui->setupUi(this);
 
     // Cancel/Reset buttons
-    connect(this->ui->pushButtonCancel, &QPushButton::clicked, this, &QDialog::close);
+    connect(this->ui->pushButtonClose, &QPushButton::clicked, this, &QDialog::close);
     connect(this->ui->pushButtonReset, &QPushButton::clicked, this, &CropDialog::resetValues);
     // Crop button pressed
     connect(this->ui->pushButtonCrop, &QPushButton::clicked, this, &CropDialog::pushButtonCrop_clicked);
