@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>272</width>
-    <height>258</height>
+    <height>246</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>272</width>
-    <height>258</height>
+    <height>246</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>272</width>
-    <height>258</height>
+    <height>246</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -27,12 +27,15 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
    <property name="sizeConstraint">
-    <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+    <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
    </property>
    <item>
     <layout class="QGridLayout" name="gridLayout_3">
      <property name="sizeConstraint">
-      <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+      <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+     </property>
+     <property name="spacing">
+      <number>0</number>
      </property>
      <item row="0" column="2">
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -69,7 +72,7 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -99,7 +102,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -129,7 +132,7 @@
        <item>
         <widget class="QLabel" name="label_4">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
