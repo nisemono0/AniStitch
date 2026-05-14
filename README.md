@@ -17,18 +17,48 @@ For example, with 100 images:
 - Splits the finished images list into another chunks of 10
 - Repeat until the finished images list contains only 1 image (the final stitched image)
 
-## Dependencies (Arch Linux)
-`qt6-base` <br>
-`opencv` <br>
-`opencl runtime (optional)` <br>
-`cmake (compile)` <br>
-
 ## Compile (Arch Linux)
-Install the dependencies then run: <br>
+Run the following commands: <br>
+- Install dependencies
+```bash
+sudo pacman -Syu git cmake gcc qt6-base opencv
+```
+- Clone and compile
 ```bash
 git clone https://github.com/nisemono0/AniStitch.git && cd ./AniStitch
 ```
 ```bash
 cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j
 ```
-The binary is `./build/AniStitch` <br>
+The binary is in `./build/AniStitch`. <br>
+
+## Compile (Windows/MinGW)
+For Windows `MSYS2` needs to be installed. <br>
+From a `MSYS2` environment, run the following commands: <br>
+- Install dependencies
+```bash
+pacman -Syu git mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-qt6-base mingw-w64-ucrt-x86_64-opencv
+```
+- Clone and compile
+```bash
+git clone https://github.com/nisemono0/AniStitch.git && cd ./AniStitch
+```
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j
+```
+- Deploy
+```bash
+mkdir ./build/AniStitchRelease/ && cd ./build/AniStitchRelease && mv ../AniStitch.exe .
+```
+```bash
+windeployqt ./AniStitch.exe
+```
+```bash
+ldd ./AniStitch.exe | grep /ucrt64 | awk '{print $3}' | xargs -i cp {} .
+```
+- Copy the program to desktop. Replace `<your-username-here>` with your Windows username
+```bash
+cd .. && mv ./AniStitchRelease/ /C/Users/<your-username-here>/Desktop/
+```
+There should be a `AniStitchRelease` folder on the Desktop now. <br>
+The `.exe` is `AniStitch.exe` in the `AniStitchRelease` folder.
