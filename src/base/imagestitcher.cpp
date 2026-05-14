@@ -388,6 +388,7 @@ std::expected<cv::Mat, cv::Stitcher::Status> ImageStitcher::stitchImages(const s
     stitcher_status = stitcher->stitch(bgr_mats, stitched_image);
 
     if (stitcher_status != cv::Stitcher::OK) {
+        stitcher.release();
         return std::unexpected(stitcher_status);
     }
 
