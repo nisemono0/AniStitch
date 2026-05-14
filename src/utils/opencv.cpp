@@ -175,9 +175,9 @@ void Utils::OpenCV::disableOpenCL() {
         cv::ocl::setUseOpenCL(false);
 
         if (cv::ocl::useOpenCL()) {
-            Log::info(QStringLiteral("  -> OpenCL is enabled"));
+            Log::warning(QStringLiteral("  -> OpenCL is enabled"));
         } else {
-            Log::warning(QStringLiteral("  -> OpenCL is disabled"));
+            Log::info(QStringLiteral("  -> OpenCL is disabled"));
         }
     } else {
         Log::warning(QStringLiteral("OpenCL not supported"));
