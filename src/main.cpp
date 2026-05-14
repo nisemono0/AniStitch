@@ -8,8 +8,8 @@
 
 
 int main (int argc, char *argv[]) {
-    // Enable OpenCL if avaialble
-    Utils::OpenCV::enableOpenCL();
+    // Disable OpenCL if avaialble
+    Utils::OpenCV::disableOpenCL();
 
     QApplication app(argc, argv);
 

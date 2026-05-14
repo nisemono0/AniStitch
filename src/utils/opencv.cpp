@@ -168,19 +168,19 @@ cv::Mat Utils::Image::cropMat(const cv::Mat &cv_mat, int top_px, int right_px, i
     return cv_mat(crop_roi);
 }
 
-void Utils::OpenCV::enableOpenCL() {
+void Utils::OpenCV::disableOpenCL() {
     if (cv::ocl::haveOpenCL()) {
-        Log::info(QStringLiteral("OpenCL is supported, trying to enable it"));
+        Log::info(QStringLiteral("OpenCL is supported, trying to disable it"));
 
-        cv::ocl::setUseOpenCL(true);
+        cv::ocl::setUseOpenCL(false);
 
         if (cv::ocl::useOpenCL()) {
-            Log::info(QStringLiteral("  -> OpenCL is being used"));
+            Log::info(QStringLiteral("  -> OpenCL is enabled"));
         } else {
-            Log::warning(QStringLiteral("  -> OpenCL is not being used"));
+            Log::warning(QStringLiteral("  -> OpenCL is disabled"));
         }
     } else {
-        Log::warning(QStringLiteral("OpenCL not supported, please install an OpenCL runtime"));
+        Log::warning(QStringLiteral("OpenCL not supported"));
     }
 }
 

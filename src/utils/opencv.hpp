@@ -31,7 +31,7 @@ namespace Utils::Image {
 };
 
 namespace Utils::OpenCV {
-    // Try to enable OpenCL if available
-    void enableOpenCL();
+    // Disable OpenCL
+    void disableOpenCL();
 }
 
