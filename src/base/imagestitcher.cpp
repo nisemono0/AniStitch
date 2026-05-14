@@ -147,13 +147,13 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getCustomScanStitcherPtr(const StitcherSett
     cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
     // Set image registration resolution (Default: 0.6)
-    stitcher->setRegistrationResol(0.7);
+    stitcher->setRegistrationResol(stitcher_settings.registration_res);
     // Set image resolution for seam estimation (Default: 0.1)
-    stitcher->setSeamEstimationResol(0.1);
+    stitcher->setSeamEstimationResol(stitcher_settings.seam_res);
     // Set resolution for final stitch (Default: ORIG_RESOL)
     stitcher->setCompositingResol(cv::Stitcher::ORIG_RESOL);
     // Confidence threshold for images to be part of the same stitch (Default: 1)
-    stitcher->setPanoConfidenceThresh(0.7);
+    stitcher->setPanoConfidenceThresh(stitcher_settings.confidence_threshold);
     // Seam finder:
     stitcher->setSeamFinder(
                 cv::makePtr<cv::detail::GraphCutSeamFinder>(
@@ -228,13 +228,13 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getCustomPanoramaStitcherPtr(const Stitcher
     cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::PANORAMA);
 
     // Set image registration resolution (Default: 0.6)
-    stitcher->setRegistrationResol(0.7);
+    stitcher->setRegistrationResol(stitcher_settings.registration_res);
     // Set image resolution for seam estimation (Default: 0.1)
-    stitcher->setSeamEstimationResol(0.1);
+    stitcher->setSeamEstimationResol(stitcher_settings.seam_res);
     // Set resolution for final stitch (Default: ORIG_RESOL)
     stitcher->setCompositingResol(cv::Stitcher::ORIG_RESOL);
     // Confidence threshold for images to be part of the same stitch (Default: 1)
-    stitcher->setPanoConfidenceThresh(0.7);
+    stitcher->setPanoConfidenceThresh(stitcher_settings.confidence_threshold);
     // Seam finder:
     stitcher->setSeamFinder(
                 cv::makePtr<cv::detail::GraphCutSeamFinder>(

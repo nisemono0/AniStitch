@@ -33,6 +33,9 @@ StitcherSettingsDialog::~StitcherSettingsDialog() {
 StitcherSettings StitcherSettingsDialog::getStitcherSettings() {
     StitcherSettings stitcher_settings;
 
+    stitcher_settings.registration_res = this->ui->doubleSpinBoxRegistrationRes->value();
+    stitcher_settings.seam_res = this->ui->doubleSpinBoxSeamRes->value();
+    stitcher_settings.confidence_threshold = this->ui->doubleSpinBoxConfidenceThreshold->value();
     stitcher_settings.blender_bands = this->ui->spinBoxNumberBands->value();
 
     WaveCorrectData wave_correct = static_cast<WaveCorrectData>(this->ui->comboBoxWaveCorrect->currentData().toInt());
@@ -118,6 +121,9 @@ void StitcherSettingsDialog::pushButtonStitchPanorama_clicked(bool checked) {
 }
 
 void StitcherSettingsDialog::resetValues() {
+    this->ui->doubleSpinBoxRegistrationRes->setValue(0.7);
+    this->ui->doubleSpinBoxSeamRes->setValue(0.1);
+    this->ui->doubleSpinBoxConfidenceThreshold->setValue(0.7);
     this->ui->spinBoxNumberBands->setValue(0);
     this->ui->comboBoxWaveCorrect->setCurrentIndex(0);
     this->ui->comboBoxWarper->setCurrentIndex(0);

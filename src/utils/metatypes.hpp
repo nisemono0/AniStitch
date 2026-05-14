@@ -9,6 +9,9 @@ struct StitcherSettings {
     enum Warper { PLANE, SPHERICAL, CYLINDRICAL };
     enum ExposureCompensator { BLOCKS_GAIN, BLOCKS_CHANNEL };
 
+    float registration_res = 0.7;
+    float seam_res = 0.1;
+    float confidence_threshold = 0.7;
     int blender_bands = 0;
     WaveCorrect wave_correct = WaveCorrect::HORIZONTAL;
     Warper warper = Warper::PLANE;
