@@ -86,3 +86,12 @@ target_include_directories(AniStitch PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
 target_link_libraries(AniStitch PRIVATE Qt::Concurrent)
 target_link_libraries(AniStitch PRIVATE ${OpenCV_LIBS})
+
+if(MINGW)
+    message(STATUS "Building for Windows (mingw)")
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set_property(TARGET AniStitch PROPERTY WIN32_EXECUTABLE true)
+    endif()
+else()
+    message(STATUS "Building for Linux")
+endif()

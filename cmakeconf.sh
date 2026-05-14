@@ -29,6 +29,15 @@ echo "target_include_directories($PROJ_NAME PUBLIC \${CMAKE_SOURCE_DIR}/src)" >>
 echo >> ./CMakeLists.txt
 echo "target_link_libraries($PROJ_NAME PRIVATE Qt::Concurrent)" >> ./CMakeLists.txt
 echo "target_link_libraries($PROJ_NAME PRIVATE \${OpenCV_LIBS})" >> ./CMakeLists.txt
+echo "
+if(MINGW)
+    message(STATUS \"Building for Windows (mingw)\")
+    if(CMAKE_BUILD_TYPE STREQUAL \"Release\")
+        set_property(TARGET "$PROJ_NAME" PROPERTY WIN32_EXECUTABLE true)
+    endif()
+else()
+    message(STATUS \"Building for Linux\")
+endif()" >> ./CMakeLists.txt
 
 if [ "$1" == "--compile" ]; then
     cmake -B build -DCMAKE_BUILD_TYPE=Release
