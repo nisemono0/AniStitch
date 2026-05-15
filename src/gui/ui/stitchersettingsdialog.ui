@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>387</width>
-    <height>357</height>
+    <height>377</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>387</width>
-    <height>357</height>
+    <height>377</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>387</width>
-    <height>357</height>
+    <height>377</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -43,12 +43,15 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="labelRegistrationRes">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Image registration resolution (SCAN+PANORAMA)</string>
          </property>
          <property name="text">
           <string>Registration res</string>
@@ -60,6 +63,9 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="doubleSpinBoxRegistrationRes">
+         <property name="statusTip">
+          <string>Image registration resolution (SCAN+PANORAMA)</string>
+         </property>
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
          </property>
@@ -85,12 +91,15 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="labelSeamRes">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Seam finder resolution (SCAN+PANORAMA)</string>
          </property>
          <property name="text">
           <string>Seam res</string>
@@ -102,6 +111,9 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="doubleSpinBoxSeamRes">
+         <property name="statusTip">
+          <string>Seam finder resolution (SCAN+PANORAMA)</string>
+         </property>
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
          </property>
@@ -124,12 +136,15 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QLabel" name="label_9">
+        <widget class="QLabel" name="labelConfidenceThreshold">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Confidence that images are the same (SCAN+PANORAMA)</string>
          </property>
          <property name="text">
           <string>Confidence threshold</string>
@@ -141,6 +156,9 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="doubleSpinBoxConfidenceThreshold">
+         <property name="statusTip">
+          <string>Confidence that images are the same (SCAN+PANORAMA)</string>
+         </property>
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
          </property>
@@ -168,7 +186,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="labelNumberBands">
+       <property name="statusTip">
+        <string>Number of bands the blender uses (SCAN+PANORAMA)</string>
+       </property>
        <property name="text">
         <string>Blender bands:</string>
        </property>
@@ -176,6 +197,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="spinBoxNumberBands">
+       <property name="statusTip">
+        <string>Number of bands the blender uses (SCAN+PANORAMA)</string>
+       </property>
        <property name="buttonSymbols">
         <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
        </property>
@@ -189,7 +213,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="labelWaveCorrect">
+       <property name="statusTip">
+        <string>Wave correction type (PANORAMA)</string>
+       </property>
        <property name="text">
         <string>Wave correct:</string>
        </property>
@@ -197,6 +224,9 @@
      </item>
      <item>
       <widget class="QComboBox" name="comboBoxWaveCorrect">
+       <property name="statusTip">
+        <string>Wave correction type (PANORAMA)</string>
+       </property>
        <property name="insertPolicy">
         <enum>QComboBox::InsertPolicy::NoInsert</enum>
        </property>
@@ -210,7 +240,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="labelWarper">
+       <property name="statusTip">
+        <string>Warper type (PANORAMA)</string>
+       </property>
        <property name="text">
         <string>Warper:</string>
        </property>
@@ -218,6 +251,9 @@
      </item>
      <item>
       <widget class="QComboBox" name="comboBoxWarper">
+       <property name="statusTip">
+        <string>Warper type (PANORAMA)</string>
+       </property>
        <property name="insertPolicy">
         <enum>QComboBox::InsertPolicy::NoInsert</enum>
        </property>
@@ -231,7 +267,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="labelExposureCompensator">
+       <property name="statusTip">
+        <string>Exposure compensator type (SCAN+PANORAMA)</string>
+       </property>
        <property name="text">
         <string>Exposure compensator:</string>
        </property>
@@ -239,6 +278,9 @@
      </item>
      <item>
       <widget class="QComboBox" name="comboBoxExposureCompensator">
+       <property name="statusTip">
+        <string>Exposure compensator type (SCAN+PANORAMA)</string>
+       </property>
        <property name="insertPolicy">
         <enum>QComboBox::InsertPolicy::NoInsert</enum>
        </property>
@@ -252,7 +294,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="labelCompensatorBlockSize">
+       <property name="statusTip">
+        <string>Block size the compensator uses (SCAN+PANORAMA)</string>
+       </property>
        <property name="text">
         <string>Compensator block size:</string>
        </property>
@@ -260,6 +305,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="spinBoxCompensatorBlockSize">
+       <property name="statusTip">
+        <string>Block size the compensator uses (SCAN+PANORAMA)</string>
+       </property>
        <property name="buttonSymbols">
         <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
        </property>
@@ -276,7 +324,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_6">
      <item>
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="labelCompensatorFeeds">
+       <property name="statusTip">
+        <string>Number of feeds the compensator uses (SCAN+PANORAMA)</string>
+       </property>
        <property name="text">
         <string>Compensator feeds:</string>
        </property>
@@ -284,6 +335,9 @@
      </item>
      <item>
       <widget class="QSpinBox" name="spinBoxCompensatorFeeds">
+       <property name="statusTip">
+        <string>Number of feeds the compensator uses (SCAN+PANORAMA)</string>
+       </property>
        <property name="buttonSymbols">
         <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
        </property>
@@ -300,12 +354,15 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_7">
      <item>
-      <widget class="QPushButton" name="pushButtonCancel">
+      <widget class="QPushButton" name="pushButtonClose">
        <property name="focusPolicy">
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
+       <property name="statusTip">
+        <string>Close the dialog</string>
+       </property>
        <property name="text">
-        <string>Cancel</string>
+        <string>Close</string>
        </property>
       </widget>
      </item>
@@ -313,6 +370,9 @@
       <widget class="QPushButton" name="pushButtonResetValues">
        <property name="focusPolicy">
         <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
+       <property name="statusTip">
+        <string>Reset to default values</string>
        </property>
        <property name="text">
         <string>Reset</string>
@@ -324,6 +384,9 @@
        <property name="focusPolicy">
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
+       <property name="statusTip">
+        <string>Stitch under perspective transformations</string>
+       </property>
        <property name="text">
         <string>Stitch panorama</string>
        </property>
@@ -334,12 +397,28 @@
        <property name="focusPolicy">
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
+       <property name="statusTip">
+        <string>Stitch under affine transformations</string>
+       </property>
        <property name="text">
         <string>Stitch scan</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelStatusTip">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

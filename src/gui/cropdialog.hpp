@@ -19,6 +19,9 @@ public:
 private:
     Ui::CropDialog *ui;
 
+protected:
+    bool eventFilter(QObject *o, QEvent *e) override;
+
 signals:
     void send_CropDialog_crop_values(int top_px, int right_px, int bottom_px, int left_px);
 

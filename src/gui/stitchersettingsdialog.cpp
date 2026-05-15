@@ -16,13 +16,47 @@ StitcherSettingsDialog::StitcherSettingsDialog(QWidget *parent) : QDialog(parent
     this->ui->comboBoxWarper->addItem(QStringLiteral("Spherical"), WarperData::SPHERICAL);
     this->ui->comboBoxWarper->addItem(QStringLiteral("Cylindrical"), WarperData::CYLINDRICAL);
 
+    // Install event filter on widgets
+    // Registration res
+    this->ui->labelRegistrationRes->installEventFilter(this);
+    this->ui->doubleSpinBoxRegistrationRes->installEventFilter(this);
+    // Seam res
+    this->ui->labelSeamRes->installEventFilter(this);
+    this->ui->doubleSpinBoxSeamRes->installEventFilter(this);
+    // Confidence threshold
+    this->ui->labelConfidenceThreshold->installEventFilter(this);
+    this->ui->doubleSpinBoxConfidenceThreshold->installEventFilter(this);
+    // Blender bands
+    this->ui->labelNumberBands->installEventFilter(this);
+    this->ui->spinBoxNumberBands->installEventFilter(this);
+    // Wave correct
+    this->ui->labelWaveCorrect->installEventFilter(this);
+    this->ui->comboBoxWaveCorrect->installEventFilter(this);
+    // Warper
+    this->ui->labelWarper->installEventFilter(this);
+    this->ui->comboBoxWarper->installEventFilter(this);
+    // Exposure compensator
+    this->ui->labelExposureCompensator->installEventFilter(this);
+    this->ui->comboBoxExposureCompensator->installEventFilter(this);
+    // Compensator block size
+    this->ui->labelCompensatorBlockSize->installEventFilter(this);
+    this->ui->spinBoxCompensatorBlockSize->installEventFilter(this);
+    // Compensator feeds
+    this->ui->labelCompensatorFeeds->installEventFilter(this);
+    this->ui->spinBoxCompensatorFeeds->installEventFilter(this);
+    // Buttons
+    this->ui->pushButtonClose->installEventFilter(this);
+    this->ui->pushButtonResetValues->installEventFilter(this);
+    this->ui->pushButtonStitchPanorama->installEventFilter(this);
+    this->ui->pushButtonStitchScan->installEventFilter(this);
+
     // Compensator combobox setup
     this->ui->comboBoxExposureCompensator->addItem(QStringLiteral("Blocks Gain"), CompensatorData::BLOCKS_GAIN);
     this->ui->comboBoxExposureCompensator->addItem(QStringLiteral("Blocks Channels"), CompensatorData::BLOCKS_CHANNEL);
 
     connect(this->ui->pushButtonStitchScan, &QPushButton::clicked, this, &StitcherSettingsDialog::pushButtonStitchScan_clicked);
     connect(this->ui->pushButtonStitchPanorama, &QPushButton::clicked, this, &StitcherSettingsDialog::pushButtonStitchPanorama_clicked);
-    connect(this->ui->pushButtonCancel, &QPushButton::clicked, this, &QDialog::close);
+    connect(this->ui->pushButtonClose, &QPushButton::clicked, this, &QDialog::close);
     connect(this->ui->pushButtonResetValues, &QPushButton::clicked, this, &StitcherSettingsDialog::resetValues);
 }
 
@@ -94,6 +128,32 @@ StitcherSettings StitcherSettingsDialog::getStitcherSettings() {
     stitcher_settings.compensator_feeds = this->ui->spinBoxCompensatorFeeds->value();
 
     return stitcher_settings;
+}
+
+bool StitcherSettingsDialog::eventFilter(QObject *o, QEvent *e) {
+    auto widget = qobject_cast<QWidget *>(o);
+
+    if (!widget) {
+        return QDialog::eventFilter(o, e);
+    }
+
+    switch (e->type()) {
+        case QEvent::Enter:
+        {
+            this->ui->labelStatusTip->setText(widget->statusTip());
+            break;
+        }
+        case QEvent::Leave:
+        {
+            this->ui->labelStatusTip->clear();
+            break;
+        }
+        default:
+            break;
+    }
+
+    return QDialog::eventFilter(o, e);
+
 }
 
 void StitcherSettingsDialog::receive_show_StitcherSettingsDialog_request() {

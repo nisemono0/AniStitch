@@ -39,6 +39,9 @@ private:
     // Return a StitcherSettings struct with values from the dialog
     StitcherSettings getStitcherSettings();
 
+protected:
+    bool eventFilter(QObject *o, QEvent *e) override;
+
 signals:
     // Send button presses with settings
     void send_StitcherSettingsDialog_scan_settings(const StitcherSettings &stitcher_settings);

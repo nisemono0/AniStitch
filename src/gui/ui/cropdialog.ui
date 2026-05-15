@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>272</width>
-    <height>246</height>
+    <height>269</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>272</width>
-    <height>246</height>
+    <height>269</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>272</width>
-    <height>246</height>
+    <height>269</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -40,12 +40,15 @@
      <item row="0" column="2">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="labelCropTop">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Number of pixels to crop from the top</string>
          </property>
          <property name="text">
           <string>Top</string>
@@ -57,6 +60,9 @@
        </item>
        <item>
         <widget class="QSpinBox" name="spinBoxCropTop">
+         <property name="statusTip">
+          <string>Number of pixels to crop from the top</string>
+         </property>
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
          </property>
@@ -70,12 +76,15 @@
      <item row="3" column="2">
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="labelCropBottom">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Number of pixels to crop from the bottom</string>
          </property>
          <property name="text">
           <string>Bottom</string>
@@ -87,6 +96,9 @@
        </item>
        <item>
         <widget class="QSpinBox" name="spinBoxCropBottom">
+         <property name="statusTip">
+          <string>Number of pixels to crop from the bottom</string>
+         </property>
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
          </property>
@@ -100,12 +112,15 @@
      <item row="1" column="1">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="labelCropLeft">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Number of pixels to crop from the left</string>
          </property>
          <property name="text">
           <string>Left</string>
@@ -117,6 +132,9 @@
        </item>
        <item>
         <widget class="QSpinBox" name="spinBoxCropLeft">
+         <property name="statusTip">
+          <string>Number of pixels to crop from the left</string>
+         </property>
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
          </property>
@@ -130,12 +148,15 @@
      <item row="1" column="3">
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="labelCropRight">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Number of pixels to crop from the right</string>
          </property>
          <property name="text">
           <string>Right</string>
@@ -147,6 +168,9 @@
        </item>
        <item>
         <widget class="QSpinBox" name="spinBoxCropRight">
+         <property name="statusTip">
+          <string>Number of pixels to crop from the right</string>
+         </property>
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
          </property>
@@ -162,22 +186,28 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButtonReset">
-       <property name="focusPolicy">
-        <enum>Qt::FocusPolicy::NoFocus</enum>
-       </property>
-       <property name="text">
-        <string>Reset</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="pushButtonClose">
        <property name="focusPolicy">
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
+       <property name="statusTip">
+        <string>Close the dialog</string>
+       </property>
        <property name="text">
         <string>Close</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonReset">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
+       <property name="statusTip">
+        <string>Reset to default values</string>
+       </property>
+       <property name="text">
+        <string>Reset</string>
        </property>
       </widget>
      </item>
@@ -186,12 +216,28 @@
        <property name="focusPolicy">
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
+       <property name="statusTip">
+        <string>Crop selected images</string>
+       </property>
        <property name="text">
         <string>Crop</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelStatusTip">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
