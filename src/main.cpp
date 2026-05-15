@@ -30,9 +30,6 @@ int main (int argc, char *argv[]) {
 
     MainWindow main_window;
 
-    // Set window as dialog so my wm open this as
-    // floating w/o configuring a rule for it
-    // main_window.setWindowFlag(Qt::Dialog);
     main_window.show();
 
     int app_return_code = app.exec();
