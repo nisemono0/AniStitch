@@ -1,7 +1,7 @@
-#include "app/displayimagescene.hpp"
+#include "app/stitchedimagescene.hpp"
 
 
-DisplayImageScene::DisplayImageScene(QObject *parent) : QGraphicsScene(parent) {
+StitchedImageScene::StitchedImageScene(QObject *parent) : QGraphicsScene(parent) {
     this->scene_pixmap_item = new QGraphicsPixmapItem(QPixmap());
     this->scene_pixmap_item->setTransformationMode(Qt::SmoothTransformation);
     this->scene_pixmap_item->setVisible(true);
@@ -9,20 +9,20 @@ DisplayImageScene::DisplayImageScene(QObject *parent) : QGraphicsScene(parent) {
     this->addItem(this->scene_pixmap_item);
 }
 
-DisplayImageScene::~DisplayImageScene() {
+StitchedImageScene::~StitchedImageScene() {
     delete this->scene_pixmap_item;
 }
 
-void DisplayImageScene::setPixmap(const QPixmap &pixmap) {
+void StitchedImageScene::setPixmap(const QPixmap &pixmap) {
     this->scene_pixmap_item->setPixmap(pixmap);
     this->setSceneRect(this->scene_pixmap_item->boundingRect());
 }
 
-void DisplayImageScene::clearScene() {
+void StitchedImageScene::clearScene() {
     this->scene_pixmap_item->setPixmap(QPixmap());
 }
 
-QRectF DisplayImageScene::getBoundingRect() {
+QRectF StitchedImageScene::getBoundingRect() {
     return this->scene_pixmap_item->boundingRect();
 }
 

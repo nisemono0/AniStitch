@@ -1,4 +1,4 @@
-#include "gui/displayimagedialog.hpp"
+#include "gui/stitchedimagedialog.hpp"
 
 #include "utils/opencv.hpp"
 #include "utils/file.hpp"
@@ -8,26 +8,26 @@
 #include <QMessageBox>
 
 
-DisplayImageDialog::DisplayImageDialog(QWidget *parent) : QDialog(parent), ui(new Ui::DisplayImageDialog) {
+StitchedImageDialog::StitchedImageDialog(QWidget *parent) : QDialog(parent), ui(new Ui::StitchedImageDialog) {
     this->ui->setupUi(this);
 
     // Set selected tab to the be normal image tab
     this->ui->tabWidgetDisplayImages->setCurrentWidget(this->ui->tabNormalImage);
 
     // Save button
-    connect(this->ui->pushButtonSaveImage, &QPushButton::clicked, this, &DisplayImageDialog::pushButtonSaveImage_clicked);
+    connect(this->ui->pushButtonSaveImage, &QPushButton::clicked, this, &StitchedImageDialog::pushButtonSaveImage_clicked);
     // Close button
-    connect(this->ui->pushButtonClose, &QPushButton::clicked, this, &DisplayImageDialog::close);
+    connect(this->ui->pushButtonClose, &QPushButton::clicked, this, &StitchedImageDialog::close);
 }
 
-DisplayImageDialog::~DisplayImageDialog() {
+StitchedImageDialog::~StitchedImageDialog() {
     this->stitched_normal_mat.release();
     this->stitched_parsed_mat.release();
     this->stitched_thresholded_mat.release();
     delete this->ui;
 }
 
-void DisplayImageDialog::receive_show_DisplayImageDialog_request(const cv::Mat &normal_mat, const cv::Mat &parsed_mat, const cv::Mat &thresholded_mat) {
+void StitchedImageDialog::receive_show_DisplayImageDialog_request(const cv::Mat &normal_mat, const cv::Mat &parsed_mat, const cv::Mat &thresholded_mat) {
     // Clear the scenes and clone the mats
     this->ui->graphicsDisplayNormalImageView->clearScene();
     this->ui->graphicsDisplayParsedImageView->clearScene();
@@ -57,7 +57,7 @@ void DisplayImageDialog::receive_show_DisplayImageDialog_request(const cv::Mat &
     }
 }
 
-void DisplayImageDialog::pushButtonSaveImage_clicked(bool checked) {
+void StitchedImageDialog::pushButtonSaveImage_clicked(bool checked) {
     QString save_image_path = Utils::FileDialog::saveImage(this);
 
     // Do nothing if save_image_path is null or empty

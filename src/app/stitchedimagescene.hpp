@@ -4,11 +4,11 @@
 #include <QGraphicsPixmapItem>
 
 
-class DisplayImageScene : public QGraphicsScene {
+class StitchedImageScene : public QGraphicsScene {
     Q_OBJECT;
 public:
-    explicit DisplayImageScene(QObject *parent = nullptr);
-    ~DisplayImageScene();
+    explicit StitchedImageScene(QObject *parent = nullptr);
+    ~StitchedImageScene();
 
     // Set QPixmap to show on scene
     void setPixmap(const QPixmap &pixmap);

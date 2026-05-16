@@ -1,27 +1,27 @@
 #pragma once
 
-#include "ui/ui_displayimagedialog.h"
+#include "ui/ui_stitchedimagedialog.h"
 
 #include <opencv2/core.hpp>
 
-#include "app/displayimageview.hpp"
+#include "app/stitchedimageview.hpp"
 
 #include <QDialog>
 #include <QWidget>
 
 
 namespace Ui {
-    class DisplayImageDialog;
+    class StitchedImageDialog;
 };
 
-class DisplayImageDialog : public QDialog {
+class StitchedImageDialog : public QDialog {
     Q_OBJECT;
 public:
-    explicit DisplayImageDialog(QWidget *parent = nullptr);
-    ~DisplayImageDialog() override;
+    explicit StitchedImageDialog(QWidget *parent = nullptr);
+    ~StitchedImageDialog() override;
 
 private:
-    Ui::DisplayImageDialog *ui;
+    Ui::StitchedImageDialog *ui;
 
     cv::Mat stitched_normal_mat;
     cv::Mat stitched_parsed_mat;

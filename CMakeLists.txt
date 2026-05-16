@@ -9,10 +9,6 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(AniStitch
-    src/app/displayimagescene.cpp
-    src/app/displayimagescene.hpp
-    src/app/displayimageview.cpp
-    src/app/displayimageview.hpp
     src/app/dualprogressdialog.cpp
     src/app/dualprogressdialog.hpp
     src/app/imagegraphicsscene.cpp
@@ -25,6 +21,10 @@ qt_add_executable(AniStitch
     src/app/imagelistview.hpp
     src/app/progressdialog.cpp
     src/app/progressdialog.hpp
+    src/app/stitchedimagescene.cpp
+    src/app/stitchedimagescene.hpp
+    src/app/stitchedimageview.cpp
+    src/app/stitchedimageview.hpp
     src/base/imageitem.cpp
     src/base/imageitem.hpp
     src/base/imageloader.cpp
@@ -35,12 +35,12 @@ qt_add_executable(AniStitch
     src/base/settings.hpp
     src/gui/cropdialog.cpp
     src/gui/cropdialog.hpp
-    src/gui/displayimagedialog.cpp
-    src/gui/displayimagedialog.hpp
     src/gui/logdialog.cpp
     src/gui/logdialog.hpp
     src/gui/mainwindow.cpp
     src/gui/mainwindow.hpp
+    src/gui/stitchedimagedialog.cpp
+    src/gui/stitchedimagedialog.hpp
     src/gui/stitchersettingsdialog.cpp
     src/gui/stitchersettingsdialog.hpp
     src/main.cpp
@@ -60,9 +60,9 @@ target_sources(AniStitch
     PRIVATE
         src/app/ui/dualprogressdialog.ui
         src/gui/ui/cropdialog.ui
-        src/gui/ui/displayimagedialog.ui
         src/gui/ui/logdialog.ui
         src/gui/ui/mainwindow.ui
+        src/gui/ui/stitchedimagedialog.ui
         src/gui/ui/stitchersettingsdialog.ui
 )
 

@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Ui setup
     this->ui->setupUi(this);
     this->log_window_dialog = new LogDialog(this);
-    this->display_image_dialog = new DisplayImageDialog(this);
+    this->display_image_dialog = new StitchedImageDialog(this);
     this->stitcher_settings_dialog = new StitcherSettingsDialog(this);
     this->crop_dialog = new CropDialog(this);
 
@@ -87,8 +87,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this->image_stitcher_worker, &ImageStitcher::send_ImageStitcher_status, this, &MainWindow::receive_ImageStitcher_status);
     // Receive ImageStitcher show progress bar request
     connect(this->image_stitcher_worker, &ImageStitcher::send_ImageStitcher_show_progress_bar, this, &MainWindow::receive_ImageStitcher_show_progress_bar);
-    // Send ImageStitcher stitched image to the DisplayImageDialog to be displayed
-    connect(this->image_stitcher_worker, &ImageStitcher::send_ImageStitcher_data, this->display_image_dialog, &DisplayImageDialog::receive_show_DisplayImageDialog_request);
+    // Send ImageStitcher stitched image to the StitchedImageDialog to be displayed
+    connect(this->image_stitcher_worker, &ImageStitcher::send_ImageStitcher_data, this->display_image_dialog, &StitchedImageDialog::receive_show_DisplayImageDialog_request);
 
     // Receive ImageGraphicsScene drag and drop events
     connect(this->ui->imageGraphicsView->getGraphicsScene(), &ImageGraphicsScene::send_ImageGraphicsScene_drag_drop_file_paths, this, &MainWindow::receive_ImageGraphicsScene_drag_drop_file_paths);

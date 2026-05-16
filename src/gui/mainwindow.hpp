@@ -3,7 +3,7 @@
 #include "ui/ui_mainwindow.h"
 
 #include "gui/logdialog.hpp"
-#include "gui/displayimagedialog.hpp"
+#include "gui/stitchedimagedialog.hpp"
 #include "gui/stitchersettingsdialog.hpp"
 #include "gui/cropdialog.hpp"
 
@@ -43,7 +43,7 @@ private:
     // Log window dialog
     LogDialog *log_window_dialog;
     // Display stitched image dialog
-    DisplayImageDialog *display_image_dialog;
+    StitchedImageDialog *display_image_dialog;
     // Stitcher settings dialog
     StitcherSettingsDialog *stitcher_settings_dialog;
     // Crop dialog

@@ -1,17 +1,17 @@
 #pragma once
 
-#include "app/displayimagescene.hpp"
+#include "app/stitchedimagescene.hpp"
 
 #include <QWidget>
 #include <QGraphicsView>
 #include <QResizeEvent>
 
 
-class DisplayImageView : public QGraphicsView {
+class StitchedImageView : public QGraphicsView {
     Q_OBJECT;
 public:
-    explicit DisplayImageView(QWidget *parent = nullptr);
-    ~DisplayImageView() override;
+    explicit StitchedImageView(QWidget *parent = nullptr);
+    ~StitchedImageView() override;
 
     // Display pixmap on the scene
     void displayPixmap(const QPixmap &pixmap);
@@ -19,7 +19,7 @@ public:
     void clearScene();
 
 private:
-    DisplayImageScene *image_scene;
+    StitchedImageScene *image_scene;
     // ScenePadding to use when fitting the scene
     const int ScenePadding = 5;
     // Fit image_scene in view keeping aspect ratio and adding padding on all sides
