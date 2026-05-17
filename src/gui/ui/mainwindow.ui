@@ -236,6 +236,9 @@
    <property name="text">
     <string>Show logs</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
   </action>
   <action name="actionShowAbout">
    <property name="text">
