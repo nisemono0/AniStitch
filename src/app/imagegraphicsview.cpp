@@ -38,3 +38,22 @@ void ImageGraphicsView::receive_clear_scene_request() {
     this->image_scene->clearScene();
 }
 
+void ImageGraphicsView::receive_enable_selection_request() {
+    this->image_scene->setSelectionEnabled(true);
+    this->setCursor(Qt::CrossCursor);
+}
+
+void ImageGraphicsView::receive_disable_selection_request() {
+    this->image_scene->setSelectionEnabled(false);
+    this->image_scene->resetSelection();
+    this->setCursor(Qt::ArrowCursor);
+}
+
+void ImageGraphicsView::receive_reset_selection_request() {
+    this->image_scene->resetSelection();
+}
+
+void ImageGraphicsView::receive_send_selection_request() {
+    emit send_ImageGraphicsView_selection(this->image_scene->getSelectionPoints());
+}
+

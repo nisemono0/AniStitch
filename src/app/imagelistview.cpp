@@ -54,7 +54,7 @@ void ImageListView::receive_clear_items_request() {
     this->clear();
 }
 
-void ImageListView::receive_crop_selected_items_request(int top_px, int right_px, int bottom_px, int left_px) {
+void ImageListView::receive_crop_value_request(int top_px, int right_px, int bottom_px, int left_px) {
     QModelIndexList selected_idx = this->selectedIndexes();
 
     QModelIndex current_selected_idx = this->selectionModel()->currentIndex();
@@ -74,6 +74,33 @@ void ImageListView::receive_crop_selected_items_request(int top_px, int right_px
             emit currentChanged(current_selected_idx, current_selected_idx);
         }
     }
+}
+
+void ImageListView::receive_crop_selection_request(const std::optional<std::vector<cv::Point>> &polygon_points) {
+    if (!polygon_points) {
+        return;
+    }
+
+    QModelIndexList selected_idx = this->selectedIndexes();
+
+    QModelIndex current_selected_idx = this->selectionModel()->currentIndex();
+
+    for (auto &idx : selected_idx) {
+        if (idx.data(ImageListModel::ITEM_CVMAT).canConvert<cv::Mat>()) {
+            QVariant cropped_cvmat_variant = QVariant::fromValue(
+                        Utils::Image::cropMat(
+                                idx.data(ImageListModel::ITEM_CVMAT).value<cv::Mat>(),
+                                polygon_points.value()
+                            )
+                    );
+            this->image_list_model->setData(idx, cropped_cvmat_variant, ImageListModel::ITEM_CVMAT);
+
+            // Manually trigger the currentChanged slot with the last selected index
+            // this way if the selecte item's image gets updated it will be displayed
+            emit currentChanged(current_selected_idx, current_selected_idx);
+        }
+    }
+
 }
 
 void ImageListView::action_delete_items_triggered(bool checked) {

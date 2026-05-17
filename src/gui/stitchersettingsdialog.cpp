@@ -50,6 +50,9 @@ StitcherSettingsDialog::StitcherSettingsDialog(QWidget *parent) : QDialog(parent
     this->ui->pushButtonStitchPanorama->installEventFilter(this);
     this->ui->pushButtonStitchScan->installEventFilter(this);
 
+    // Default status tip message
+    this->ui->labelStatusTip->setText(QStringLiteral("Custom settings for stitcher"));
+
     // Compensator combobox setup
     this->ui->comboBoxExposureCompensator->addItem(QStringLiteral("Blocks Gain"), CompensatorData::BLOCKS_GAIN);
     this->ui->comboBoxExposureCompensator->addItem(QStringLiteral("Blocks Channels"), CompensatorData::BLOCKS_CHANNEL);
@@ -145,7 +148,7 @@ bool StitcherSettingsDialog::eventFilter(QObject *o, QEvent *e) {
         }
         case QEvent::Leave:
         {
-            this->ui->labelStatusTip->clear();
+            this->ui->labelStatusTip->setText(QStringLiteral("Custom settings for stitcher"));
             break;
         }
         default:

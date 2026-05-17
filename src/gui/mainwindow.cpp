@@ -45,9 +45,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this->ui->pushButtonClearImages, &QPushButton::clicked, this->image_loader_worker, &ImageLoader::receive_ImageLoader_reset_counter);
     // Send signal to CropDialog to show the dialog
     connect(this->ui->pushButtonCropImages, &QPushButton::clicked, this->crop_dialog, &CropDialog::receive_show_CropDialog_request);
+    // Enable crop selection when showing the CropDialog
+    connect(this->ui->pushButtonCropImages, &QPushButton::clicked, this->ui->imageGraphicsView, &ImageGraphicsView::receive_enable_selection_request);
+    // Disable crop selection on CropDialog reject
+    // Rejection happen on ESC, Alt-F4, close() etc.
+    connect(this->crop_dialog, &CropDialog::rejected, this->ui->imageGraphicsView, &ImageGraphicsView::receive_disable_selection_request);
+    // Reset selection on CropDialog reset button press
+    connect(this->crop_dialog, &CropDialog::send_CropDialog_reset, this->ui->imageGraphicsView, &ImageGraphicsView::receive_reset_selection_request);
+    // Emit signal to forward the selection coords
+    connect(this->crop_dialog, &CropDialog::send_CropDialog_crop_selection, this->ui->imageGraphicsView, &ImageGraphicsView::receive_send_selection_request);
 
     // CropDialog send crop values
-    connect(this->crop_dialog, &CropDialog::send_CropDialog_crop_values, this->ui->imagesListView, &ImageListView::receive_crop_selected_items_request);
+    connect(this->crop_dialog, &CropDialog::send_CropDialog_crop_value, this->ui->imagesListView, &ImageListView::receive_crop_value_request);
+    // CropdDialog send crop selection from ImageGraphicsView
+    connect(this->ui->imageGraphicsView, &ImageGraphicsView::send_ImageGraphicsView_selection, this->ui->imagesListView, &ImageListView::receive_crop_selection_request);
 
     // ImageListView send status message to image_list_status
     connect(this->ui->imagesListView, &ImageListView::send_ImageListView_status, this->image_list_status, &QLabel::setText);

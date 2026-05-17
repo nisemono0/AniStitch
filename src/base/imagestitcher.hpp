@@ -25,9 +25,9 @@ public:
 
 private:
     // Chunk sizes
-    const static int DEFAULT_CHUNK_SIZE = 10;
-    const static int SCAN_CHUNKS_SIZE = 10;
-    const static int PANORAMA_CHUNKS_SIZE = 5;
+    static const int DEFAULT_CHUNK_SIZE = 10;
+    static const int SCAN_CHUNKS_SIZE = 10;
+    static const int PANORAMA_CHUNKS_SIZE = 5;
 
     // Stitching thread pool
     QThreadPool *thread_pool;

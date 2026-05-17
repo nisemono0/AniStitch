@@ -53,7 +53,9 @@ public slots:
     // Remove all items from ImageListView
     void receive_clear_items_request();
     // Crop the slected items top_px/right_px/bottom_px/left_px number of pixels
-    void receive_crop_selected_items_request(int top_px, int right_px, int bottom_px, int left_px);
+    void receive_crop_value_request(int top_px, int right_px, int bottom_px, int left_px);
+    // Crop the selected items using polygon_points
+    void receive_crop_selection_request(const std::optional<std::vector<cv::Point>> &polygon_points);
 
 private slots:
     void action_delete_items_triggered(bool checked = false);

@@ -28,6 +28,8 @@ namespace Utils::Image {
     cv::Mat getBGRAMatFromParsing(const cv::Mat &cv_mat);
     // Crop a cv_mat a number of top_px/right_px/bottom_px/left_px pixels from top/right/bottom/left
     cv::Mat cropMat(const cv::Mat &cv_mat, int top_px, int right_px, int bottom_px, int left_px);
+    // Crop the polygon from polygon_points from the cv_mat
+    cv::Mat cropMat(const cv::Mat &cv_mat, const std::vector<cv::Point> &polygon_points);
 };
 
 namespace Utils::OpenCV {

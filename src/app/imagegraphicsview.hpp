@@ -27,9 +27,24 @@ private:
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
+signals:
+    void send_ImageGraphicsView_selection(const std::optional<std::vector<cv::Point>> &polygon_points);
+
 public slots:
+    // Show given pixmap on the scene
     void receive_show_pixmap_request(const QPixmap &pixmap);
     void receive_clear_scene_request();
+
+    // Enable / Disable selection
+    void receive_enable_selection_request();
+    void receive_disable_selection_request();
+
+    // Reset current selection coords
+    void receive_reset_selection_request();
+
+    // Retrieve the current selection's coords and
+    // forward them to be processed
+    void receive_send_selection_request();
 
 };
 

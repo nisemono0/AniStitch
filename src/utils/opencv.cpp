@@ -1,8 +1,6 @@
 #include "utils/opencv.hpp"
 #include "utils/log.hpp"
 
-#include "base/imageitem.hpp"
-
 #include <opencv2/core/ocl.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
@@ -168,6 +166,30 @@ cv::Mat Utils::Image::cropMat(const cv::Mat &cv_mat, int top_px, int right_px, i
     return cv_mat(crop_roi);
 }
 
+cv::Mat Utils::Image::cropMat(const cv::Mat &cv_mat, const std::vector<cv::Point> &polygon_points) {
+    if (polygon_points.size() < 4) {
+        return cv_mat;
+    }
+    // Create a crop maske
+    cv::Mat crop_mask = cv::Mat(cv_mat.size(), CV_8UC1, cv::Scalar(255));
+    // Set the polygon area to 0
+    cv::fillPoly(crop_mask, polygon_points, cv::Scalar(0));
+
+    // Convert to BGRA or use as is if already BGRA
+    cv::Mat alpha_mat;
+    if (cv_mat.channels() == 3) {
+        cv::cvtColor(cv_mat, alpha_mat, cv::COLOR_BGR2BGRA);
+    } else {
+        alpha_mat = cv_mat;
+    }
+
+    // The resulting cropped mat
+    cv::Mat result;
+    alpha_mat.copyTo(result, crop_mask);
+
+    return result;
+}
+
 void Utils::OpenCV::disableOpenCL() {
     if (cv::ocl::haveOpenCL()) {
         Log::info(QStringLiteral("OpenCL is supported, trying to disable it"));
@@ -180,7 +202,7 @@ void Utils::OpenCV::disableOpenCL() {
             Log::info(QStringLiteral("  -> OpenCL is disabled"));
         }
     } else {
-        Log::warning(QStringLiteral("OpenCL not supported"));
+        Log::info(QStringLiteral("OpenCL not supported"));
     }
 }
 

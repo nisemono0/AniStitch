@@ -19,19 +19,25 @@ public:
 private:
     Ui::CropDialog *ui;
 
+    // Reset values
+    void resetValues();
+
 protected:
     bool eventFilter(QObject *o, QEvent *e) override;
 
 signals:
-    void send_CropDialog_crop_values(int top_px, int right_px, int bottom_px, int left_px);
+    void send_CropDialog_crop_value(int top_px, int right_px, int bottom_px, int left_px);
+    void send_CropDialog_crop_selection();
+    void send_CropDialog_reset();
 
 public slots:
     void receive_show_CropDialog_request();
 
 private slots:
-    // Reset values
-    void resetValues();
+    // Reset button
+    void pushButtonReset_clicked(bool checked = false);
     // Crop button pressed
-    void pushButtonCrop_clicked(bool checked = false);
+    void pushButtonCropValue_clicked(bool checked = false);
+    void pushButtonCropSelection_clicked(bool checked = false);
 };
 

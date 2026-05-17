@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>272</width>
-    <height>269</height>
+    <width>375</width>
+    <height>270</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>272</width>
-    <height>269</height>
+    <width>375</width>
+    <height>270</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>272</width>
-    <height>269</height>
+    <width>375</width>
+    <height>270</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -212,15 +212,28 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonCrop">
+      <widget class="QPushButton" name="pushButtonCropSelection">
        <property name="focusPolicy">
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="statusTip">
-        <string>Crop selected images</string>
+        <string>Crop selected image(s) using set selection</string>
        </property>
        <property name="text">
-        <string>Crop</string>
+        <string>Crop selection</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCropValue">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
+       <property name="statusTip">
+        <string>Crop selected image(s) using set values</string>
+       </property>
+       <property name="text">
+        <string>Crop value</string>
        </property>
       </widget>
      </item>

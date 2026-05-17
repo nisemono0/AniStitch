@@ -21,13 +21,18 @@ CropDialog::CropDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CropDialog
     // Buttons
     this->ui->pushButtonReset->installEventFilter(this);
     this->ui->pushButtonClose->installEventFilter(this);
-    this->ui->pushButtonCrop->installEventFilter(this);
+    this->ui->pushButtonCropValue->installEventFilter(this);
+    this->ui->pushButtonCropSelection->installEventFilter(this);
+
+    // Default status tip message
+    this->ui->labelStatusTip->setText(QStringLiteral("You can make selections on the image"));
 
     // Cancel/Reset buttons
-    connect(this->ui->pushButtonClose, &QPushButton::clicked, this, &QDialog::close);
-    connect(this->ui->pushButtonReset, &QPushButton::clicked, this, &CropDialog::resetValues);
+    connect(this->ui->pushButtonClose, &QPushButton::clicked, this, &CropDialog::close);
+    connect(this->ui->pushButtonReset, &QPushButton::clicked, this, &CropDialog::pushButtonReset_clicked);
     // Crop button pressed
-    connect(this->ui->pushButtonCrop, &QPushButton::clicked, this, &CropDialog::pushButtonCrop_clicked);
+    connect(this->ui->pushButtonCropValue, &QPushButton::clicked, this, &CropDialog::pushButtonCropValue_clicked);
+    connect(this->ui->pushButtonCropSelection, &QPushButton::clicked, this, &CropDialog::pushButtonCropSelection_clicked);
 }
 
 CropDialog::~CropDialog() {
@@ -49,7 +54,7 @@ bool CropDialog::eventFilter(QObject *o, QEvent *e) {
         }
         case QEvent::Leave:
         {
-            this->ui->labelStatusTip->clear();
+            this->ui->labelStatusTip->setText(QStringLiteral("You can make selections on the image"));
             break;
         }
         default:
@@ -76,12 +81,21 @@ void CropDialog::resetValues() {
     this->ui->spinBoxCropLeft->setValue(0);
 }
 
-void CropDialog::pushButtonCrop_clicked(bool checked) {
+void CropDialog::pushButtonReset_clicked(bool checked) {
+    this->resetValues();
+    emit send_CropDialog_reset();
+}
+
+void CropDialog::pushButtonCropValue_clicked(bool checked) {
     int top_px = this->ui->spinBoxCropTop->value();
     int right_px = this->ui->spinBoxCropRight->value();
     int bottom_px = this->ui->spinBoxCropBottom->value();
     int left_px = this->ui->spinBoxCropLeft->value();
 
-    emit send_CropDialog_crop_values(top_px, right_px, bottom_px, left_px);
+    emit send_CropDialog_crop_value(top_px, right_px, bottom_px, left_px);
+}
+
+void CropDialog::pushButtonCropSelection_clicked(bool checked) {
+    emit send_CropDialog_crop_selection();
 }
 
