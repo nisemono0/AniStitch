@@ -18,6 +18,143 @@ ImageStitcher::~ImageStitcher() {
     delete this->thread_pool;
 }
 
+void ImageStitcher::startWorker(const std::vector<cv::Mat> &cv_mats, ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings) {
+    // Show progress bar
+    emit send_ImageStitcher_show_progress_bar();
+
+    int chunk_size = ImageStitcher::DEFAULT_CHUNK_SIZE;
+
+    switch (stitcher_type) {
+        case ImageStitcherType::SCAN:
+        {
+            chunk_size = ImageStitcher::SCAN_CHUNKS_SIZE;
+            break;
+        }
+        case ImageStitcherType::PANORAMA:
+        {
+            chunk_size = ImageStitcher::PANORAMA_CHUNKS_SIZE;
+            break;
+        }
+        case ImageStitcherType::CUSTOM_SCAN:
+        {
+            chunk_size = ImageStitcher::SCAN_CHUNKS_SIZE;
+            break;
+        }
+        case ImageStitcherType::CUSTOM_PANORAMA:
+        {
+            chunk_size = ImageStitcher::PANORAMA_CHUNKS_SIZE;
+            break;
+        }
+    }
+
+    int total_steps = this->getTotalProgressToDo(cv_mats.size(), chunk_size);
+    int current_step = 0;
+
+    std::vector<cv::Mat> image_list = cv_mats;
+
+    Log::info(QStringLiteral("Start stitching images: %1").arg(QString::number(cv_mats.size())));
+
+    QElapsedTimer stitcher_timer;
+    stitcher_timer.start();
+
+    // Process until cv_mats has a single image
+    while (image_list.size() > 1) {
+        if (QThread::currentThread()->isInterruptionRequested()) {
+            emit send_ImageStitcher_status(ImageStitcherStatus::INTERRUPTED);
+            return;
+        }
+
+        Log::info(QStringLiteral("  -> Images left to stitch: %1").arg(QString::number(image_list.size())));
+
+        // Split into chunks to process
+        std::vector<std::vector<cv::Mat>> cv_mats_chunks = this->splitIntoChunks(image_list, chunk_size);
+
+        Log::info(QStringLiteral("  -> Chunks to stitch: %1").arg(QString::number(cv_mats_chunks.size())));
+
+        // Thread futures
+        QList<QFuture<std::expected<cv::Mat, cv::Stitcher::Status>>> stitch_thread_futures;
+        for (auto &cv_mat_chunk : cv_mats_chunks) {
+            stitch_thread_futures.append(
+                        QtConcurrent::run(
+                                this->thread_pool,
+                                [this, cv_mat_chunk, stitcher_type, stitcher_settings] {
+                                    return this->stitchImages(cv_mat_chunk, stitcher_type, stitcher_settings);
+                                }
+                            )
+                    );
+        }
+
+        std::vector<cv::Mat> stitched_images = std::vector<cv::Mat>();
+        for (auto &stitch_future : stitch_thread_futures) {
+            if (QThread::currentThread()->isInterruptionRequested()) {
+                emit send_ImageStitcher_status(ImageStitcherStatus::INTERRUPTED);
+                return;
+            }
+            // Wait for a thread to finish before taking the result
+            stitch_future.waitForFinished();
+            // get stitch result
+            auto stitch_result = stitch_future.result();
+            // If result is cv::Mat add it to the stitched_images vector
+            if (stitch_result) {
+                // Add stitched images for reprocessing
+                stitched_images.push_back(stitch_result.value());
+                // Send progress
+                current_step++;
+                int progress = (current_step * 100) / total_steps;
+                emit send_ImageStitcher_progress(progress);
+            // If result is cv::Stitcher::Status process it and emit signal
+            } else {
+                switch (stitch_result.error()) {
+                    case cv::Stitcher::ERR_NEED_MORE_IMGS:
+                    {
+                        Log::error(QStringLiteral("Error stitching images: NEED_MORE_IMGS"));
+                        emit send_ImageStitcher_status(ImageStitcherStatus::NEED_MORE_IMGS);
+                        return;
+                    }
+                    case cv::Stitcher::ERR_HOMOGRAPHY_EST_FAIL:
+                    {
+                        Log::error(QStringLiteral("Error stitching images: EST_FAIL"));
+                        emit send_ImageStitcher_status(ImageStitcherStatus::EST_FAIL);
+                        return;
+                    }
+                    case cv::Stitcher::ERR_CAMERA_PARAMS_ADJUST_FAIL:
+                    {
+                        Log::error(QStringLiteral("Error stitching images: ADJUST_FAIL"));
+                        emit send_ImageStitcher_status(ImageStitcherStatus::ADJUST_FAIL);
+                        return;
+                    }
+                    case cv::Stitcher::OK: break;
+                }
+            }
+        }
+
+        image_list = stitched_images;
+    }
+
+    // image_list should contain the final stitched image
+    // If it contains more images it means that the stitch failed somehow
+    if (image_list.size() != 1) {
+        Log::error(QStringLiteral("Error stitching images: NOT_DONE"));
+        emit send_ImageStitcher_status(ImageStitcherStatus::NOT_DONE);
+        return;
+    }
+
+    // image_list[0] is the normal full stitched image
+    cv::Mat normal_mat = image_list[0];
+    cv::Mat parsed_mat = Utils::Image::getBGRAMatFromParsing(normal_mat);
+    cv::Mat thresholded_mat = Utils::Image::getBGRAMatFromThreshold(normal_mat);
+
+    QTime time = QTime(0, 0);
+    QString sec_done = time.addMSecs(
+            stitcher_timer.elapsed()
+            ).toString("mm:ss.zz");
+    Log::info(QStringLiteral("Stitching done in: %1").arg(sec_done));
+
+    emit send_ImageStitcher_data(normal_mat, parsed_mat, thresholded_mat);
+    // Send stitcher status
+    emit send_ImageStitcher_status(ImageStitcherStatus::OK);
+}
+
 cv::Ptr<cv::Stitcher> ImageStitcher::getScanStitcherPtr() {
     cv::Ptr<cv::Stitcher> stitcher = cv::Stitcher::create(cv::Stitcher::SCANS);
 
@@ -465,139 +602,18 @@ int ImageStitcher::getTotalProgressToDo(int size, int chunk_size) {
 }
 
 void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Mat> &cv_mats, ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings) {
-    // Show progress bar
-    emit send_ImageStitcher_show_progress_bar();
-
-    int chunk_size = ImageStitcher::DEFAULT_CHUNK_SIZE;
-
-    switch (stitcher_type) {
-        case ImageStitcherType::SCAN:
-        {
-            chunk_size = ImageStitcher::SCAN_CHUNKS_SIZE;
-            break;
-        }
-        case ImageStitcherType::PANORAMA:
-        {
-            chunk_size = ImageStitcher::PANORAMA_CHUNKS_SIZE;
-            break;
-        }
-        case ImageStitcherType::CUSTOM_SCAN:
-        {
-            chunk_size = ImageStitcher::SCAN_CHUNKS_SIZE;
-            break;
-        }
-        case ImageStitcherType::CUSTOM_PANORAMA:
-        {
-            chunk_size = ImageStitcher::PANORAMA_CHUNKS_SIZE;
-            break;
-        }
-    }
-
-    int total_steps = this->getTotalProgressToDo(cv_mats.size(), chunk_size);
-    int current_step = 0;
-
-    std::vector<cv::Mat> image_list = cv_mats;
-
-    Log::info(QStringLiteral("Start stitching images: %1").arg(QString::number(cv_mats.size())));
-
-    QElapsedTimer stitcher_timer;
-    stitcher_timer.start();
-
-    // Process until cv_mats has a single image
-    while (image_list.size() > 1) {
-        if (QThread::currentThread()->isInterruptionRequested()) {
-            emit send_ImageStitcher_status(ImageStitcherStatus::INTERRUPTED);
-            return;
-        }
-
-        Log::info(QStringLiteral("  -> Images left to stitch: %1").arg(QString::number(image_list.size())));
-
-        // Split into chunks to process
-        std::vector<std::vector<cv::Mat>> cv_mats_chunks = this->splitIntoChunks(image_list, chunk_size);
-
-        Log::info(QStringLiteral("  -> Chunks to stitch: %1").arg(QString::number(cv_mats_chunks.size())));
-
-        // Thread futures
-        QList<QFuture<std::expected<cv::Mat, cv::Stitcher::Status>>> stitch_thread_futures;
-        for (auto &cv_mat_chunk : cv_mats_chunks) {
-            stitch_thread_futures.append(
-                        QtConcurrent::run(
-                                this->thread_pool,
-                                [this, cv_mat_chunk, stitcher_type, stitcher_settings] {
-                                    return this->stitchImages(cv_mat_chunk, stitcher_type, stitcher_settings);
-                                }
-                            )
-                    );
-        }
-
-        std::vector<cv::Mat> stitched_images = std::vector<cv::Mat>();
-        for (auto &stitch_future : stitch_thread_futures) {
-            if (QThread::currentThread()->isInterruptionRequested()) {
-                emit send_ImageStitcher_status(ImageStitcherStatus::INTERRUPTED);
-                return;
+    try {
+        this->startWorker(cv_mats, stitcher_type, stitcher_settings);
+    } catch (const QUnhandledException &ex) {
+        try {
+            if (ex.exception()) {
+                std::rethrow_exception(ex.exception());
             }
-            // Wait for a thread to finish before taking the result
-            stitch_future.waitForFinished();
-            // get stitch result
-            auto stitch_result = stitch_future.result();
-            // If result is cv::Mat add it to the stitched_images vector
-            if (stitch_result) {
-                // Add stitched images for reprocessing
-                stitched_images.push_back(stitch_result.value());
-                // Send progress
-                current_step++;
-                int progress = (current_step * 100) / total_steps;
-                emit send_ImageStitcher_progress(progress);
-            // If result is cv::Stitcher::Status process it and emit signal
-            } else {
-                switch (stitch_result.error()) {
-                    case cv::Stitcher::ERR_NEED_MORE_IMGS:
-                    {
-                        Log::error(QStringLiteral("Error stitching images: NEED_MORE_IMGS"));
-                        emit send_ImageStitcher_status(ImageStitcherStatus::NEED_MORE_IMGS);
-                        return;
-                    }
-                    case cv::Stitcher::ERR_HOMOGRAPHY_EST_FAIL:
-                    {
-                        Log::error(QStringLiteral("Error stitching images: EST_FAIL"));
-                        emit send_ImageStitcher_status(ImageStitcherStatus::EST_FAIL);
-                        return;
-                    }
-                    case cv::Stitcher::ERR_CAMERA_PARAMS_ADJUST_FAIL:
-                    {
-                        Log::error(QStringLiteral("Error stitching images: ADJUST_FAIL"));
-                        emit send_ImageStitcher_status(ImageStitcherStatus::ADJUST_FAIL);
-                        return;
-                    }
-                    case cv::Stitcher::OK: break;
-                }
-            }
+        } catch (cv::Exception &ex) {
+            Log::error(QStringLiteral("OpenCV error: %1").arg(ex.what()));
         }
 
-        image_list = stitched_images;
+        emit send_ImageStitcher_status(ImageStitcherStatus::EXCEPTION);
     }
-
-    // image_list should contain the final stitched image
-    // If it contains more images it means that the stitch failed somehow
-    if (image_list.size() != 1) {
-        Log::error(QStringLiteral("Error stitching images: NOT_DONE"));
-        emit send_ImageStitcher_status(ImageStitcherStatus::NOT_DONE);
-        return;
-    }
-
-    // image_list[0] is the normal full stitched image
-    cv::Mat normal_mat = image_list[0];
-    cv::Mat parsed_mat = Utils::Image::getBGRAMatFromParsing(normal_mat);
-    cv::Mat thresholded_mat = Utils::Image::getBGRAMatFromThreshold(normal_mat);
-
-    QTime time = QTime(0, 0);
-    QString sec_done = time.addMSecs(
-            stitcher_timer.elapsed()
-            ).toString("mm:ss.zz");
-    Log::info(QStringLiteral("Stitching done in: %1").arg(sec_done));
-
-    emit send_ImageStitcher_data(normal_mat, parsed_mat, thresholded_mat);
-    // Send stitcher status
-    emit send_ImageStitcher_status(ImageStitcherStatus::OK);
 }
 

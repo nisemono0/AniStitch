@@ -16,7 +16,7 @@ class ImageStitcher : public QObject {
     Q_OBJECT;
 public:
     // Status to send back
-    enum ImageStitcherStatus { OK, NOT_DONE, NEED_MORE_IMGS, EST_FAIL, ADJUST_FAIL, INTERRUPTED };
+    enum ImageStitcherStatus { OK, EXCEPTION, NOT_DONE, NEED_MORE_IMGS, EST_FAIL, ADJUST_FAIL, INTERRUPTED };
     // Stitch type
     enum ImageStitcherType { SCAN, PANORAMA, CUSTOM_SCAN, CUSTOM_PANORAMA };
 
@@ -31,6 +31,9 @@ private:
 
     // Stitching thread pool
     QThreadPool *thread_pool;
+
+    // Start worker
+    void startWorker(const std::vector<cv::Mat> &cv_mats, ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings);
 
     // Returns a cv::Ptr of type cv::Stitcher with default SCAN settings
     cv::Ptr<cv::Stitcher> getScanStitcherPtr();

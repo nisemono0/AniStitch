@@ -321,6 +321,11 @@ void MainWindow::receive_ImageStitcher_status(ImageStitcher::ImageStitcherStatus
             QMessageBox::information(this, QStringLiteral("Image stitcher"), QStringLiteral("Done stitching"));
             break;
         }
+        case ImageStitcher::ImageStitcherStatus::EXCEPTION:
+        {
+            QMessageBox::critical(this, QStringLiteral("Image Stitcher"), QStringLiteral("Error: worker exception"));
+            break;
+        }
         case ImageStitcher::ImageStitcherStatus::NOT_DONE:
         {
             QMessageBox::warning(this, QStringLiteral("Image stitcher"), QStringLiteral("Not all images stitched"));
