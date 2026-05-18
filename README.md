@@ -6,7 +6,7 @@
 
 ## Info
 Program to stitch images from anime together. Works on things other than anime too. <br>
-Takes video/image files as input. <br>
+Takes video/image files as input. Can be given a list of files as argument to load them directly. <br>
 Stitches chunks of images in an inverted pyramid style. Each chunk in a different thread.
 
 For example, with 100 images:
