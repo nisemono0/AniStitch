@@ -3,7 +3,7 @@
 #include <QDir>
 
 
-QSettings Settings::settings = QSettings(App::OrgName, App::AppName);
+QSettings Settings::settings = QSettings(Utils::App::OrgName, Utils::App::AppName);
 
 QString Settings::last_open_file_path = QDir::homePath();
 QString Settings::last_save_stitch_path = QDir::homePath();

@@ -30,7 +30,7 @@ namespace Ui {
 class MainWindow : public QMainWindow {
     Q_OBJECT;
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(const QStringList &arg_file_list = QStringList(), QWidget *parent = nullptr);
     ~MainWindow() override;
 
 private:
@@ -63,6 +63,8 @@ private:
     // Get ImageList images and starts ImageStitcher thread.
     // Images are stitched using stitcher_type
     void startImageStitch(ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings);
+    // Process the list of files given as argument
+    void processArgFileList(const QStringList &arg_file_list);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;

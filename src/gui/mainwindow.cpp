@@ -8,7 +8,7 @@
 #include <QMimeData>
 
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(const QStringList &arg_file_list, QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     // Ui setup
     this->ui->setupUi(this);
     this->log_window_dialog = new LogDialog(this);
@@ -103,6 +103,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // Receive ImageGraphicsScene drag and drop events
     connect(this->ui->imageGraphicsView->getGraphicsScene(), &ImageGraphicsScene::send_ImageGraphicsScene_drag_drop_file_paths, this, &MainWindow::receive_ImageGraphicsScene_drag_drop_file_paths);
+
+    // Process arguments
+    this->processArgFileList(arg_file_list);
 }
 
 MainWindow::~MainWindow() {
@@ -194,6 +197,28 @@ void MainWindow::startImageStitch(ImageStitcher::ImageStitcherType stitcher_type
     // Start the thread and send work
     this->image_stitcher_thread->start();
     emit request_ImageStitcher_start(cv_mats, stitcher_type, stitcher_settings);
+}
+
+void MainWindow::processArgFileList(const QStringList &arg_file_list) {
+    if (arg_file_list.isEmpty()) {
+        return;
+    }
+
+    // If the ImageLoader thread is running, show a
+    // message and bring the progress bar on front
+    if (this->image_loader_thread->isRunning()) {
+        // Bring the progress dialog on front again
+        if (this->image_loader_progress_dialog) {
+            this->image_loader_progress_dialog->raise();
+            this->image_loader_progress_dialog->activateWindow();
+        }
+        QMessageBox::information(this, QStringLiteral("Load file(s)"), QStringLiteral("Already running"));
+        return;
+    }
+
+    // Start the thread and send work
+    this->image_loader_thread->start();
+    emit request_ImageLoader_start(arg_file_list);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event) {
