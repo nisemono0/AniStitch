@@ -6,6 +6,14 @@
 StitcherSettingsDialog::StitcherSettingsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::StitcherSettingsDialog) {
     this->ui->setupUi(this);
 
+    // Features finder combobox setup
+    this->ui->comboBoxFeaturesFinder->addItem(QStringLiteral("SIFT"), FeaturesFinder::SIFT);
+    this->ui->comboBoxFeaturesFinder->addItem(QStringLiteral("ORB"), FeaturesFinder::ORB);
+
+    // Seam finder combobox setup
+    this->ui->comboBoxSeamFinder->addItem(QStringLiteral("Cost color"), SeamFinder::COST_COLOR);
+    this->ui->comboBoxSeamFinder->addItem(QStringLiteral("Cost color gradient"), SeamFinder::COST_COLOR_GRAD);
+
     // Wave correct combobox setup
     this->ui->comboBoxWaveCorrect->addItem(QStringLiteral("Horizontal"), WaveCorrectData::HORIZONTAL);
     this->ui->comboBoxWaveCorrect->addItem(QStringLiteral("Vertical"), WaveCorrectData::VERTICAL);
@@ -26,6 +34,15 @@ StitcherSettingsDialog::StitcherSettingsDialog(QWidget *parent) : QDialog(parent
     // Confidence threshold
     this->ui->labelConfidenceThreshold->installEventFilter(this);
     this->ui->doubleSpinBoxConfidenceThreshold->installEventFilter(this);
+    // Features finder
+    this->ui->labelFeaturesFinder->installEventFilter(this);
+    this->ui->comboBoxFeaturesFinder->installEventFilter(this);
+    // Features number
+    this->ui->labelFeaturesNumber->installEventFilter(this);
+    this->ui->spinBoxFeaturesNumber->installEventFilter(this);
+    // Seam finder
+    this->ui->labelSeamFinder->installEventFilter(this);
+    this->ui->comboBoxSeamFinder->installEventFilter(this);
     // Blender bands
     this->ui->labelNumberBands->installEventFilter(this);
     this->ui->spinBoxNumberBands->installEventFilter(this);
@@ -73,6 +90,37 @@ StitcherSettings StitcherSettingsDialog::getStitcherSettings() {
     stitcher_settings.registration_res = this->ui->doubleSpinBoxRegistrationRes->value();
     stitcher_settings.seam_res = this->ui->doubleSpinBoxSeamRes->value();
     stitcher_settings.confidence_threshold = this->ui->doubleSpinBoxConfidenceThreshold->value();
+
+    FeaturesFinder features_finder = static_cast<FeaturesFinder>(this->ui->comboBoxFeaturesFinder->currentData().toInt());
+    switch (features_finder) {
+        case SIFT:
+        {
+            stitcher_settings.features_finder = StitcherSettings::FeaturesFinder::SIFT;
+            break;
+        }
+        case ORB:
+        {
+            stitcher_settings.features_finder = StitcherSettings::FeaturesFinder::ORB;
+            break;
+        }
+    }
+
+    stitcher_settings.features_finder_number = this->ui->spinBoxFeaturesNumber->value();
+
+    SeamFinder seam_finder = static_cast<SeamFinder>(this->ui->comboBoxSeamFinder->currentData().toInt());
+    switch (seam_finder) {
+        case COST_COLOR:
+        {
+            stitcher_settings.seam_finder = StitcherSettings::SeamFinder::COST_COLOR;
+            break;
+        }
+        case COST_COLOR_GRAD:
+        {
+            stitcher_settings.seam_finder = StitcherSettings::SeamFinder::COST_COLOR_GRAD;
+            break;
+        }
+    }
+
     stitcher_settings.blender_bands = this->ui->spinBoxNumberBands->value();
 
     WaveCorrectData wave_correct = static_cast<WaveCorrectData>(this->ui->comboBoxWaveCorrect->currentData().toInt());
@@ -187,6 +235,9 @@ void StitcherSettingsDialog::resetValues() {
     this->ui->doubleSpinBoxRegistrationRes->setValue(0.7);
     this->ui->doubleSpinBoxSeamRes->setValue(0.1);
     this->ui->doubleSpinBoxConfidenceThreshold->setValue(0.7);
+    this->ui->comboBoxFeaturesFinder->setCurrentIndex(0);
+    this->ui->spinBoxFeaturesNumber->setValue(2000);
+    this->ui->comboBoxSeamFinder->setCurrentIndex(0);
     this->ui->spinBoxNumberBands->setValue(0);
     this->ui->comboBoxWaveCorrect->setCurrentIndex(0);
     this->ui->comboBoxWarper->setCurrentIndex(0);

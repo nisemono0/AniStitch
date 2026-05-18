@@ -5,6 +5,8 @@
 #include <QMetaType>
 
 struct StitcherSettings {
+    enum FeaturesFinder { SIFT, ORB };
+    enum SeamFinder { COST_COLOR, COST_COLOR_GRAD };
     enum WaveCorrect { HORIZONTAL, VERTICAL, AUTO };
     enum Warper { PLANE, SPHERICAL, CYLINDRICAL };
     enum ExposureCompensator { BLOCKS_GAIN, BLOCKS_CHANNEL };
@@ -12,6 +14,9 @@ struct StitcherSettings {
     float registration_res = 0.7;
     float seam_res = 0.1;
     float confidence_threshold = 0.7;
+    FeaturesFinder features_finder = FeaturesFinder::SIFT;
+    int features_finder_number = 2000;
+    SeamFinder seam_finder = SeamFinder::COST_COLOR;
     int blender_bands = 0;
     WaveCorrect wave_correct = WaveCorrect::HORIZONTAL;
     Warper warper = Warper::PLANE;

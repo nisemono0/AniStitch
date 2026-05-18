@@ -20,6 +20,14 @@ public:
 
 private:
     // Enums used internally for comboboxes
+    enum FeaturesFinder {
+        SIFT = Qt::UserRole + 1,
+        ORB  = Qt::UserRole + 2
+    };
+    enum SeamFinder {
+        COST_COLOR      = Qt::UserRole + 1,
+        COST_COLOR_GRAD = Qt::UserRole + 2
+    };
     enum WaveCorrectData {
         HORIZONTAL = Qt::UserRole + 1,
         VERTICAL   = Qt::UserRole + 2,

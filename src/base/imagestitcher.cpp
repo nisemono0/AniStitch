@@ -155,11 +155,23 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getCustomScanStitcherPtr(const StitcherSett
     // Confidence threshold for images to be part of the same stitch (Default: 1)
     stitcher->setPanoConfidenceThresh(stitcher_settings.confidence_threshold);
     // Seam finder:
-    stitcher->setSeamFinder(
-                cv::makePtr<cv::detail::GraphCutSeamFinder>(
-                        cv::detail::GraphCutSeamFinderBase::COST_COLOR
-                    )
-            );
+    switch (stitcher_settings.seam_finder) {
+        case StitcherSettings::SeamFinder::COST_COLOR:
+        {
+            stitcher->setSeamFinder(
+                        cv::makePtr<cv::detail::GraphCutSeamFinder>(cv::detail::GraphCutSeamFinderBase::COST_COLOR)
+                    );
+            break;
+
+        }
+        case StitcherSettings::SeamFinder::COST_COLOR_GRAD:
+        {
+            stitcher->setSeamFinder(
+                        cv::makePtr<cv::detail::GraphCutSeamFinder>(cv::detail::GraphCutSeamFinderBase::COST_COLOR_GRAD)
+                    );
+            break;
+        }
+    }
     // Blender:
     stitcher->setBlender(
                 // arg_name (default)
@@ -167,9 +179,19 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getCustomScanStitcherPtr(const StitcherSett
                 cv::makePtr<cv::detail::MultiBandBlender>(true, stitcher_settings.blender_bands)
             );
     // Features finder:
-    stitcher->setFeaturesFinder(
-                cv::SIFT::create(2000)
-            );
+    switch (stitcher_settings.features_finder) {
+        case StitcherSettings::SIFT:
+        {
+            stitcher->setFeaturesFinder(cv::SIFT::create(stitcher_settings.features_finder_number));
+            break;
+
+        }
+        case StitcherSettings::ORB:
+        {
+            stitcher->setFeaturesFinder(cv::ORB::create(stitcher_settings.features_finder_number));
+            break;
+        }
+    }
     // Interpolation:
     stitcher->setInterpolationFlags(
                 cv::INTER_LANCZOS4
@@ -236,11 +258,23 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getCustomPanoramaStitcherPtr(const Stitcher
     // Confidence threshold for images to be part of the same stitch (Default: 1)
     stitcher->setPanoConfidenceThresh(stitcher_settings.confidence_threshold);
     // Seam finder:
-    stitcher->setSeamFinder(
-                cv::makePtr<cv::detail::GraphCutSeamFinder>(
-                        cv::detail::GraphCutSeamFinderBase::COST_COLOR
-                    )
-            );
+    switch (stitcher_settings.seam_finder) {
+        case StitcherSettings::SeamFinder::COST_COLOR:
+        {
+            stitcher->setSeamFinder(
+                        cv::makePtr<cv::detail::GraphCutSeamFinder>(cv::detail::GraphCutSeamFinderBase::COST_COLOR)
+                    );
+            break;
+
+        }
+        case StitcherSettings::SeamFinder::COST_COLOR_GRAD:
+        {
+            stitcher->setSeamFinder(
+                        cv::makePtr<cv::detail::GraphCutSeamFinder>(cv::detail::GraphCutSeamFinderBase::COST_COLOR_GRAD)
+                    );
+            break;
+        }
+    }
     // Blender:
     stitcher->setBlender(
                 // arg_name (default)
@@ -248,9 +282,19 @@ cv::Ptr<cv::Stitcher> ImageStitcher::getCustomPanoramaStitcherPtr(const Stitcher
                 cv::makePtr<cv::detail::MultiBandBlender>(true, stitcher_settings.blender_bands)
             );
     // Features finder:
-    stitcher->setFeaturesFinder(
-                cv::SIFT::create(2000)
-            );
+    switch (stitcher_settings.features_finder) {
+        case StitcherSettings::SIFT:
+        {
+            stitcher->setFeaturesFinder(cv::SIFT::create(stitcher_settings.features_finder_number));
+            break;
+
+        }
+        case StitcherSettings::ORB:
+        {
+            stitcher->setFeaturesFinder(cv::ORB::create(stitcher_settings.features_finder_number));
+            break;
+        }
+    }
     // Interpolation:
     stitcher->setInterpolationFlags(
                 cv::INTER_LANCZOS4
