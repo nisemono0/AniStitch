@@ -220,15 +220,11 @@ void StitcherSettingsDialog::receive_show_StitcherSettingsDialog_request() {
 void StitcherSettingsDialog::pushButtonStitchScan_clicked(bool checked) {
     StitcherSettings stitcher_settings = this->getStitcherSettings();
     emit send_StitcherSettingsDialog_scan_settings(stitcher_settings);
-
-    this->close();
 }
 
 void StitcherSettingsDialog::pushButtonStitchPanorama_clicked(bool checked) {
     StitcherSettings stitcher_settings = this->getStitcherSettings();
     emit send_StitcherSettingsDialog_panorama_settings(stitcher_settings);
-
-    this->close();
 }
 
 void StitcherSettingsDialog::resetValues() {
