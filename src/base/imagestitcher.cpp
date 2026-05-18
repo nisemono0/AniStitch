@@ -610,7 +610,9 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
                 std::rethrow_exception(ex.exception());
             }
         } catch (cv::Exception &ex) {
-            Log::error(QStringLiteral("OpenCV error: %1").arg(ex.what()));
+            Log::error(QStringLiteral("cv::Exception: %1").arg(ex.what()));
+        } catch (std::exception &ex) {
+            Log::error(QStringLiteral("std::exception: %1").arg(ex.what()));
         }
 
         emit send_ImageStitcher_status(ImageStitcherStatus::EXCEPTION);
