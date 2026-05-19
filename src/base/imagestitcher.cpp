@@ -611,9 +611,9 @@ void ImageStitcher::receive_ImageStitcher_start_request(const std::vector<cv::Ma
                 std::rethrow_exception(ex.exception());
             }
         } catch (cv::Exception &ex) {
-            Log::error(QStringLiteral("Image loader cv::Exception: %1").arg(ex.what()));
+            Log::error(QStringLiteral("Image stitcher cv::Exception: %1").arg(ex.what()));
         } catch (std::exception &ex) {
-            Log::error(QStringLiteral("Image loader std::exception: %1").arg(ex.what()));
+            Log::error(QStringLiteral("Image stitcher std::exception: %1").arg(ex.what()));
         }
 
         emit send_ImageStitcher_status(ImageStitcherStatus::EXCEPTION);
