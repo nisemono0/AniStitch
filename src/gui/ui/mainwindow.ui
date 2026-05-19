@@ -64,6 +64,9 @@
          <layout class="QHBoxLayout" name="horizontalLayoutButtonsLeft">
           <item>
            <widget class="QPushButton" name="pushButtonLoad">
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::NoFocus</enum>
+            </property>
             <property name="statusTip">
              <string>Load image(s) or video(s) for stitching</string>
             </property>
@@ -74,6 +77,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButtonDeleteImage">
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::NoFocus</enum>
+            </property>
             <property name="statusTip">
              <string>Delete selected image(s)</string>
             </property>
@@ -84,6 +90,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButtonClearImages">
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::NoFocus</enum>
+            </property>
             <property name="statusTip">
              <string>Clear all images</string>
             </property>
@@ -110,6 +119,9 @@
         </item>
         <item>
          <widget class="ImageGraphicsView" name="imageGraphicsView">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="verticalScrollBarPolicy">
            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
           </property>
@@ -122,6 +134,9 @@
          <layout class="QHBoxLayout" name="horizontalLayoutButtonsRight">
           <item>
            <widget class="QPushButton" name="pushButtonCropImages">
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::NoFocus</enum>
+            </property>
             <property name="statusTip">
              <string>Crop the selected image(s); Opens a dialog with crop options</string>
             </property>
@@ -145,6 +160,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButtonStitchCustom">
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::NoFocus</enum>
+            </property>
             <property name="statusTip">
              <string>Stitch the loaded images; Opens a dialog to set custom settings</string>
             </property>
@@ -155,6 +173,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButtonStitchPanorama">
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::NoFocus</enum>
+            </property>
             <property name="statusTip">
              <string>Stitch the loaded images; Expects images under perspective transformation</string>
             </property>
@@ -165,6 +186,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButtonStitchScan">
+            <property name="focusPolicy">
+             <enum>Qt::FocusPolicy::NoFocus</enum>
+            </property>
             <property name="statusTip">
              <string>Stitch the loaded images; Expects images under affine transformation</string>
             </property>

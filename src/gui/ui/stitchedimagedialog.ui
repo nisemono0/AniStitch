@@ -22,8 +22,11 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidgetDisplayImages">
+     <property name="focusPolicy">
+      <enum>Qt::FocusPolicy::NoFocus</enum>
+     </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabNormalImage">
       <attribute name="title">
@@ -72,6 +75,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="StitchedImageView" name="graphicsDisplayThresholdedImageView">
+         <property name="focusPolicy">
+          <enum>Qt::FocusPolicy::NoFocus</enum>
+         </property>
          <property name="acceptDrops">
           <bool>false</bool>
          </property>
@@ -104,6 +110,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonSaveImage">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Save image</string>
        </property>
@@ -111,6 +120,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonClose">
+       <property name="focusPolicy">
+        <enum>Qt::FocusPolicy::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Close</string>
        </property>
