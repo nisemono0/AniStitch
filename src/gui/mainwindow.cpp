@@ -286,6 +286,11 @@ void MainWindow::receive_ImageLoader_status(ImageLoader::ImageLoaderStatus statu
             QMessageBox::information(this, QStringLiteral("Load file(s)"), QStringLiteral("All files loaded"));
             break;
         }
+        case ImageLoader::ImageLoaderStatus::EXCEPTION:
+        {
+            QMessageBox::critical(this, QStringLiteral("Load file(s)"), QStringLiteral("Error: worker exception"));
+            break;
+        }
         case ImageLoader::ImageLoaderStatus::WARNING:
         {
             QMessageBox::warning(this, QStringLiteral("Load file(s)"), QStringLiteral("Warnings found; Check logs"));
@@ -302,7 +307,6 @@ void MainWindow::receive_ImageLoader_status(ImageLoader::ImageLoaderStatus statu
             break;
         }
     }
-
 }
 
 void MainWindow::receive_ImageLoader_show_progress_bar() {
@@ -377,7 +381,6 @@ void MainWindow::receive_ImageStitcher_status(ImageStitcher::ImageStitcherStatus
             break;
         }
     }
-
 }
 
 void MainWindow::receive_ImageStitcher_show_progress_bar() {

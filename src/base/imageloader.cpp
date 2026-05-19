@@ -8,6 +8,7 @@
 #include <opencv2/videoio.hpp>
 
 #include <QThread>
+#include <QUnhandledException>
 
 
 ImageLoader::ImageLoader(QObject *parent) : QObject(parent) {
@@ -18,62 +19,7 @@ ImageLoader::~ImageLoader() {
 
 }
 
-QString ImageLoader::getNameAndUpdateCounter() {
-    this->image_counter++;
-    return QStringLiteral("Image %1").arg(QString::number(this->image_counter));
-}
-
-std::optional<ImageItem> ImageLoader::getImageItemFromImage(const QString &image_path) {
-    cv::Mat image_mat = cv::imread(image_path.toStdString(), cv::IMREAD_UNCHANGED);
-
-    if (image_mat.empty()) {
-        return std::nullopt;
-    }
-
-    ImageItem image_item = ImageItem();
-    image_item.display_name = this->getNameAndUpdateCounter();
-    image_item.name = image_item.display_name;
-    image_item.pixmap = Utils::Image::getPixmapFromMat(image_mat);
-    image_item.cvmat = image_mat.clone();
-
-    return image_item;
-}
-
-QList<std::optional<ImageItem>> ImageLoader::getImageItemFromVideo(const QString &video_path) {
-    // Open video_path as video
-    cv::VideoCapture video_cap = cv::VideoCapture(video_path.toStdString(), cv::CAP_ANY);
-    // If the video couldn't be opened, return and empty QList
-    if (!video_cap.isOpened()) {
-        return QList<std::optional<ImageItem>>();
-    }
-
-    QList<std::optional<ImageItem>> image_item_list = QList<std::optional<ImageItem>>();
-    cv::Mat video_frame = cv::Mat();
-
-    int frame_count = video_cap.get(cv::CAP_PROP_FRAME_COUNT);
-    for (int frame_idx = 0; frame_idx <= frame_count; frame_idx++) {
-        bool frame_grabbed = video_cap.read(video_frame);
-        if (frame_grabbed) {
-            ImageItem image_item = ImageItem();
-
-            image_item.display_name = this->getNameAndUpdateCounter();
-            image_item.name = image_item.display_name;
-            image_item.pixmap = Utils::Image::getPixmapFromMat(video_frame);
-            image_item.cvmat = video_frame.clone();
-
-            image_item_list.append(image_item);
-        } else {
-            image_item_list.append(std::nullopt);
-        }
-    }
-
-    // Close video capture
-    video_cap.release();
-
-    return image_item_list;
-}
-
-void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_paths) {
+void ImageLoader::startWorker(const QStringList &file_paths) {
     // Request show the progress bar
     emit send_ImageLoader_show_progress_bar();
 
@@ -157,6 +103,78 @@ void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_path
     }
 
     emit send_ImageLoader_status(ImageLoaderStatus::OK);
+}
+
+QString ImageLoader::getNameAndUpdateCounter() {
+    this->image_counter++;
+    return QStringLiteral("Image %1").arg(QString::number(this->image_counter));
+}
+
+std::optional<ImageItem> ImageLoader::getImageItemFromImage(const QString &image_path) {
+    cv::Mat image_mat = cv::imread(image_path.toStdString(), cv::IMREAD_UNCHANGED);
+
+    if (image_mat.empty()) {
+        return std::nullopt;
+    }
+
+    ImageItem image_item = ImageItem();
+    image_item.display_name = this->getNameAndUpdateCounter();
+    image_item.name = image_item.display_name;
+    image_item.pixmap = Utils::Image::getPixmapFromMat(image_mat);
+    image_item.cvmat = image_mat.clone();
+
+    return image_item;
+}
+
+QList<std::optional<ImageItem>> ImageLoader::getImageItemFromVideo(const QString &video_path) {
+    // Open video_path as video
+    cv::VideoCapture video_cap = cv::VideoCapture(video_path.toStdString(), cv::CAP_ANY);
+    // If the video couldn't be opened, return and empty QList
+    if (!video_cap.isOpened()) {
+        return QList<std::optional<ImageItem>>();
+    }
+
+    QList<std::optional<ImageItem>> image_item_list = QList<std::optional<ImageItem>>();
+    cv::Mat video_frame = cv::Mat();
+
+    int frame_count = video_cap.get(cv::CAP_PROP_FRAME_COUNT);
+    for (int frame_idx = 0; frame_idx <= frame_count; frame_idx++) {
+        bool frame_grabbed = video_cap.read(video_frame);
+        if (frame_grabbed) {
+            ImageItem image_item = ImageItem();
+
+            image_item.display_name = this->getNameAndUpdateCounter();
+            image_item.name = image_item.display_name;
+            image_item.pixmap = Utils::Image::getPixmapFromMat(video_frame);
+            image_item.cvmat = video_frame.clone();
+
+            image_item_list.append(image_item);
+        } else {
+            image_item_list.append(std::nullopt);
+        }
+    }
+
+    // Close video capture
+    video_cap.release();
+
+    return image_item_list;
+}
+
+void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_paths) {
+    try {
+        this->startWorker(file_paths);
+    } catch (const QUnhandledException &ex) {
+        try {
+            if (ex.exception()) {
+                std::rethrow_exception(ex.exception());
+            }
+        } catch (cv::Exception &ex) {
+            Log::error(QStringLiteral("Image loader cv::Exception: %1").arg(ex.what()));
+        } catch (std::exception &ex) {
+            Log::error(QStringLiteral("Image loader std::exception: %1").arg(ex.what()));
+        }
+        emit send_ImageLoader_status(ImageLoaderStatus::EXCEPTION);
+    }
 }
 
 void ImageLoader::receive_ImageLoader_reset_counter() {
