@@ -33,7 +33,7 @@ private:
     static const int SELECTION_RED   = 255;
     static const int SELECTION_GREEN = 0;
     static const int SELECTION_BLUE  = 0;
-    static const int SELECTION_ALPHA = 30;
+    static const int SELECTION_ALPHA = 50;
     // Line width of the polygon
     static const int LINE_WIDTH      = 2;
     // Polygon points radius
