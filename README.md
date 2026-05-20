@@ -17,6 +17,55 @@ For example, with 100 images:
 - Splits the finished images list into another chunks of 10
 - Repeat until the finished images list contains only 1 image (the final stitched image)
 
+## Shortcuts
+All shortcuts are also shown inside the status tip when hovering over a widget.
+### Main window
+Keybind | Description
+|:-:|:-:|
+`Ctrl+L` | Open load files dialog
+`Ctrl+D` | Remove selected images
+`Ctrl+C` | Clear all images
+`C` | Open crop dialog
+`Ctrl+S` | Open custom stitcher dialog
+`P` | Stitch images in PANORAMA mode
+`S` | Stitch images in SCAN mode
+`Ctrl+I` | Open logs dialog
+`Ctrl+Q` | Quit program
+
+### Logs dialog
+Keybind | Description
+|:-:|:-:|
+`Ctrl+S` | Save logs to disk
+`Ctrl+C` | Clear logs
+`Ctrl+Q` | Close dialog
+
+### Crop dialog
+While the crop dialog is open you can make selection on the image.
+Keybind | Description
+|:-:|:-:|
+`Tab/Shift+Tab` | Select next/previous widget
+`V` | Crop using set values
+`S` | Crop using set selection
+`R` | Reset crop values/selection
+`Q` | Close dialog
+
+### Stitcher settings dialog
+Some settings are SCAN/PANORAMA only. This is shown in the statusbar.
+Keybind | Description
+|:-:|:-:|
+`Tab/Shift+Tab` | Select next/previous widget
+`S` | Stitch images in SCAN mode
+`P` | Stitch images in PANORAMA mode
+`R` | Reset values to default
+`Q` | Close dialog
+
+### Stitched image dialog
+Keybind | Description
+|:-:|:-:|
+`Tab/Shift+Tab` | Select next/previous stitched image
+`Ctrl+S` | Save the current stitched image
+`Ctrl+Q` | Close dialog
+
 ## Compile (Arch Linux)
 Run the following commands: <br>
 - Install dependencies
