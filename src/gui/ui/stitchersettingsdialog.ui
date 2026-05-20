@@ -443,7 +443,7 @@
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="statusTip">
-        <string>Close the dialog</string>
+        <string>Close the dialog [Q]</string>
        </property>
        <property name="text">
         <string>Close</string>
@@ -456,7 +456,7 @@
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="statusTip">
-        <string>Reset to default values</string>
+        <string>Reset to default values [R]</string>
        </property>
        <property name="text">
         <string>Reset</string>
@@ -469,7 +469,7 @@
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="statusTip">
-        <string>Stitch under perspective transformations</string>
+        <string>Stitch under perspective transformations [P]</string>
        </property>
        <property name="text">
         <string>Stitch panorama</string>
@@ -482,7 +482,7 @@
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="statusTip">
-        <string>Stitch under affine transformations</string>
+        <string>Stitch under affine transformations [S]</string>
        </property>
        <property name="text">
         <string>Stitch scan</string>

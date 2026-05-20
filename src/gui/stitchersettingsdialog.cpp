@@ -2,6 +2,8 @@
 
 #include "utils/defs.hpp"
 
+#include <QKeyEvent>
+
 
 StitcherSettingsDialog::StitcherSettingsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::StitcherSettingsDialog) {
     this->ui->setupUi(this);
@@ -189,15 +191,46 @@ bool StitcherSettingsDialog::eventFilter(QObject *o, QEvent *e) {
     }
 
     switch (e->type()) {
+        // Mouse enters widget area
         case QEvent::Enter:
         {
             this->ui->labelStatusTip->setText(widget->statusTip());
-            break;
+            return true;
         }
+        // Mouse leaves widget area
         case QEvent::Leave:
         {
             this->ui->labelStatusTip->setText(QStringLiteral("Custom settings for stitcher"));
-            break;
+            return true;
+        }
+        // Keypress
+        case QEvent::KeyPress:
+        {
+            QKeyEvent *key_event = static_cast<QKeyEvent*>(e);
+            switch (key_event->key()) {
+                case Qt::Key_Q:
+                {
+                    this->ui->pushButtonClose->animateClick();
+                    return true;
+                }
+                case Qt::Key_R:
+                {
+                    this->ui->pushButtonResetValues->animateClick();
+                    return true;
+                }
+                case Qt::Key_P:
+                {
+                    this->ui->pushButtonStitchPanorama->animateClick();
+                    return true;
+                }
+                case Qt::Key_S:
+                {
+                    this->ui->pushButtonStitchScan->animateClick();
+                    return true;
+                }
+                default:
+                    break;
+            }
         }
         default:
             break;

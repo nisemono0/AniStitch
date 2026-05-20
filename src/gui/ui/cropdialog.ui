@@ -191,7 +191,7 @@
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="statusTip">
-        <string>Close the dialog</string>
+        <string>Close the dialog [Q]</string>
        </property>
        <property name="text">
         <string>Close</string>
@@ -204,7 +204,7 @@
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="statusTip">
-        <string>Reset to default values</string>
+        <string>Reset to default values [R]</string>
        </property>
        <property name="text">
         <string>Reset</string>
@@ -217,7 +217,7 @@
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="statusTip">
-        <string>Crop selected image(s) using set selection</string>
+        <string>Crop selected image(s) using set selection [S]</string>
        </property>
        <property name="text">
         <string>Crop selection</string>
@@ -230,7 +230,7 @@
         <enum>Qt::FocusPolicy::NoFocus</enum>
        </property>
        <property name="statusTip">
-        <string>Crop selected image(s) using set values</string>
+        <string>Crop selected image(s) using set values [V]</string>
        </property>
        <property name="text">
         <string>Crop value</string>

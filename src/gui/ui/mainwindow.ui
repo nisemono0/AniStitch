@@ -68,7 +68,7 @@
              <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
             <property name="statusTip">
-             <string>Load image(s) or video(s) for stitching</string>
+             <string>Load image(s) or video(s) for stitching [Ctrl+L]</string>
             </property>
             <property name="text">
              <string>Load</string>
@@ -81,10 +81,13 @@
              <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
             <property name="statusTip">
-             <string>Delete selected image(s)</string>
+             <string>Delete selected image(s) [Ctrl+D]</string>
             </property>
             <property name="text">
              <string>Delete</string>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+D</string>
             </property>
            </widget>
           </item>
@@ -94,10 +97,13 @@
              <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
             <property name="statusTip">
-             <string>Clear all images</string>
+             <string>Clear all images [Ctrl+C]</string>
             </property>
             <property name="text">
              <string>Clear</string>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+C</string>
             </property>
            </widget>
           </item>
@@ -138,10 +144,13 @@
              <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
             <property name="statusTip">
-             <string>Crop the selected image(s); Opens a dialog with crop options</string>
+             <string>Crop the selected image(s); Opens a dialog with crop options [C]</string>
             </property>
             <property name="text">
              <string>Crop image(s)</string>
+            </property>
+            <property name="shortcut">
+             <string>C</string>
             </property>
            </widget>
           </item>
@@ -164,10 +173,13 @@
              <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
             <property name="statusTip">
-             <string>Stitch the loaded images; Opens a dialog to set custom settings</string>
+             <string>Stitch the loaded images; Opens a dialog to set custom settings [Ctrl+S]</string>
             </property>
             <property name="text">
              <string>Stitch custom</string>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+S</string>
             </property>
            </widget>
           </item>
@@ -177,10 +189,13 @@
              <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
             <property name="statusTip">
-             <string>Stitch the loaded images; Expects images under perspective transformation</string>
+             <string>Stitch the loaded images; Expects images under perspective transformation [P]</string>
             </property>
             <property name="text">
              <string>Stitch panorama</string>
+            </property>
+            <property name="shortcut">
+             <string>P</string>
             </property>
            </widget>
           </item>
@@ -190,10 +205,13 @@
              <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
             <property name="statusTip">
-             <string>Stitch the loaded images; Expects images under affine transformation</string>
+             <string>Stitch the loaded images; Expects images under affine transformation [S]</string>
             </property>
             <property name="text">
              <string>Stitch scan</string>
+            </property>
+            <property name="shortcut">
+             <string>S</string>
             </property>
            </widget>
           </item>
@@ -239,7 +257,7 @@
     <string>Load</string>
    </property>
    <property name="statusTip">
-    <string>Load image(s) or video for stitching</string>
+    <string>Load image(s) or video for stitching [Ctrl+L]</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -250,7 +268,7 @@
     <string>Quit</string>
    </property>
    <property name="statusTip">
-    <string>Quit the program</string>
+    <string>Quit the program [Ctrl+Q]</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -259,6 +277,9 @@
   <action name="actionShowLogs">
    <property name="text">
     <string>Show logs</string>
+   </property>
+   <property name="statusTip">
+    <string>Open the logs dialog [Ctrl+I]</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>

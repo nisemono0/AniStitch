@@ -26,7 +26,7 @@
       <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabNormalImage">
       <attribute name="title">
@@ -116,6 +116,9 @@
        <property name="text">
         <string>Save image</string>
        </property>
+       <property name="shortcut">
+        <string>Ctrl+S</string>
+       </property>
       </widget>
      </item>
      <item>
@@ -125,6 +128,9 @@
        </property>
        <property name="text">
         <string>Close</string>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+Q</string>
        </property>
       </widget>
      </item>

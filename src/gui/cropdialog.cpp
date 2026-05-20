@@ -1,5 +1,7 @@
 #include "gui/cropdialog.hpp"
 
+#include <QKeyEvent>
+
 
 CropDialog::CropDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CropDialog) {
     // Ui setup
@@ -47,15 +49,46 @@ bool CropDialog::eventFilter(QObject *o, QEvent *e) {
     }
 
     switch (e->type()) {
+        // Mouse enters widget area
         case QEvent::Enter:
         {
             this->ui->labelStatusTip->setText(widget->statusTip());
-            break;
+            return true;
         }
+        // Mouse leaves widget area
         case QEvent::Leave:
         {
             this->ui->labelStatusTip->setText(QStringLiteral("You can make selections on the image"));
-            break;
+            return true;
+        }
+        // Keypress
+        case QEvent::KeyPress:
+        {
+            QKeyEvent *key_event = static_cast<QKeyEvent *>(e);
+            switch (key_event->key()) {
+                case Qt::Key_Q:
+                {
+                    this->ui->pushButtonClose->animateClick();
+                    return true;
+                }
+                case Qt::Key_R:
+                {
+                    this->ui->pushButtonReset->animateClick();
+                    return true;
+                }
+                case Qt::Key_S:
+                {
+                    this->ui->pushButtonCropSelection->animateClick();
+                    return true;
+                }
+                case Qt::Key_V:
+                {
+                    this->ui->pushButtonCropValue->animateClick();
+                    return true;
+                }
+                default:
+                    break;
+            }
         }
         default:
             break;
