@@ -11,19 +11,19 @@ QMutex Log::qmutex = QMutex();
 void Log::info(const QString &message) {
     QMutexLocker locker(&Log::qmutex);
     Log::log_queue.enqueue(QStringLiteral("<font color=\"gray\">[INFO]: </font>%1").arg(message));
-    qInfo().noquote() << QStringLiteral(INFO"[INFO]: " RESET"%1").arg(message);
+    qInfo().noquote() << QStringLiteral(INFO).arg(message);
 }
 
 void Log::warning(const QString &message) {
     QMutexLocker locker(&Log::qmutex);
     Log::log_queue.enqueue(QStringLiteral("<font color=\"orange\">[WARN]: </font>%1").arg(message));
-    qWarning().noquote() << QStringLiteral(WARN"[WARN]: " RESET"%1").arg(message);
+    qWarning().noquote() << QStringLiteral(WARN).arg(message);
 }
 
 void Log::error(const QString &message) {
     QMutexLocker locker(&Log::qmutex);
     Log::log_queue.enqueue(QStringLiteral("<font color=\"red\">[CRIT]: </font>%1").arg(message));
-    qCritical().noquote() << QStringLiteral(CRIT"[CRIT]: " RESET"%1").arg(message);
+    qCritical().noquote() << QStringLiteral(CRIT).arg(message);
 }
 
 bool Log::isLogQueueEmpty() {
