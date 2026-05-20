@@ -6,6 +6,7 @@
 #include "utils/log.hpp"
 
 #include <QMessageBox>
+#include <QKeyEvent>
 
 
 StitchedImageDialog::StitchedImageDialog(QWidget *parent) : QDialog(parent), ui(new Ui::StitchedImageDialog) {
@@ -62,6 +63,27 @@ bool StitchedImageDialog::eventFilter(QObject *o, QEvent *e) {
         {
             this->showDefaultStatusTip();
             return true;
+        }
+        // Keypress
+        case QEvent::KeyPress:
+        {
+            QKeyEvent *key_event = static_cast<QKeyEvent *>(e);
+            switch (key_event->key()) {
+                case Qt::Key_Tab:
+                {
+                    int next_tab = (this->ui->tabWidgetDisplayImages->currentIndex() + 1) % this->ui->tabWidgetDisplayImages->count();
+                    this->ui->tabWidgetDisplayImages->setCurrentIndex(next_tab);
+                    return true;
+                }
+                case Qt::Key_Backtab:
+                {
+                    int prev_tab = (this->ui->tabWidgetDisplayImages->currentIndex() - 1) % this->ui->tabWidgetDisplayImages->count();
+                    this->ui->tabWidgetDisplayImages->setCurrentIndex(prev_tab);
+                    return true;
+                }
+                default:
+                    break;
+            }
         }
         default:
             break;
