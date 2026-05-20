@@ -5,6 +5,13 @@
 #include <QMutex>
 
 
+// Colored escape sequences
+#define INFO "\033[38;5;245m"
+#define WARN "\033[38;5;172m"
+#define CRIT "\033[38;5;124m"
+#define RESET "\033[0m"
+
+
 class Log {
 public:
     static void info(const QString &message);
