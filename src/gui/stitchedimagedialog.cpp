@@ -14,6 +14,18 @@ StitchedImageDialog::StitchedImageDialog(QWidget *parent) : QDialog(parent), ui(
     // Set selected tab to the be normal image tab
     this->ui->tabWidgetDisplayImages->setCurrentWidget(this->ui->tabNormalImage);
 
+    // Add event filter to tab widget
+    this->ui->tabWidgetDisplayImages->installEventFilter(this);
+
+    // Add event filter to buttons
+    this->ui->pushButtonSaveImage->installEventFilter(this);
+    this->ui->pushButtonClose->installEventFilter(this);
+
+    // Default labelStatusTip message
+    this->showDefaultStatusTip();
+
+    // Tab widget change
+    connect(this->ui->tabWidgetDisplayImages, &QTabWidget::currentChanged, this, &StitchedImageDialog::tabWidgetDisplayImages_currentChanged);
     // Save button
     connect(this->ui->pushButtonSaveImage, &QPushButton::clicked, this, &StitchedImageDialog::pushButtonSaveImage_clicked);
     // Close button
@@ -25,6 +37,37 @@ StitchedImageDialog::~StitchedImageDialog() {
     this->stitched_parsed_mat.release();
     this->stitched_thresholded_mat.release();
     delete this->ui;
+}
+
+void StitchedImageDialog::showDefaultStatusTip() {
+    this->ui->labelStatusTip->setText(QStringLiteral("Save stitched image"));
+}
+
+bool StitchedImageDialog::eventFilter(QObject *o, QEvent *e) {
+    auto widget = qobject_cast<QWidget*>(o);
+
+    if (!widget) {
+        return QDialog::eventFilter(o, e);
+    }
+
+    switch (e->type()) {
+        // Mouse enter widget area
+        case QEvent::Enter:
+        {
+            this->ui->labelStatusTip->setText(widget->statusTip());
+            return true;
+        }
+        // Mouse leaves widget area
+        case QEvent::Leave:
+        {
+            this->showDefaultStatusTip();
+            return true;
+        }
+        default:
+            break;
+    }
+
+    return QDialog::eventFilter(o, e);
 }
 
 void StitchedImageDialog::receive_show_DisplayImageDialog_request(const cv::Mat &normal_mat, const cv::Mat &parsed_mat, const cv::Mat &thresholded_mat) {
@@ -87,6 +130,20 @@ void StitchedImageDialog::pushButtonSaveImage_clicked(bool checked) {
     } else {
         Log::error(QStringLiteral("Save image failed: %1").arg(save_image_path));
         QMessageBox::critical(this, QStringLiteral("Save image"), QStringLiteral("Save image failed; Check logs"));
+    }
+}
+
+void StitchedImageDialog::tabWidgetDisplayImages_currentChanged(int index) {
+    // Change stauts tip based on what tab is pressed
+    if (this->ui->tabWidgetDisplayImages->currentWidget() == this->ui->tabNormalImage) {
+        this->ui->tabWidgetDisplayImages->setStatusTip(QStringLiteral("Default stitched image"));
+        this->ui->labelStatusTip->setText(QStringLiteral("Default stitched image"));
+    } else if (this->ui->tabWidgetDisplayImages->currentWidget() == this->ui->tabParsedImage) {
+        this->ui->tabWidgetDisplayImages->setStatusTip(QStringLiteral("Stitched image with pure black pixels removed by parsing them from the outside in"));
+        this->ui->labelStatusTip->setText(QStringLiteral("Stitched image with pure black pixels removed by parsing them from the outside in"));
+    } else if (this->ui->tabWidgetDisplayImages->currentWidget() == this->ui->tabThresholdedImage) {
+        this->ui->tabWidgetDisplayImages->setStatusTip(QStringLiteral("Stitched image with pure black pixels removed by using a binary threshold mask"));
+        this->ui->labelStatusTip->setText(QStringLiteral("Stitched image with pure black pixels removed by using a binary threshold mask"));
     }
 }
 

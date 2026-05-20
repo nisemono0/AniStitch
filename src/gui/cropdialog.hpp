@@ -19,6 +19,8 @@ public:
 private:
     Ui::CropDialog *ui;
 
+    // Show default statustip
+    void showDefaultStatusTip();
     // Reset values
     void resetValues();
 

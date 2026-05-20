@@ -70,7 +70,7 @@ StitcherSettingsDialog::StitcherSettingsDialog(QWidget *parent) : QDialog(parent
     this->ui->pushButtonStitchScan->installEventFilter(this);
 
     // Default status tip message
-    this->ui->labelStatusTip->setText(QStringLiteral("Custom settings for stitcher"));
+    this->showDefaultStatusTip();
 
     // Compensator combobox setup
     this->ui->comboBoxExposureCompensator->addItem(QStringLiteral("Blocks Gain"), CompensatorData::BLOCKS_GAIN);
@@ -183,6 +183,10 @@ StitcherSettings StitcherSettingsDialog::getStitcherSettings() {
     return stitcher_settings;
 }
 
+void StitcherSettingsDialog::showDefaultStatusTip() {
+    this->ui->labelStatusTip->setText(QStringLiteral("Custom settings for stitcher"));
+}
+
 bool StitcherSettingsDialog::eventFilter(QObject *o, QEvent *e) {
     auto widget = qobject_cast<QWidget *>(o);
 
@@ -200,7 +204,7 @@ bool StitcherSettingsDialog::eventFilter(QObject *o, QEvent *e) {
         // Mouse leaves widget area
         case QEvent::Leave:
         {
-            this->ui->labelStatusTip->setText(QStringLiteral("Custom settings for stitcher"));
+            this->showDefaultStatusTip();
             return true;
         }
         // Keypress

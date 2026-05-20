@@ -20,26 +20,6 @@
    <string>Logs</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="2">
-    <widget class="QPushButton" name="pushButtonSaveLog">
-     <property name="focusPolicy">
-      <enum>Qt::FocusPolicy::NoFocus</enum>
-     </property>
-     <property name="text">
-      <string>Save log</string>
-     </property>
-     <property name="shortcut">
-      <string>Ctrl+S</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="logStatusLabel">
-     <property name="text">
-      <string>Lines: 0</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1">
     <spacer name="horizontalSpacer">
      <property name="orientation">
@@ -58,6 +38,9 @@
      <property name="focusPolicy">
       <enum>Qt::FocusPolicy::NoFocus</enum>
      </property>
+     <property name="statusTip">
+      <string>Clear all logs [Ctrl+C]</string>
+     </property>
      <property name="text">
       <string>Clear log</string>
      </property>
@@ -66,10 +49,42 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="logStatusLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Lines: 0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="pushButtonSaveLog">
+     <property name="focusPolicy">
+      <enum>Qt::FocusPolicy::NoFocus</enum>
+     </property>
+     <property name="statusTip">
+      <string>Save the log to file [Ctrl+S]</string>
+     </property>
+     <property name="text">
+      <string>Save log</string>
+     </property>
+     <property name="shortcut">
+      <string>Ctrl+S</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="4">
     <widget class="QPushButton" name="pushButtonClose">
      <property name="focusPolicy">
       <enum>Qt::FocusPolicy::NoFocus</enum>
+     </property>
+     <property name="statusTip">
+      <string>Close the dialog [Ctrl+Q]</string>
      </property>
      <property name="text">
       <string>Close</string>

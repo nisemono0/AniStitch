@@ -14,8 +14,17 @@
 LogDialog::LogDialog(QWidget *parent) : QDialog(parent), ui(new Ui::LogDialog) {
     this->ui->setupUi(this);
 
+    // Time to process log messages
     this->log_timer = new QTimer(this);
     this->log_timer->setInterval(1);
+
+    // Event filters for buttosn
+    this->ui->pushButtonSaveLog->installEventFilter(this);
+    this->ui->pushButtonClearLog->installEventFilter(this);
+    this->ui->pushButtonClose->installEventFilter(this);
+
+    // Show default statustip
+    this->showDefaultStatusTip();
 
     connect(this->log_timer, &QTimer::timeout, this, &LogDialog::log_timer_timeout);
     this->log_timer->start();
@@ -31,6 +40,39 @@ LogDialog::LogDialog(QWidget *parent) : QDialog(parent), ui(new Ui::LogDialog) {
 LogDialog::~LogDialog() {
     this->log_timer->deleteLater();
     delete this->ui;
+}
+
+void LogDialog::showDefaultStatusTip() {
+    this->ui->logStatusLabel->setText(QStringLiteral("Lines: %1").arg(
+                QString::number(this->ui->plainTextEditLogs->blockCount())
+                ));
+}
+
+bool LogDialog::eventFilter(QObject *o, QEvent *e) {
+    auto widget = qobject_cast<QWidget*>(o);
+
+    if (!widget) {
+        return QDialog::eventFilter(o, e);
+    }
+
+    switch (e->type()) {
+        // Mouse enter widget area
+        case QEvent::Enter:
+        {
+            this->ui->logStatusLabel->setText(widget->statusTip());
+            return true;
+        }
+        // Mouse leaves widget area
+        case QEvent::Leave:
+        {
+            this->showDefaultStatusTip();
+            return true;
+        }
+        default:
+            break;
+    }
+
+    return QDialog::eventFilter(o, e);
 }
 
 void LogDialog::receive_show_LogDialog_request(bool checked) {

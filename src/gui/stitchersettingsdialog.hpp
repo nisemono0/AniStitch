@@ -46,6 +46,8 @@ private:
     Ui::StitcherSettingsDialog *ui;
     // Return a StitcherSettings struct with values from the dialog
     StitcherSettings getStitcherSettings();
+    // Show default statust tip
+    void showDefaultStatusTip();
 
 protected:
     bool eventFilter(QObject *o, QEvent *e) override;

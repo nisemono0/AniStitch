@@ -27,7 +27,7 @@ CropDialog::CropDialog(QWidget *parent) : QDialog(parent), ui(new Ui::CropDialog
     this->ui->pushButtonCropSelection->installEventFilter(this);
 
     // Default status tip message
-    this->ui->labelStatusTip->setText(QStringLiteral("You can make selections on the image"));
+    this->showDefaultStatusTip();
 
     // Cancel/Reset buttons
     connect(this->ui->pushButtonClose, &QPushButton::clicked, this, &CropDialog::close);
@@ -58,7 +58,7 @@ bool CropDialog::eventFilter(QObject *o, QEvent *e) {
         // Mouse leaves widget area
         case QEvent::Leave:
         {
-            this->ui->labelStatusTip->setText(QStringLiteral("You can make selections on the image"));
+            this->showDefaultStatusTip();
             return true;
         }
         // Keypress
@@ -105,6 +105,10 @@ void CropDialog::receive_show_CropDialog_request() {
         this->resetValues();
         this->show();
     }
+}
+
+void CropDialog::showDefaultStatusTip() {
+    this->ui->labelStatusTip->setText(QStringLiteral("You can make selections on the image"));
 }
 
 void CropDialog::resetValues() {

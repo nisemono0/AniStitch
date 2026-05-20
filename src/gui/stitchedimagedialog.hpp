@@ -27,12 +27,18 @@ private:
     cv::Mat stitched_parsed_mat;
     cv::Mat stitched_thresholded_mat;
 
+    void showDefaultStatusTip();
+
+protected:
+    bool eventFilter(QObject *o, QEvent *e) override;
+
 public slots:
     // Receive norma, parsed and thresholded cv::Mat to be displayed
     void receive_show_DisplayImageDialog_request(const cv::Mat &normal_mat, const cv::Mat &parsed_mat, const cv::Mat &thresholded_mat);
 
 private slots:
     void pushButtonSaveImage_clicked(bool checked = false);
+    void tabWidgetDisplayImages_currentChanged(int index);
 
 };
 

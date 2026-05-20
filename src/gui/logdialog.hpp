@@ -5,6 +5,7 @@
 #include <QDialog>
 #include <QWidget>
 #include <QTimer>
+#include <QEvent>
 
 
 namespace Ui {
@@ -21,6 +22,11 @@ private:
     Ui::LogDialog *ui;
 
     QTimer *log_timer;
+
+    void showDefaultStatusTip();
+
+protected:
+    bool eventFilter(QObject *o, QEvent *e) override;
 
 public slots:
     void receive_show_LogDialog_request(bool checked = false);
