@@ -73,6 +73,9 @@
             <property name="text">
              <string>Load</string>
             </property>
+            <property name="shortcut">
+             <string>Ctrl+L</string>
+            </property>
            </widget>
           </item>
           <item>
@@ -237,8 +240,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionLoad"/>
-    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuInfo">
@@ -252,17 +253,6 @@
    <addaction name="menuFile"/>
    <addaction name="menuInfo"/>
   </widget>
-  <action name="actionLoad">
-   <property name="text">
-    <string>Load</string>
-   </property>
-   <property name="statusTip">
-    <string>Load image(s) or video for stitching [Ctrl+L]</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+L</string>
-   </property>
-  </action>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>

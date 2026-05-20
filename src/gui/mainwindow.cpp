@@ -72,7 +72,6 @@ MainWindow::MainWindow(const QStringList &arg_file_list, QWidget *parent) : QMai
     connect(this->stitcher_settings_dialog, &StitcherSettingsDialog::send_StitcherSettingsDialog_panorama_settings, this, &MainWindow::receive_StitcherSettingsDialog_panorama_settings);
 
     // Menubar:File
-    connect(this->ui->actionLoad, &QAction::triggered, this, &MainWindow::startImageLoad);
     connect(this->ui->actionQuit, &QAction::triggered, this, &QApplication::quit);
 
     // Menubar:Info
