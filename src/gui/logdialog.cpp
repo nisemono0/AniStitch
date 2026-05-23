@@ -97,9 +97,11 @@ void LogDialog::pushButtonSaveLog_clicked(bool checked) {
         text_stream << this->ui->plainTextEditLogs->toPlainText();
         text_stream.flush();
         if (text_stream.status() == QTextStream::Ok) {
-            QMessageBox::information(this, QStringLiteral("Info"), QStringLiteral("Log written to file"));
+            Log::info(QStringLiteral("Log saved: %1").arg(save_path));
+            QMessageBox::information(this, QStringLiteral("Save log"), QStringLiteral("Log written to file"));
         } else if (text_stream.status() == QTextStream::WriteFailed) {
-            QMessageBox::warning(this, QStringLiteral("Warning"), QStringLiteral("Log file could not be saved"));
+            Log::error(QStringLiteral("Failed to save log: %1").arg(save_path));
+            QMessageBox::critical(this, QStringLiteral("Save log"), QStringLiteral("Could not save log"));
         }
         log_file.close();
     }

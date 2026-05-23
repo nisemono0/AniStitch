@@ -150,8 +150,8 @@ void StitchedImageDialog::pushButtonSaveImage_clicked(bool checked) {
         Log::info(QStringLiteral("Image saved: %1").arg(save_image_path));
         QMessageBox::information(this, QStringLiteral("Save image"), QStringLiteral("Image saved"));
     } else {
-        Log::error(QStringLiteral("Save image failed: %1").arg(save_image_path));
-        QMessageBox::critical(this, QStringLiteral("Save image"), QStringLiteral("Save image failed; Check logs"));
+        Log::error(QStringLiteral("Failed to save image: %1").arg(save_image_path));
+        QMessageBox::critical(this, QStringLiteral("Save image"), QStringLiteral("Could not save image"));
     }
 }
 
