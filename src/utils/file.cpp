@@ -1,4 +1,5 @@
 #include "utils/file.hpp"
+#include "utils/str.hpp"
 
 #include "base/settings.hpp"
 
@@ -44,9 +45,27 @@ bool Utils::File::isImage(const QString &file_path) {
     return false;
 }
 
+bool Utils::File::containsExtension(const QString &file_path, const QStringList &ext_list) {
+    QFileInfo file_info = QFileInfo(file_path);
+    return ext_list.contains(file_info.suffix(), Qt::CaseInsensitive);
+}
+
 QString Utils::File::absolutePath(const QString &file_path) {
     QFileInfo file_info = QFileInfo(file_path);
     return file_info.absolutePath();
+}
+
+QString Utils::File::sanitizeFilePath(const QString &file_path, const QString &extension) {
+    QFileInfo file_info = QFileInfo(file_path);
+    QString absolute_path = file_info.absolutePath();
+
+    if (Utils::String::isNullOrEmpty(extension)) {
+        QString sanitized_filename = file_info.completeBaseName().replace(".", "_") + "." + file_info.suffix();
+        return QDir(absolute_path).filePath(sanitized_filename);
+    }
+
+    QString sanitized_filename = file_info.fileName().replace(".", "_") + "." + extension;
+    return QDir(absolute_path).filePath(sanitized_filename);
 }
 
 QStringList Utils::FileDialog::openFile(QWidget *parent) {
@@ -84,7 +103,11 @@ QString Utils::FileDialog::saveImage(QWidget *parent) {
         QString save_path = save_dialog.selectedFiles().first();
         // Set last save dialog path to the selected file
         Settings::last_save_stitch_path = Utils::File::absolutePath(save_path);
-        return save_path;
+        // Return sanitized save_path
+        if (Utils::File::containsExtension(save_path, {"png", "jpg", "jpeg", "webp"})) {
+            return Utils::File::sanitizeFilePath(save_path);
+        }
+        return Utils::File::sanitizeFilePath(save_path, "png");
     }
     return QString();
 }
@@ -104,7 +127,11 @@ QString Utils::FileDialog::saveLog(QWidget *parent) {
         QString save_path = save_dialog.selectedFiles().first();
         // Set last save dialog path to the selected file
         Settings::last_save_log_path = Utils::File::absolutePath(save_path);
-        return save_path;
+        // Return sanitized save_path
+        if (Utils::File::containsExtension(save_path, {"log"})) {
+            return Utils::File::sanitizeFilePath(save_path);
+        }
+        return Utils::File::sanitizeFilePath(save_path, "log");
     }
     return QString();
 }
