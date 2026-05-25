@@ -60,6 +60,8 @@ Keybind | Description
 `Q` | Close dialog
 
 ### Stitched image dialog
+You can left/right click on the image area to change the background. <br>
+This makes it easier to spot transparency in images.
 Keybind | Description
 |:-:|:-:|
 `Tab/Shift+Tab` | Select next/previous stitched image
