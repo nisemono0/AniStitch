@@ -21,6 +21,8 @@ qt_add_executable(AniStitch
     src/app/imagelistview.hpp
     src/app/progressdialog.cpp
     src/app/progressdialog.hpp
+    src/app/pushbutton.cpp
+    src/app/pushbutton.hpp
     src/app/stitchedimagescene.cpp
     src/app/stitchedimagescene.hpp
     src/app/stitchedimageview.cpp

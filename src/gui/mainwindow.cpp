@@ -34,7 +34,9 @@ MainWindow::MainWindow(const QStringList &arg_file_list, QWidget *parent) : QMai
     this->image_stitcher_worker->moveToThread(this->image_stitcher_thread);
 
     // Send signal to open the file(s) and start loading them
-    connect(this->ui->pushButtonLoad, &QPushButton::clicked, this, &MainWindow::startImageLoad);
+    connect(this->ui->pushButtonLoad, &PushButton::clicked, this, &MainWindow::pushButtonLoad_clicked);
+    // Send signal to reload the last file(s)
+    connect(this->ui->pushButtonLoad, &PushButton::rightClicked, this, &MainWindow::pushButtonLoad_rightClicked);
     // Send signal to ImageListView to remove the selected items from ImageListView
     connect(this->ui->pushButtonDeleteImage, &QPushButton::clicked, this->ui->imagesListView, &ImageListView::receive_delete_selected_items_request);
     // Send signal to ImageListView to remove all the items from ImageListView
@@ -80,6 +82,7 @@ MainWindow::MainWindow(const QStringList &arg_file_list, QWidget *parent) : QMai
 
     // ImageLoader worker thread
     connect(this, &MainWindow::request_ImageLoader_start, this->image_loader_worker, &ImageLoader::receive_ImageLoader_start_request);
+    connect(this, &MainWindow::request_ImageLoader_reload, this->image_loader_worker, &ImageLoader::receive_ImageLoader_reload_request);
     connect(this->image_loader_worker, &ImageLoader::send_ImageLoader_status, this->image_loader_thread, &QThread::quit);
     // Receive ImageLoader status
     connect(this->image_loader_worker, &ImageLoader::send_ImageLoader_status, this, &MainWindow::receive_ImageLoader_status);
@@ -149,7 +152,7 @@ MainWindow::~MainWindow() {
     delete this->ui;
 }
 
-void MainWindow::startImageLoad() {
+void MainWindow::pushButtonLoad_clicked(bool checked) {
     // If the ImageLoader thread is running, show a
     // message and bring the progress bar on front
     if (this->image_loader_thread->isRunning()) {
@@ -170,6 +173,13 @@ void MainWindow::startImageLoad() {
     // Start the thread and send work
     this->image_loader_thread->start();
     emit request_ImageLoader_start(selected_files);
+}
+
+void MainWindow::pushButtonLoad_rightClicked() {
+    if (!this->image_loader_thread->isRunning()) {
+        this->image_loader_thread->start();
+        emit request_ImageLoader_reload();
+    }
 }
 
 void MainWindow::startImageStitch(ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings) {
@@ -303,6 +313,11 @@ void MainWindow::receive_ImageLoader_status(ImageLoader::ImageLoaderStatus statu
         case ImageLoader::ImageLoaderStatus::INTERRUPTED:
         {
             QMessageBox::warning(this, QStringLiteral("Load file(s)"), QStringLiteral("File load canceled"));
+            break;
+        }
+        case ImageLoader::ImageLoaderStatus::NO_LAST:
+        {
+            QMessageBox::information(this, QStringLiteral("Load file(s)"), QStringLiteral("No files to reload"));
             break;
         }
     }

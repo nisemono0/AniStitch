@@ -11,7 +11,7 @@ class ImageLoader : public QObject {
     Q_OBJECT;
 public:
     // Statuses to send back
-    enum ImageLoaderStatus { OK, EXCEPTION, WARNING, ERROR, INTERRUPTED };
+    enum ImageLoaderStatus { OK, EXCEPTION, WARNING, ERROR, INTERRUPTED, NO_LAST };
 
     explicit ImageLoader(QObject *parent = nullptr);
     ~ImageLoader();
@@ -20,6 +20,9 @@ private:
     // Counter for number of images loaded
     // Used to set name of item as Image %loaded_counter%
     int image_counter;
+
+    // Save the last loaded file paths
+    QStringList last_file_paths;
 
     // Start worker
     void startWorker(const QStringList &file_paths);
@@ -51,6 +54,8 @@ signals:
 public slots:
     // Receive request to start the image loader on file_paths
     void receive_ImageLoader_start_request(const QStringList &file_paths);
+    // Receive request to load the last loaded file paths
+    void receive_ImageLoader_reload_request();
     // Receive request to reset loaded_counter;
     // This should be called when the Clear button is pressed
     void receive_ImageLoader_reset_counter();

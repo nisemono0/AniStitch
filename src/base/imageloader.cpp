@@ -13,6 +13,7 @@
 
 ImageLoader::ImageLoader(QObject *parent) : QObject(parent) {
     this->image_counter = 0;
+    this->last_file_paths = QStringList();
 }
 
 ImageLoader::~ImageLoader() {
@@ -162,7 +163,31 @@ QList<std::optional<ImageItem>> ImageLoader::getImageItemFromVideo(const QString
 
 void ImageLoader::receive_ImageLoader_start_request(const QStringList &file_paths) {
     try {
+        this->last_file_paths = file_paths;
         this->startWorker(file_paths);
+    } catch (const QUnhandledException &ex) {
+        try {
+            if (ex.exception()) {
+                std::rethrow_exception(ex.exception());
+            }
+        } catch (cv::Exception &ex) {
+            Log::error(QStringLiteral("Image loader cv::Exception: %1").arg(ex.what()));
+        } catch (std::exception &ex) {
+            Log::error(QStringLiteral("Image loader std::exception: %1").arg(ex.what()));
+        }
+        emit send_ImageLoader_status(ImageLoaderStatus::EXCEPTION);
+    }
+}
+
+void ImageLoader::receive_ImageLoader_reload_request() {
+    // Emit the NO_LAST status if there are no last loaded paths
+    if (this->last_file_paths.isEmpty()) {
+        emit send_ImageLoader_status(ImageLoaderStatus::NO_LAST);
+        return;
+    }
+
+    try {
+        this->startWorker(this->last_file_paths);
     } catch (const QUnhandledException &ex) {
         try {
             if (ex.exception()) {

@@ -63,7 +63,7 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayoutButtonsLeft">
           <item>
-           <widget class="QPushButton" name="pushButtonLoad">
+           <widget class="PushButton" name="pushButtonLoad">
             <property name="focusPolicy">
              <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
@@ -291,6 +291,11 @@
    <class>ImageGraphicsView</class>
    <extends>QGraphicsView</extends>
    <header>app/imagegraphicsview.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>PushButton</class>
+   <extends>QPushButton</extends>
+   <header>app/pushbutton.hpp</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -73,6 +73,7 @@ protected:
 
 signals:
     void request_ImageLoader_start(const QStringList &file_paths);
+    void request_ImageLoader_reload();
     void request_ImageStitcher_start(const std::vector<cv::Mat> &cv_mats, const ImageStitcher::ImageStitcherType stitcher_type, const StitcherSettings &stitcher_settings);
 
 public slots:
@@ -94,7 +95,9 @@ public slots:
 private slots:
     // Load file(s)
     // Opens a file dialog and starts ImageLoader thread with them
-    void startImageLoad();
+    void pushButtonLoad_clicked(bool checked = false);
+    // Re-loads the last file paths
+    void pushButtonLoad_rightClicked();
 
     // Stitch buttons clicked
     void pushButtonStitchScan_clicked(bool checked = false);
