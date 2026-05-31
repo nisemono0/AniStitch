@@ -1,12 +1,30 @@
 #include "app/pushbutton.hpp"
 
+#include <QTimer>
+
 
 PushButton::PushButton(QWidget *parent) : QPushButton(parent) {
-
+    this->shortcuts_list = QList<QShortcut *>();
 }
 
 PushButton::~PushButton() {
+    qDeleteAll(this->shortcuts_list);
+}
 
+void PushButton::addShortcut(const QKeySequence &key_seq, void (PushButton::*method)()) {
+    QShortcut *shortcut = new QShortcut(key_seq, this);
+    this->shortcuts_list.append(shortcut);
+
+    connect(shortcut, &QShortcut::activated, this, method);
+}
+
+void PushButton::animateRightClick() {
+    this->setDown(true);
+    // animateClick also uses 100ms
+    QTimer::singleShot(100, this, [this]{
+                this->setDown(false);
+                emit rightClicked();
+            });
 }
 
 void PushButton::mouseMoveEvent(QMouseEvent *e) {
