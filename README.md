@@ -20,9 +20,11 @@ For example, with 100 images:
 ## Shortcuts
 All shortcuts are also shown inside the status tip when hovering over a widget.
 ### Main window
+You can also right click on the Load button to trigger a reload.
 Keybind | Description
 |:-:|:-:|
 `Ctrl+L` | Open load files dialog
+`Ctrl+R` | Reload the last files
 `Ctrl+D` | Remove selected images
 `Ctrl+C` | Clear all images
 `C` | Open crop dialog
