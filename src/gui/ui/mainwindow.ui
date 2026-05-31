@@ -68,7 +68,7 @@
              <enum>Qt::FocusPolicy::NoFocus</enum>
             </property>
             <property name="statusTip">
-             <string>Load image(s) or video(s) for stitching [Ctrl+L]</string>
+             <string>Load/Reload image(s) or video(s) for stitching [Ctrl+L / Ctrl+R]</string>
             </property>
             <property name="text">
              <string>Load</string>
