@@ -16,6 +16,12 @@ MainWindow::MainWindow(const QStringList &arg_file_list, QWidget *parent) : QMai
     this->stitcher_settings_dialog = new StitcherSettingsDialog(this);
     this->crop_dialog = new CropDialog(this);
 
+    // Add shortcut to Load button
+    this->ui->pushButtonLoad->addShortcut(
+                QKeySequence(Qt::CTRL | Qt::Key_R),
+                &PushButton::animateRightClick
+            );
+
     // Image list status label
     this->image_list_status = new QLabel(this);
     this->image_list_status->setText(QStringLiteral("No images loaded"));
