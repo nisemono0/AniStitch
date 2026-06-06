@@ -10,9 +10,6 @@
 
 
 int main (int argc, char *argv[]) {
-    // Disable OpenCL if avaialble
-    Utils::OpenCV::disableOpenCL();
-
     QApplication app(argc, argv);
 
     // Register metatypes
@@ -33,18 +30,27 @@ int main (int argc, char *argv[]) {
     arg_parser.setApplicationDescription(Utils::App::AppDesc);
     arg_parser.addHelpOption();
 
+    QCommandLineOption dialog_window_option = {{"window", "w"}, "Start the application as a dialog window."};
+    arg_parser.addOption(dialog_window_option);
+
     arg_parser.addPositionalArgument("file_paths", "List of files to load into the program.", "[file_paths...]");
 
     arg_parser.process(app);
+
     QStringList file_list = arg_parser.positionalArguments();
+
+    // Disable OpenCL if avaialble
+    Utils::OpenCV::disableOpenCL();
 
     // Load saved settings
     Settings::loadSettings();
 
     MainWindow main_window = MainWindow(file_list);
 
-    // Set hint to dialog if started with arguments
-    if (!file_list.isEmpty()) {
+    // Set window hint to dialog if started with --window/-w
+    // This makes the window floating on tiling WM without
+    // having to setup exception rules for it
+    if (arg_parser.isSet(dialog_window_option)) {
         main_window.setWindowFlag(Qt::Dialog, true);
     }
 
