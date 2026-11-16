@@ -71,7 +71,7 @@ void ImageListView::receive_crop_value_request(int top_px, int right_px, int bot
 
             // Manually trigger the currentChanged slot with the last selected index
             // this way if the selecte item's image gets updated it will be displayed
-            emit currentChanged(current_selected_idx, current_selected_idx);
+            this->currentChanged(current_selected_idx, current_selected_idx);
         }
     }
 }
@@ -97,7 +97,7 @@ void ImageListView::receive_crop_selection_request(const std::optional<std::vect
 
             // Manually trigger the currentChanged slot with the last selected index
             // this way if the selecte item's image gets updated it will be displayed
-            emit currentChanged(current_selected_idx, current_selected_idx);
+            this->currentChanged(current_selected_idx, current_selected_idx);
         }
     }
 

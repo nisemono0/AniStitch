@@ -4,7 +4,7 @@
 #include "utils/opencv.hpp"
 #include "utils/defs.hpp"
 
-#include <QtConcurrent>
+#include <QtConcurrentRun>
 #include <QElapsedTimer>
 #include <QDateTime>
 #include <QUnhandledException>

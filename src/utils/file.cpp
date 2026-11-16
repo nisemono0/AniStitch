@@ -100,7 +100,7 @@ QString Utils::FileDialog::saveImage(QWidget *parent) {
     save_dialog.setDefaultSuffix(QStringLiteral(".png"));
 
     if (save_dialog.exec()) {
-        QString save_path = save_dialog.selectedFiles().first();
+        QString save_path = save_dialog.selectedFiles().constFirst();
         // Set last save dialog path to the selected file
         Settings::last_save_stitch_path = Utils::File::absolutePath(save_path);
         // Return sanitized save_path
@@ -124,7 +124,7 @@ QString Utils::FileDialog::saveLog(QWidget *parent) {
     save_dialog.setDefaultSuffix(QStringLiteral(".log"));
 
     if (save_dialog.exec()) {
-        QString save_path = save_dialog.selectedFiles().first();
+        QString save_path = save_dialog.selectedFiles().constFirst();
         // Set last save dialog path to the selected file
         Settings::last_save_log_path = Utils::File::absolutePath(save_path);
         // Return sanitized save_path

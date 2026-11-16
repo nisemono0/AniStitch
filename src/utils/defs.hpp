@@ -4,10 +4,10 @@
 
 
 namespace Utils::App {
-    static const QString AppName         = QStringLiteral("AniStitch");
-    static const QString OrgName         = QStringLiteral("AniStitch");
-    static const QString Style           = QStringLiteral("Fusion");
-    static const QString AppDesc         = QStringLiteral("Program to stitch anime images together");
-    static const int CursorBlinkInterval = 0;
+    inline const QString AppName         = QStringLiteral("AniStitch");
+    inline const QString OrgName         = QStringLiteral("AniStitch");
+    inline const QString Style           = QStringLiteral("Fusion");
+    inline const QString AppDesc         = QStringLiteral("Program to stitch anime images together");
+    inline const int CursorBlinkInterval = 0;
 };
 
