@@ -63,23 +63,24 @@ void ImageLoader::startWorker(const QStringList &file_paths) {
             if (!image_item_list.has_value()) {
                 Log::error(QStringLiteral("Error loading video: %1").arg(current_file_path));
                 has_errors = true;
-            }
+            } else {
+                int total_items = image_item_list->size();
+                for (int item_idx = 0; item_idx < total_items; item_idx++) {
+                    if (QThread::currentThread()->isInterruptionRequested()) {
+                        // Update counter
+                        this->image_counter = this->image_counter - (total_items - item_idx);
+                        emit send_ImageLoader_status(ImageLoaderStatus::INTERRUPTED);
+                        return;
+                    }
 
-            int total_items = image_item_list->size();
-            for (int item_idx = 0; item_idx < total_items; item_idx++) {
-                if (QThread::currentThread()->isInterruptionRequested()) {
-                    // Update counter
-                    this->image_counter = this->image_counter - (total_items - item_idx);
-                    emit send_ImageLoader_status(ImageLoaderStatus::INTERRUPTED);
-                    return;
+                    Log::info(QStringLiteral("  -> Frame (%1) loaded: %2").arg(image_item_list->at(item_idx).display_name, current_file_path));
+                    emit send_ImageLoader_data(image_item_list->at(item_idx));
+
+                    // Send current video frame load progress
+                    emit send_ImageLoader_current_progress((item_idx + 1) * 100 / total_items);
                 }
-
-                Log::info(QStringLiteral("  -> Frame (%1) loaded: %2").arg(image_item_list->at(item_idx).display_name, current_file_path));
-                emit send_ImageLoader_data(image_item_list->at(item_idx));
-
-                // Send current video frame load progress
-                emit send_ImageLoader_current_progress((item_idx + 1) * 100 / total_items);
             }
+
         // File is not image of video
         } else {
             Log::warning(QStringLiteral("Not an image/video: %1").arg(current_file_path));
