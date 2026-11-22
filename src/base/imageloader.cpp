@@ -59,13 +59,13 @@ void ImageLoader::startWorker(const QStringList &file_paths) {
         } else if (Utils::File::isVideo(current_file_path)) {
             Log::info(QStringLiteral("Loading video: %1").arg(current_file_path));
 
-            QList<std::optional<ImageItem>> image_item_list = this->getImageItemFromVideo(current_file_path);
-            if (image_item_list.isEmpty()) {
+            std::optional<QList<ImageItem>> image_item_list = this->getImageItemFromVideo(current_file_path);
+            if (!image_item_list.has_value()) {
                 Log::error(QStringLiteral("Error loading video: %1").arg(current_file_path));
                 has_errors = true;
             }
 
-            int total_items = image_item_list.size();
+            int total_items = image_item_list->size();
             for (int item_idx = 0; item_idx < total_items; item_idx++) {
                 if (QThread::currentThread()->isInterruptionRequested()) {
                     // Update counter
@@ -73,14 +73,10 @@ void ImageLoader::startWorker(const QStringList &file_paths) {
                     emit send_ImageLoader_status(ImageLoaderStatus::INTERRUPTED);
                     return;
                 }
-                // If item has no image loaded, send error and stop loading images
-                if (image_item_list[item_idx]) {
-                    Log::info(QStringLiteral("  -> Frame (%1) loaded: %2").arg(image_item_list[item_idx].value().display_name, current_file_path));
-                    emit send_ImageLoader_data(image_item_list[item_idx].value());
-                } else {
-                    Log::warning(QStringLiteral("  -> Frame not loaded: %1").arg(current_file_path));
-                    has_warnings = true;
-                }
+
+                Log::info(QStringLiteral("  -> Frame (%1) loaded: %2").arg(image_item_list->at(item_idx).display_name, current_file_path));
+                emit send_ImageLoader_data(image_item_list->at(item_idx));
+
                 // Send current video frame load progress
                 emit send_ImageLoader_current_progress((item_idx + 1) * 100 / total_items);
             }
@@ -127,36 +123,34 @@ std::optional<ImageItem> ImageLoader::getImageItemFromImage(const QString &image
     return image_item;
 }
 
-QList<std::optional<ImageItem>> ImageLoader::getImageItemFromVideo(const QString &video_path) {
+std::optional<QList<ImageItem>> ImageLoader::getImageItemFromVideo(const QString &video_path) {
     // Open video_path as video
     cv::VideoCapture video_cap = cv::VideoCapture(video_path.toStdString(), cv::CAP_ANY);
     // If the video couldn't be opened, return and empty QList
     if (!video_cap.isOpened()) {
-        return QList<std::optional<ImageItem>>();
+        return std::nullopt;
     }
 
-    QList<std::optional<ImageItem>> image_item_list = QList<std::optional<ImageItem>>();
+    QList<ImageItem> image_item_list = QList<ImageItem>();
     cv::Mat video_frame = cv::Mat();
 
-    int frame_count = video_cap.get(cv::CAP_PROP_FRAME_COUNT);
-    for (int frame_idx = 0; frame_idx <= frame_count; frame_idx++) {
-        bool frame_grabbed = video_cap.read(video_frame);
-        if (frame_grabbed) {
-            ImageItem image_item = ImageItem();
+    while (video_cap.read(video_frame)) {
+        ImageItem image_item = ImageItem();
 
-            image_item.display_name = this->getNameAndUpdateCounter();
-            image_item.name = image_item.display_name;
-            image_item.pixmap = Utils::Image::getPixmapFromMat(video_frame);
-            image_item.cvmat = video_frame.clone();
+        image_item.display_name = this->getNameAndUpdateCounter();
+        image_item.name = image_item.display_name;
+        image_item.pixmap = Utils::Image::getPixmapFromMat(video_frame);
+        image_item.cvmat = video_frame.clone();
 
-            image_item_list.append(image_item);
-        } else {
-            image_item_list.append(std::nullopt);
-        }
+        image_item_list.append(image_item);
     }
 
     // Close video capture
     video_cap.release();
+
+    if (image_item_list.isEmpty()) {
+        return std::nullopt;
+    }
 
     return image_item_list;
 }

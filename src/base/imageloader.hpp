@@ -34,7 +34,7 @@ private:
     // Return a QList of std::optional<ImageItem> from a video at video_path
     // Each ImageItem inside the QList is a frame from the video, can be std::nullopt
     // if it could not be loaded
-    QList<std::optional<ImageItem>> getImageItemFromVideo(const QString &video_path);
+    std::optional<QList<ImageItem>> getImageItemFromVideo(const QString &video_path);
 
 signals:
     // Send the finish status of the worker; this implies
